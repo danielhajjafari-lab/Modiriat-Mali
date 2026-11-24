@@ -369,46 +369,118 @@ val scope = rememberCoroutineScope()
 }
 }
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit) {
     var amountText by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
+    var customCategory by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
 
+    val categories = if (page == "ثبت درآمد") {
+        listOf("حقوق", "پاداش", "فروش", "هدیه", "سود سرمایه‌گذاری", "سایر")
+    } else {
+        listOf("خوراک", "حمل‌ونقل", "خرید", "قبض و خدمات", "درمان", "پوشاک", "تفریح", "آموزش", "اجاره و مسکن", "قسط و بدهی", "سایر")
+    }
+
     OutlinedTextField(
         value = amountText,
-        onValueChange = { amountText = toEnglishDigits(it).filter(Char::isDigit); error = "" },
+        onValueChange = {
+            amountText = toEnglishDigits(it).filter(Char::isDigit)
+            error = ""
+        },
         label = { Text("مبلغ به تومان") },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true
     )
-    OutlinedTextField(
-        value = category,
-        onValueChange = { category = it; error = "" },
-        label = { Text(if (page == "ثبت درآمد") "دلیل دریافت (مثلاً حقوق)" else "دسته هزینه (مثلاً خوراک)") },
-        modifier = Modifier.fillMaxWidth(),
-        singleLine = true
-    )
+
+    Box(Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = category,
+            onValueChange = {},
+            readOnly = true,
+            label = {
+                Text(if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه")
+            },
+            trailingIcon = {
+                Icon(Icons.Default.ArrowDropDown, contentDescription = "انتخاب دسته")
+            },
+            modifier = Modifier.fillMaxWidth().clickable {
+                expanded = true
+            },
+            singleLine = true
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            categories.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(item) },
+                    onClick = {
+                        category = item
+                        customCategory = ""
+                        expanded = false
+                        error = ""
+                    }
+                )
+            }
+        }
+    }
+
+    if (category == "سایر") {
+        OutlinedTextField(
+            value = customCategory,
+            onValueChange = {
+                customCategory = it
+                error = ""
+            },
+            label = { Text("نام دسته دلخواه") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+    }
+
     OutlinedTextField(
         value = note,
         onValueChange = { note = it },
         label = { Text("توضیحات (اختیاری)") },
         modifier = Modifier.fillMaxWidth()
     )
+
     if (error.isNotBlank()) Text(error, color = Red)
+
     Button(
         onClick = {
             val amount = amountText.toLongOrNull()
+            val finalCategory =
+                if (category == "سایر") customCategory.trim() else category
+
             when {
-                amount == null || amount <= 0 -> error = "مبلغ معتبر وارد کن."
-                category.isBlank() -> error = "لطفاً دسته یا دلیل تراکنش را بنویس."
-                else -> onSave(amount, category.trim(), note.trim())
+                amount == null || amount <= 0 ->
+                    error = "مبلغ معتبر وارد کن."
+                category.isBlank() ->
+                    error = "لطفاً یک دسته انتخاب کن."
+                finalCategory.isBlank() ->
+                    error = "نام دسته دلخواه را وارد کن."
+                else -> onSave(amount, finalCategory, note.trim())
             }
         },
         modifier = Modifier.fillMaxWidth()
-    ) { Text("ذخیره تراکنش") }
-    Text("مبلغ‌ها به تومان ثبت می‌شوند و روی همین گوشی ذخیره می‌مانند.", color = Color.LightGray, fontSize = 12.sp)
+    ) {
+        Text("ذخیره تراکنش")
+    }
+
+    Text(
+        "مبلغ‌ها به تومان ثبت می‌شوند و روی همین گوشی ذخیره می‌مانند.",
+        color = Color.LightGray,
+        fontSize = 12.sp
+    )
 }
+
 
 @Composable
 private fun SummaryCard(title: String, amount: String, color: Color, modifier: Modifier) {
