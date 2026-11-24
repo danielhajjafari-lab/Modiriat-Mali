@@ -67,6 +67,29 @@ class FinanceDb(context: Context) : SQLiteOpenHelper(context, "finance.db", null
         writableDatabase.insertOrThrow("transactions", null, values)
     }
 
+fun update(item: MoneyTransaction) {
+    val values = ContentValues().apply {
+        put("type", item.type)
+        put("amount", item.amount)
+        put("category", item.category)
+        put("note", item.note)
+    }
+    writableDatabase.update(
+        "transactions",
+        values,
+        "id = ?",
+        arrayOf(item.id.toString())
+    )
+}
+
+fun delete(id: Long) {
+    writableDatabase.delete(
+        "transactions",
+        "id = ?",
+        arrayOf(id.toString())
+    )
+}
+
     fun all(): List<MoneyTransaction> {
         val result = mutableListOf<MoneyTransaction>()
         readableDatabase.rawQuery(
