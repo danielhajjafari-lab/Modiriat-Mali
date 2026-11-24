@@ -1,6 +1,7 @@
 package ir.daniel.modiriatmali
 
 import android.content.ContentValues
+import kotlinx.coroutines.launch
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -134,8 +135,9 @@ private fun toEnglishDigits(value: String): String {
 @Composable
 private fun FinanceApp(db: FinanceDb) {
     var page by remember { mutableStateOf("خانه") }
-    var menuOpen by remember { mutableStateOf(false) }
-    var refresh by remember { mutableIntStateOf(0) }
+var refresh by remember { mutableIntStateOf(0) }
+val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+val scope = rememberCoroutineScope() 
 
     var editing by remember { mutableStateOf<MoneyTransaction?>(null) }
     var deleting by remember { mutableStateOf<MoneyTransaction?>(null) }
@@ -158,13 +160,52 @@ private fun FinanceApp(db: FinanceDb) {
         background = Night, surface = Panel, primary = Cyan, secondary = Purple,
         onBackground = Color.White, onSurface = Color.White
     )) {
+                ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet(
+                    drawerContainerColor = Panel,
+                    drawerContentColor = Color.White
+                ) {
+                    Text(
+                        "مدیریت مالی",
+                        Modifier.fillMaxWidth().padding(20.dp),
+                        color = Cyan,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    HorizontalDivider(color = Color(0xFF26354D))
+
+                    Column(
+                        Modifier.fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
+                            .padding(vertical = 8.dp)
+                    ) {
+                        pages.forEach { item ->
+                            NavigationDrawerItem(
+                                label = { Text(item) },
+                                selected = page == item,
+                                onClick = {
+                                    page = item
+                                    scope.launch { drawerState.close() }
+                                },
+                                icon = {
+                                    Icon(Icons.Default.Menu, contentDescription = null)
+                                },
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        ) {
         Scaffold(
             containerColor = Night,
             topBar = {
                 TopAppBar(
                     title = { Text("مدیریت مالی", fontWeight = FontWeight.Bold, color = Color.White) },
                     navigationIcon = {
-                        IconButton(onClick = { menuOpen = true }) {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, "منو", tint = Cyan)
                         }
                     },
@@ -172,30 +213,7 @@ private fun FinanceApp(db: FinanceDb) {
                 )
             }
         ) { padding ->
-            if (menuOpen) {
-                AlertDialog(
-                    onDismissRequest = { menuOpen = false },
-                    title = { Text("منوی برنامه", color = Cyan) },
-                    text = {
-                        Column(Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState())) {
-                            pages.forEach { item ->
-                                Text(
-                                    item,
-                                    Modifier.fillMaxWidth().clickable {
-                                        page = item
-                                        menuOpen = false
-                                    }.padding(vertical = 12.dp),
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { menuOpen = false }) { Text("بستن") }
-                    },
-                    containerColor = Panel
-                )
-            }
+            
 
             Column(
                 Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
@@ -418,7 +436,7 @@ private fun QuickAction(
         }
     }
 }
-
+}
 @Composable
 private fun TransactionRow(
     item: MoneyTransaction,
