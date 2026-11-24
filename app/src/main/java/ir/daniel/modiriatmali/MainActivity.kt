@@ -367,7 +367,7 @@ val scope = rememberCoroutineScope()
         }
     }
 }
-
+}
 @Composable
 private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit) {
     var amountText by remember { mutableStateOf("") }
