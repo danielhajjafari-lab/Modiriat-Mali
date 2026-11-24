@@ -436,7 +436,7 @@ private fun QuickAction(
         }
     }
 }
-}
+
 @Composable
 private fun TransactionRow(
     item: MoneyTransaction,
@@ -473,7 +473,7 @@ private fun TransactionRow(
         }
     }
 }
-
+}
 @Composable
 private fun EmptyCard(message: String) {
     Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(16.dp)) {
