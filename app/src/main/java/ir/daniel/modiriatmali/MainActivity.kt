@@ -473,7 +473,7 @@ private fun TransactionRow(
         }
     }
 }
-}
+
 @Composable
 private fun EmptyCard(message: String) {
     Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(16.dp)) {
