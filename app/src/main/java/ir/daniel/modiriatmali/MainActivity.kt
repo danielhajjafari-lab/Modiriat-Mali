@@ -67,28 +67,27 @@ class FinanceDb(context: Context) : SQLiteOpenHelper(context, "finance.db", null
         writableDatabase.insertOrThrow("transactions", null, values)
     }
 
-fun update(item: MoneyTransaction) {
-    val values = ContentValues().apply {
-        put("type", item.type)
-        put("amount", item.amount)
-        put("category", item.category)
-        put("note", item.note)
+    fun update(item: MoneyTransaction) {
+        val values = ContentValues().apply {
+            put("amount", item.amount)
+            put("category", item.category)
+            put("note", item.note)
+        }
+        writableDatabase.update(
+            "transactions",
+            values,
+            "id = ?",
+            arrayOf(item.id.toString())
+        )
     }
-    writableDatabase.update(
-        "transactions",
-        values,
-        "id = ?",
-        arrayOf(item.id.toString())
-    )
-}
 
-fun delete(id: Long) {
-    writableDatabase.delete(
-        "transactions",
-        "id = ?",
-        arrayOf(id.toString())
-    )
-}
+    fun delete(id: Long) {
+        writableDatabase.delete(
+            "transactions",
+            "id = ?",
+            arrayOf(id.toString())
+        )
+    }
 
     fun all(): List<MoneyTransaction> {
         val result = mutableListOf<MoneyTransaction>()
@@ -137,6 +136,14 @@ private fun FinanceApp(db: FinanceDb) {
     var page by remember { mutableStateOf("خانه") }
     var menuOpen by remember { mutableStateOf(false) }
     var refresh by remember { mutableIntStateOf(0) }
+
+    var editing by remember { mutableStateOf<MoneyTransaction?>(null) }
+    var deleting by remember { mutableStateOf<MoneyTransaction?>(null) }
+    var editAmount by remember { mutableStateOf("") }
+    var editCategory by remember { mutableStateOf("") }
+    var editNote by remember { mutableStateOf("") }
+    var editError by remember { mutableStateOf("") }
+
     val transactions = remember(refresh) { db.all() }
     val income = transactions.filter { it.type == "درآمد" }.sumOf { it.amount }
     val expenses = transactions.filter { it.type == "هزینه" }.sumOf { it.amount }
@@ -219,7 +226,19 @@ private fun FinanceApp(db: FinanceDb) {
                     if (transactions.isEmpty()) {
                         EmptyCard("هنوز تراکنشی ثبت نشده است.")
                     } else {
-                        transactions.take(10).forEach { item -> TransactionRow(item) }
+                        transactions.take(10).forEach { item ->
+                            TransactionRow(
+                                item = item,
+                                onEdit = {
+                                    editing = item
+                                    editAmount = item.amount.toString()
+                                    editCategory = item.category
+                                    editNote = item.note
+                                    editError = ""
+                                },
+                                onDelete = { deleting = item }
+                            )
+                        }
                     }
                 } else if (page == "ثبت درآمد" || page == "ثبت هزینه") {
                     Text(page, color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -233,11 +252,99 @@ private fun FinanceApp(db: FinanceDb) {
                     when (page) {
                         "جستجو و تاریخچه" -> {
                             if (transactions.isEmpty()) EmptyCard("هنوز تراکنشی ثبت نشده است.")
-                            else transactions.forEach { TransactionRow(it) }
+                            else transactions.forEach { item ->
+                                TransactionRow(
+                                    item = item,
+                                    onEdit = {
+                                        editing = item
+                                        editAmount = item.amount.toString()
+                                        editCategory = item.category
+                                        editNote = item.note
+                                        editError = ""
+                                    },
+                                    onDelete = { deleting = item }
+                                )
+                            }
                         }
                         else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلاعات مالی شما در این نسخه در بخش ثبت تراکنش‌ها ذخیره می‌شود.")
                     }
                 }
+            }
+
+            editing?.let { item ->
+                AlertDialog(
+                    onDismissRequest = { editing = null },
+                    title = { Text("ویرایش تراکنش", color = Cyan) },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text(if (item.type == "درآمد") "نوع: درآمد" else "نوع: هزینه", color = Color.LightGray)
+                            OutlinedTextField(
+                                value = editAmount,
+                                onValueChange = { editAmount = toEnglishDigits(it).filter(Char::isDigit); editError = "" },
+                                label = { Text("مبلغ به تومان") },
+                                singleLine = true
+                            )
+                            OutlinedTextField(
+                                value = editCategory,
+                                onValueChange = { editCategory = it; editError = "" },
+                                label = { Text("دسته یا دلیل") },
+                                singleLine = true
+                            )
+                            OutlinedTextField(
+                                value = editNote,
+                                onValueChange = { editNote = it },
+                                label = { Text("توضیحات") }
+                            )
+                            if (editError.isNotBlank()) Text(editError, color = Red)
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val amount = editAmount.toLongOrNull()
+                            when {
+                                amount == null || amount <= 0 -> editError = "مبلغ معتبر وارد کن."
+                                editCategory.isBlank() -> editError = "دسته یا دلیل را وارد کن."
+                                else -> {
+                                    db.update(item.copy(
+                                        amount = amount,
+                                        category = editCategory.trim(),
+                                        note = editNote.trim()
+                                    ))
+                                    refresh++
+                                    editing = null
+                                }
+                            }
+                        }) { Text("ذخیره تغییرات") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { editing = null }) { Text("انصراف") }
+                    },
+                    containerColor = Panel
+                )
+            }
+
+            deleting?.let { item ->
+                AlertDialog(
+                    onDismissRequest = { deleting = null },
+                    title = { Text("حذف تراکنش", color = Red) },
+                    text = {
+                        Text(
+                            "از حذف این ${item.type} به مبلغ ${money(item.amount)} مطمئنی؟ این کار قابل بازگشت نیست.",
+                            color = Color.White
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            db.delete(item.id)
+                            refresh++
+                            deleting = null
+                        }) { Text("بله، حذف شود", color = Red) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { deleting = null }) { Text("انصراف") }
+                    },
+                    containerColor = Panel
+                )
             }
         }
     }
@@ -313,22 +420,37 @@ private fun QuickAction(
 }
 
 @Composable
-private fun TransactionRow(item: MoneyTransaction) {
+private fun TransactionRow(
+    item: MoneyTransaction,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
     Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(14.dp)) {
         Row(
-            Modifier.fillMaxWidth().padding(14.dp),
+            Modifier.fillMaxWidth().padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                (if (item.type == "درآمد") "+" else "−") + money(item.amount),
-                color = if (item.type == "درآمد") Green else Red,
-                fontWeight = FontWeight.Bold
-            )
-            Column(horizontalAlignment = Alignment.End) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onEdit) {
+                    Icon(Icons.Default.Edit, "ویرایش", tint = Cyan)
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(Icons.Default.Delete, "حذف", tint = Red)
+                }
+            }
+            Column(
+                Modifier.weight(1f).padding(end = 6.dp),
+                horizontalAlignment = Alignment.End
+            ) {
                 Text(item.category, color = Color.White, fontWeight = FontWeight.SemiBold)
                 Text(item.date, color = Color.LightGray, fontSize = 11.sp)
                 if (item.note.isNotBlank()) Text(item.note, color = Color.LightGray, fontSize = 12.sp)
+                Text(
+                    (if (item.type == "درآمد") "+" else "−") + money(item.amount),
+                    color = if (item.type == "درآمد") Green else Red,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
