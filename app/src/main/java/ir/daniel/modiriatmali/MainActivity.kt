@@ -368,7 +368,7 @@ val scope = rememberCoroutineScope()
     }
 }
 }
-@Composable
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit) {
