@@ -36,16 +36,8 @@ private val Purple = Color(0xFF9B7BFF)
 private val Green = Color(0xFF36D399)
 private val Red = Color(0xFFFF647C)
 
+
 data class MoneyTransaction(
-    data class BudgetAlert(
-    val id: Long,
-    val percentage: Int,
-    val enabled: Boolean,
-    val alertType: String,
-    val soundUri: String,
-    val durationSeconds: Int,
-    val vibration: Boolean
-)
     val id: Long,
     val type: String,
     val amount: Long,
@@ -54,6 +46,15 @@ data class MoneyTransaction(
     val date: String
 )
 
+data class BudgetAlert(
+    val id: Long,
+    val percentage: Int,
+    val enabled: Boolean,
+    val alertType: String,
+    val soundUri: String,
+    val durationSeconds: Int,
+    val vibration: Boolean
+)
 
 
 class FinanceDb(context: Context) :
