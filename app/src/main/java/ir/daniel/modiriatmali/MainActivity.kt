@@ -37,6 +37,15 @@ private val Green = Color(0xFF36D399)
 private val Red = Color(0xFFFF647C)
 
 data class MoneyTransaction(
+    data class BudgetAlert(
+    val id: Long,
+    val percentage: Int,
+    val enabled: Boolean,
+    val alertType: String,
+    val soundUri: String,
+    val durationSeconds: Int,
+    val vibration: Boolean
+)
     val id: Long,
     val type: String,
     val amount: Long,
@@ -62,17 +71,19 @@ class FinanceDb(context: Context) :
     }
 
     override fun onUpgrade(
-        db: SQLiteDatabase,
-        oldVersion: Int,
-        newVersion: Int
-    ) {
-        if (oldVersion < 2) {
-            if (oldVersion < 3) {
-    createBudgetTables(db)
-            }
-            createCategoriesTable(db)
-        }
+    db: SQLiteDatabase,
+    oldVersion: Int,
+    newVersion: Int
+) {
+    if (oldVersion < 2) {
+        createCategoriesTable(db)
     }
+
+    if (oldVersion < 3) {
+        createBudgetTables(db)
+    }
+    }
+    
 private fun createBudgetTables(db: SQLiteDatabase) {
     db.execSQL(
         "CREATE TABLE IF NOT EXISTS budget_settings (" +
@@ -149,7 +160,120 @@ private fun createBudgetTables(db: SQLiteDatabase) {
             SQLiteDatabase.CONFLICT_IGNORE
         )
     }
+    fun getBudgetAlerts(): List<BudgetAlert> {
+    val result = mutableListOf<BudgetAlert>()
 
+    readableDatabase.rawQuery(
+        "SELECT id, percentage, enabled, alert_type, " +
+            "sound_uri, duration_seconds, vibration " +
+            "FROM budget_alerts ORDER BY percentage ASC, id ASC",
+        null
+    ).use { cursor ->
+        while (cursor.moveToNext()) {
+            result.add(
+                BudgetAlert(
+                    id = cursor.getLong(0),
+                    percentage = cursor.getInt(1),
+                    enabled = cursor.getInt(2) == 1,
+                    alertType = cursor.getString(3),
+                    soundUri = cursor.getString(4),
+                    durationSeconds = cursor.getInt(5),
+                    vibration = cursor.getInt(6) == 1
+                )
+            )
+        }
+    }
+
+    return result
+    }
+    fun addBudgetAlert(
+    percentage: Int,
+    alertType: String = "صدا",
+    durationSeconds: Int = 5,
+    vibration: Boolean = true
+): Boolean {
+        fun updateBudgetAlert(alert: BudgetAlert): Boolean {
+         fun deleteBudgetAlert(id: Long): Boolean {
+             fun setBudgetAlertEnabled(
+    id: Long,
+    enabled: Boolean
+): Boolean {
+    val values = ContentValues().apply {
+        put("enabled", if (enabled) 1 else 0)
+    }
+
+    return writableDatabase.update(
+        "budget_alerts",
+        values,
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+             }
+    return writableDatabase.delete(
+        "budget_alerts",
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+         }   
+    if (alert.percentage !in 1..100) return false
+
+    val values = ContentValues().apply {
+        put("percentage", alert.percentage)
+        put("enabled", if (alert.enabled) 1 else 0)
+        put("alert_type", alert.alertType)
+        put("sound_uri", alert.soundUri)
+        put("duration_seconds", alert.durationSeconds.coerceAtLeast(1))
+        put("vibration", if (alert.vibration) 1 else 0)
+    }
+
+    return writableDatabase.update(
+        "budget_alerts",
+        values,
+        "id = ?",
+        arrayOf(alert.id.toString())
+    ) > 0
+        }
+    if (percentage !in 1..100) return false
+
+    val values = ContentValues().apply {
+        put("percentage", percentage)
+        put("enabled", 1)
+        put("alert_type", alertType)
+        put("sound_uri", "")
+        put("duration_seconds", durationSeconds.coerceAtLeast(1))
+        put("vibration", if (vibration) 1 else 0)
+    }
+
+    return writableDatabase.insert(
+        "budget_alerts",
+        null,
+        values
+    ) != -1L
+    }
+fun getDailyLimit(): Long {
+    readableDatabase.rawQuery(
+        "SELECT daily_limit FROM budget_settings WHERE id = 1",
+        null
+    ).use { cursor ->
+        if (cursor.moveToFirst()) {
+            return cursor.getLong(0)
+        }
+    }
+    return 0L
+}
+
+fun setDailyLimit(amount: Long) {
+    val values = ContentValues().apply {
+        put("daily_limit", amount.coerceAtLeast(0L))
+    }
+
+    writableDatabase.update(
+        "budget_settings",
+        values,
+        "id = 1",
+        null
+    )
+}
     fun getCategories(type: String): List<String> {
         val result = mutableListOf<String>()
 
