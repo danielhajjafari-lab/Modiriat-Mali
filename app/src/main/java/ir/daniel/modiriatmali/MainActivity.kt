@@ -594,58 +594,39 @@ singleLine = true
     )
 
     
-Box(Modifier.fillMaxWidth()) {
-    
-OutlinedTextField(
-    value = category,
-    onValueChange = {},
-    readOnly = true,
-    label = {
-        Text(
-            if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه"
-        )
-    },
-    trailingIcon = {
-        IconButton(onClick = { expanded = true }) {
-            Icon(
-                Icons.Default.ArrowDropDown,
-                contentDescription = "انتخاب دسته",
-                tint = Cyan
-            )
-        }
-    },
-    modifier = Modifier.fillMaxWidth(),
-    shape = RoundedCornerShape(16.dp),
-    colors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = Cyan,
-        unfocusedBorderColor = Color(0xFF52647C),
-        focusedLabelColor = Cyan,
-        unfocusedLabelColor = Color.LightGray,
-        cursorColor = Cyan,
-        focusedTextColor = Color.White,
-        unfocusedTextColor = Color.White
-    ),
-    singleLine = true
-)
 
+Box(Modifier.fillMaxWidth()) {
+    OutlinedTextField(
+        value = category,
+        onValueChange = {},
+        readOnly = true,
+        label = {
+            Text(
+                if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه"
+            )
         },
         trailingIcon = {
             IconButton(onClick = { expanded = true }) {
                 Icon(
                     Icons.Default.ArrowDropDown,
-                    contentDescription = "باز کردن دسته‌بندی‌ها",
+                    contentDescription = "انتخاب دسته",
                     tint = Cyan
                 )
             }
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { expanded = true },
+        shape = RoundedCornerShape(16.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Cyan,
+            unfocusedBorderColor = Color(0xFF52647C),
+            focusedLabelColor = Cyan,
+            unfocusedLabelColor = Color.LightGray,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White
+        ),
         singleLine = true
-    )
-
-    Box(
-        Modifier
-            .matchParentSize()
-            .clickable { expanded = true }
     )
 
     DropdownMenu(
@@ -665,6 +646,7 @@ OutlinedTextField(
         }
     }
 }
+
 
 
     if (category == "سایر") {
