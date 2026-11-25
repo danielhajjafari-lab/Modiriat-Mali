@@ -802,7 +802,141 @@ private fun CategoryManager(
     }
 }
 
+@Composable
+private fun AdvancedTransactionSearch(
+    transactions: List<MoneyTransaction>,
+    onEdit: (MoneyTransaction) -> Unit,
+    onDelete: (MoneyTransaction) -> Unit
+) {
+    var searchText by remember { mutableStateOf("") }
+    var categoryText by remember { mutableStateOf("") }
+    var dateText by remember { mutableStateOf("") }
+    var minAmount by remember { mutableStateOf("") }
+    var maxAmount by remember { mutableStateOf("") }
+    var selectedType by remember { mutableStateOf("همه") }
 
+    val filtered = transactions.filter { item ->
+        val query = searchText.trim()
+        val categoryQuery = categoryText.trim()
+        val dateQuery = dateText.trim()
+
+        val min = toEnglishDigits(minAmount).toLongOrNull()
+        val max = toEnglishDigits(maxAmount).toLongOrNull()
+
+        val matchesType =
+            selectedType == "همه" || item.type == selectedType
+
+        val matchesSearch =
+            query.isBlank() ||
+            item.category.contains(query, ignoreCase = true) ||
+            item.note.contains(query, ignoreCase = true) ||
+            item.amount.toString().contains(toEnglishDigits(query)) ||
+            item.date.contains(query)
+
+        val matchesCategory =
+            categoryQuery.isBlank() ||
+            item.category.contains(categoryQuery, ignoreCase = true)
+
+        val matchesDate =
+            dateQuery.isBlank() || item.date.contains(dateQuery)
+
+        val matchesMin = min == null || item.amount >= min
+        val matchesMax = max == null || item.amount <= max
+
+        matchesType && matchesSearch &&
+            matchesCategory && matchesDate &&
+            matchesMin && matchesMax
+    }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = { searchText = it },
+            label = { Text("جست‌وجو در مبلغ، توضیحات و دسته") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Text("نوع تراکنش", color = Color.White)
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            listOf("همه", "درآمد", "هزینه").forEach { type ->
+                Button(
+                    onClick = { selectedType = type },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor =
+                            if (selectedType == type) Cyan else Panel
+                    ),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(type)
+                }
+            }
+        }
+
+        OutlinedTextField(
+            value = categoryText,
+            onValueChange = { categoryText = it },
+            label = { Text("فیلتر دسته‌بندی") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = dateText,
+            onValueChange = { dateText = it },
+            label = { Text("تاریخ (مثلاً ۱۴۰۵/۰۸)") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = minAmount,
+                onValueChange = {
+                    minAmount = toEnglishDigits(it).filter(Char::isDigit)
+                },
+                label = { Text("حداقل مبلغ") },
+                modifier = Modifier.weight(1f),
+                singleLine = true
+            )
+
+            OutlinedTextField(
+                value = maxAmount,
+                onValueChange = {
+                    maxAmount = toEnglishDigits(it).filter(Char::isDigit)
+                },
+                label = { Text("حداکثر مبلغ") },
+                modifier = Modifier.weight(1f),
+                singleLine = true
+            )
+        }
+
+        Text(
+            "تعداد نتایج: ${filtered.size}",
+            color = Cyan,
+            fontWeight = FontWeight.Bold
+        )
+
+        if (filtered.isEmpty()) {
+            EmptyCard("تراکنشی با این مشخصات پیدا نشد.")
+        } else {
+            filtered.forEach { item ->
+                TransactionRow(
+                    item = item,
+                    onEdit = { onEdit(item) },
+                    onDelete = { onDelete(item) }
+                )
+            }
+        }
+    }
+}
 @Composable
 private fun SummaryCard(title: String, amount: String, color: Color, modifier: Modifier) {
     Card(modifier, colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(18.dp)) {
