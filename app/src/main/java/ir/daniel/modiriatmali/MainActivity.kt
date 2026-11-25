@@ -279,6 +279,7 @@ private fun toEnglishDigits(value: String): String {
 @Composable
 private fun FinanceApp(db: FinanceDb) {
     var page by remember { mutableStateOf("خانه") }
+    var transactionFilter by remember { mutableStateOf("همه") }
 var refresh by remember { mutableIntStateOf(0) }
 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 val scope = rememberCoroutineScope() 
@@ -293,6 +294,24 @@ val scope = rememberCoroutineScope()
     val transactions = remember(refresh) { db.all() }
     val income = transactions.filter { it.type == "درآمد" }.sumOf { it.amount }
     val expenses = transactions.filter { it.type == "هزینه" }.sumOf { it.amount }
+    val currentMonth = SimpleDateFormat(
+    "yyyy/MM",
+    Locale("fa", "IR")
+).format(Date())
+
+val monthlyTransactions = transactions.filter {
+    it.date.startsWith(currentMonth)
+}
+
+val monthlyIncome = monthlyTransactions
+    .filter { it.type == "درآمد" }
+    .sumOf { it.amount }
+
+val monthlyExpenses = monthlyTransactions
+    .filter { it.type == "هزینه" }
+    .sumOf { it.amount }
+
+val monthlyBalance = monthlyIncome - monthlyExpenses
     val pages = listOf(
         "خانه", "ثبت درآمد", "ثبت هزینه", "قرض و بدهی", "پس‌انداز",
         "گزارش‌ها و PDF", "دسته‌بندی‌ها", "مدیریت بانک‌ها", "ماشین‌حساب",
@@ -406,16 +425,80 @@ MaterialTheme(
                         SummaryCard("مجموع درآمد", money(income), Green, Modifier.weight(1f))
                         SummaryCard("مجموع هزینه", money(expenses), Red, Modifier.weight(1f))
                     }
+                    Card(
+    modifier = Modifier.fillMaxWidth(),
+    colors = CardDefaults.cardColors(
+        containerColor = Panel
+    ),
+    shape = RoundedCornerShape(20.dp)
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(18.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            "عملکرد این ماه",
+            color = Cyan,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text("درآمد ماه", color = Color.LightGray, fontSize = 12.sp)
+                Text(money(monthlyIncome), color = Green, fontWeight = FontWeight.Bold)
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text("هزینه ماه", color = Color.LightGray, fontSize = 12.sp)
+                Text(money(monthlyExpenses), color = Red, fontWeight = FontWeight.Bold)
+            }
+        }
+
+        HorizontalDivider(color = Color(0xFF26354D))
+
+        Text(
+            "خالص ماه: ${money(monthlyBalance)}",
+            color = if (monthlyBalance >= 0) Green else Red,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+                    }
                     Text("دسترسی سریع", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         QuickAction("ثبت درآمد", Icons.Default.AddCircle, Green, Modifier.weight(1f)) { page = "ثبت درآمد" }
                         QuickAction("ثبت هزینه", Icons.Default.RemoveCircle, Red, Modifier.weight(1f)) { page = "ثبت هزینه" }
                     }
                     Text("تراکنش‌های اخیر", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Row(
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    listOf("همه", "درآمد", "هزینه").forEach { type ->
+        FilterChip(
+            selected = transactionFilter == type,
+            onClick = { transactionFilter = type },
+            label = { Text(type) },
+            colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = Cyan,
+                selectedLabelColor = Night,
+                labelColor = Color.White
+            )
+        )
+    }
+                    }
                     if (transactions.isEmpty()) {
                         EmptyCard("هنوز تراکنشی ثبت نشده است.")
                     } else {
-                        transactions.take(10).forEach { item ->
+                        transactions
+    .filter { transactionFilter == "همه" || it.type == transactionFilter }
+    .take(10)
+    .forEach { item ->
                             TransactionRow(
                                 item = item,
                                 onEdit = {
