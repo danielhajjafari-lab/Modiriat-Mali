@@ -416,20 +416,19 @@ val scope = rememberCoroutineScope()
                     Text(page, color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     when (page) {
                         "جستجو و تاریخچه" -> {
-                            if (transactions.isEmpty()) EmptyCard("هنوز تراکنشی ثبت نشده است.")
-                            else transactions.forEach { item ->
-                                TransactionRow(
-                                    item = item,
-                                    onEdit = {
-                                        editing = item
-                                        editAmount = item.amount.toString()
-                                        editCategory = item.category
-                                        editNote = item.note
-                                        editError = ""
-                                    },
-                                    onDelete = { deleting = item }
-                                )
-                            }
+    AdvancedTransactionSearch(
+        transactions = transactions,
+        onEdit = { item ->
+            editing = item
+            editAmount = item.amount.toString()
+            editCategory = item.category
+            editNote = item.note
+            editError = ""
+        },
+        onDelete = { item ->
+            deleting = item
+        }
+    )
                         }
                         "دسته‌بندی‌ها" -> {
     CategoryManager(db) {
