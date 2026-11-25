@@ -1967,7 +1967,29 @@ val soundPicker = rememberLauncherForActivityResult(
                 )
             }
         }
+        if (alertType == "صدا") {
+            OutlinedButton(
+                onClick = {
+                    soundPicker.launch(arrayOf("audio/*"))
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    if (soundUri.isBlank()) {
+                        "انتخاب صدای دلخواه"
+                    } else {
+                        "تغییر صدای انتخاب‌شده"
+                    }
+                )
+            }
 
+            if (soundUri.isNotBlank()) {
+                Text(
+                    "صدای دلخواه انتخاب شده است",
+                    color = Green
+                )
+            }
+        }
         Button(
     onClick = {
         val p = percentage.toIntOrNull()
