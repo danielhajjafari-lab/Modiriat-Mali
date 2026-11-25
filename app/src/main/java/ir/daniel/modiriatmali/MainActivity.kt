@@ -1994,8 +1994,7 @@ val soundPicker = rememberLauncherForActivityResult(
                     color = Green
                 )
             }
-        }
-        Button(
+        }Button(
     onClick = {
         val p = percentage.toIntOrNull()
         val d = duration.toIntOrNull()
@@ -2008,6 +2007,7 @@ val soundPicker = rememberLauncherForActivityResult(
                     currentAlert.copy(
                         percentage = p,
                         alertType = alertType,
+                        soundUri = soundUri,
                         durationSeconds = d,
                         vibration = alertType != "بی‌صدا"
                     )
@@ -2018,7 +2018,8 @@ val soundPicker = rememberLauncherForActivityResult(
                     percentage = p,
                     alertType = alertType,
                     durationSeconds = d,
-                    vibration = alertType != "بی‌صدا"
+                    vibration = alertType != "بی‌صدا",
+                    soundUri = soundUri
                 )
             }
 
@@ -2026,6 +2027,7 @@ val soundPicker = rememberLauncherForActivityResult(
             percentage = "85"
             duration = "5"
             alertType = "صدا"
+            soundUri = ""
         }
     },
     modifier = Modifier.fillMaxWidth()
