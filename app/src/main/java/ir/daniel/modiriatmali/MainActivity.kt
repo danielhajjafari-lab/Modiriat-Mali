@@ -735,7 +735,7 @@ elevation = ButtonDefaults.buttonElevation(
         fontWeight = FontWeight.Bold
     )
     }
-    }
+    
 
     Text(
         "مبلغ‌ها به تومان ثبت می‌شوند و روی همین گوشی ذخیره می‌مانند.",
