@@ -200,6 +200,7 @@ private fun createBudgetTables(db: SQLiteDatabase) {
         alertType: String = "صدا",
         durationSeconds: Int = 5,
         vibration: Boolean = true
+        soundUri: String = ""
     ): Boolean {
         if (percentage !in 1..100) return false
 
@@ -207,7 +208,7 @@ private fun createBudgetTables(db: SQLiteDatabase) {
             put("percentage", percentage)
             put("enabled", 1)
             put("alert_type", alertType)
-            put("sound_uri", "")
+            put("sound_uri", soundUri)
             put("duration_seconds", durationSeconds.coerceAtLeast(1))
             put("vibration", if (vibration) 1 else 0)
         }
