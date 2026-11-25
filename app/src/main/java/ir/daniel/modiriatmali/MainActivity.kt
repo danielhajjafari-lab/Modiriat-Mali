@@ -45,11 +45,7 @@ data class MoneyTransaction(
     val date: String
 )
 
-class FinanceDb(context: Context) : SQLiteOpenHelper(context, "finance.db", null, 1) {
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(
-            "CREATE TABLE transactions (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
 
 class FinanceDb(context: Context) :
     SQLiteOpenHelper(context, "finance.db", null, 2) {
