@@ -1994,70 +1994,72 @@ val soundPicker = rememberLauncherForActivityResult(
                     "صدای دلخواه انتخاب شده است",
                     color = Green
                 )
-            }
-            if (soundUri.isNotBlank()) {
-    OutlinedButton(
-        onClick = {
-            scope.launch {
-                playBudgetAlert(
-                    context,
-                    BudgetAlert(
-                        id = 0,
-                        percentage = 0,
-                        enabled = true,
-                        alertType = "صدا",
-                        soundUri = soundUri,
-                        durationSeconds = 3,
-                        vibration = false
-                    )
-                )
-            }
-        },
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text("پخش آزمایشی صدا 🔊")
-    }
-            }
-        }Button(
-    onClick = {
-        val p = percentage.toIntOrNull()
-        val d = duration.toIntOrNull()
 
-        if (p != null && p in 1..100 && d != null && d in 1..60) {
-            val currentAlert = editingAlert
-
-            if (currentAlert != null) {
-                db.updateBudgetAlert(
-                    currentAlert.copy(
-                        percentage = p,
-                        alertType = alertType,
-                        soundUri = soundUri,
-                        durationSeconds = d,
-                        vibration = alertType != "بی‌صدا"
-                    )
-                )
-                editingAlert = null
-            } else {
-                db.addBudgetAlert(
-                    percentage = p,
-                    alertType = alertType,
-                    durationSeconds = d,
-                    vibration = alertType != "بی‌صدا",
-                    soundUri = soundUri
-                )
+                OutlinedButton(
+                    onClick = {
+                        scope.launch {
+                            playBudgetAlert(
+                                context,
+                                BudgetAlert(
+                                    id = 0,
+                                    percentage = 0,
+                                    enabled = true,
+                                    alertType = "صدا",
+                                    soundUri = soundUri,
+                                    durationSeconds = 3,
+                                    vibration = false
+                                )
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("پخش آزمایشی صدا 🔊")
+                }
             }
-
-            alerts = db.getBudgetAlerts()
-            percentage = "85"
-            duration = "5"
-            alertType = "صدا"
-            soundUri = ""
         }
-    },
-    modifier = Modifier.fillMaxWidth()
-) {
-    Text(if (editingAlert != null) "ذخیره ویرایش" else "افزودن هشدار")
+
+        Button(
+            onClick = {
+                val p = percentage.toIntOrNull()
+                val d = duration.toIntOrNull()
+
+                if (p != null && p in 1..100 && d != null && d in 1..60) {
+                    val currentAlert = editingAlert
+
+                    if (currentAlert != null) {
+                        db.updateBudgetAlert(
+                            currentAlert.copy(
+                                percentage = p,
+                                alertType = alertType,
+                                soundUri = soundUri,
+                                durationSeconds = d,
+                                vibration = alertType != "بی‌صدا"
+                            )
+                        )
+                        editingAlert = null
+                    } else {
+                        db.addBudgetAlert(
+                            percentage = p,
+                            alertType = alertType,
+                            durationSeconds = d,
+                            vibration = alertType != "بی‌صدا",
+                            soundUri = soundUri
+                        )
+                    }
+
+                    alerts = db.getBudgetAlerts()
+                    percentage = "85"
+                    duration = "5"
+                    alertType = "صدا"
+                    soundUri = ""
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(if (editingAlert != null) "ذخیره ویرایش" else "افزودن هشدار")
         }
+
 if (editingAlert != null) {
     OutlinedButton(
         onClick = {
