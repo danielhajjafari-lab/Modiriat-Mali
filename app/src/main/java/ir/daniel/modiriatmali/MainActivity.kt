@@ -50,22 +50,161 @@ class FinanceDb(context: Context) : SQLiteOpenHelper(context, "finance.db", null
         db.execSQL(
             "CREATE TABLE transactions (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+
+class FinanceDb(context: Context) :
+    SQLiteOpenHelper(context, "finance.db", null, 2) {
+
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE transactions (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "type TEXT NOT NULL, amount INTEGER NOT NULL, " +
                 "category TEXT NOT NULL, note TEXT NOT NULL, date TEXT NOT NULL)"
         )
+        createCategoriesTable(db)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(
+        db: SQLiteDatabase,
+        oldVersion: Int,
+        newVersion: Int
+    ) {
+        if (oldVersion < 2) {
+            createCategoriesTable(db)
+        }
+    }
 
-    fun add(type: String, amount: Long, category: String, note: String) {
+    private fun createCategoriesTable(db: SQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS categories (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "type TEXT NOT NULL, " +
+                "name TEXT NOT NULL, " +
+                "UNIQUE(type, name))"
+        )
+
+        val incomeCategories = listOf(
+            "حقوق", "پاداش", "فروش", "هدیه", "سود سرمایه‌گذاری", "سایر"
+        )
+
+        val expenseCategories = listOf(
+            "خوراک", "حمل‌ونقل", "خرید", "قبض و خدمات",
+            "درمان", "پوشاک", "تفریح", "آموزش",
+            "اجاره و مسکن", "قسط و بدهی", "سایر"
+        )
+
+        incomeCategories.forEach {
+            insertCategory(db, "درآمد", it)
+        }
+
+        expenseCategories.forEach {
+            insertCategory(db, "هزینه", it)
+        }
+    }
+
+    private fun insertCategory(
+        db: SQLiteDatabase,
+        type: String,
+        name: String
+    ) {
+        val values = ContentValues().apply {
+            put("type", type)
+            put("name", name)
+        }
+
+        db.insertWithOnConflict(
+            "categories",
+            null,
+            values,
+            SQLiteDatabase.CONFLICT_IGNORE
+        )
+    }
+
+    fun getCategories(type: String): List<String> {
+        val result = mutableListOf<String>()
+
+        readableDatabase.rawQuery(
+            "SELECT name FROM categories WHERE type = ? ORDER BY id ASC",
+            arrayOf(type)
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                result.add(cursor.getString(0))
+            }
+        }
+
+        return result
+    }
+
+    fun addCategory(type: String, name: String): Boolean {
+        if (name.isBlank()) return false
+
+        val values = ContentValues().apply {
+            put("type", type)
+            put("name", name.trim())
+        }
+
+        return writableDatabase.insertWithOnConflict(
+            "categories",
+            null,
+            values,
+            SQLiteDatabase.CONFLICT_IGNORE
+        ) != -1L
+    }
+
+    fun renameCategory(
+        type: String,
+        oldName: String,
+        newName: String
+    ): Boolean {
+        if (newName.isBlank()) return false
+
+        val values = ContentValues().apply {
+            put("name", newName.trim())
+        }
+
+        return writableDatabase.update(
+            "categories",
+            values,
+            "type = ? AND name = ?",
+            arrayOf(type, oldName)
+        ) > 0
+    }
+
+    fun deleteCategory(type: String, name: String): Boolean {
+        if (name == "سایر") return false
+
+        return writableDatabase.delete(
+            "categories",
+            "type = ? AND name = ?",
+            arrayOf(type, name)
+        ) > 0
+    }
+
+    fun add(
+        type: String,
+        amount: Long,
+        category: String,
+        note: String
+    ) {
         val values = ContentValues().apply {
             put("type", type)
             put("amount", amount)
             put("category", category)
             put("note", note)
-            put("date", SimpleDateFormat("yyyy/MM/dd HH:mm", Locale("fa", "IR")).format(Date()))
+            put(
+                "date",
+                SimpleDateFormat(
+                    "yyyy/MM/dd HH:mm",
+                    Locale("fa", "IR")
+                ).format(Date())
+            )
         }
-        writableDatabase.insertOrThrow("transactions", null, values)
+
+        writableDatabase.insertOrThrow(
+            "transactions",
+            null,
+            values
+        )
     }
 
     fun update(item: MoneyTransaction) {
@@ -74,6 +213,7 @@ class FinanceDb(context: Context) : SQLiteOpenHelper(context, "finance.db", null
             put("category", item.category)
             put("note", item.note)
         }
+
         writableDatabase.update(
             "transactions",
             values,
@@ -92,18 +232,26 @@ class FinanceDb(context: Context) : SQLiteOpenHelper(context, "finance.db", null
 
     fun all(): List<MoneyTransaction> {
         val result = mutableListOf<MoneyTransaction>()
+
         readableDatabase.rawQuery(
-            "SELECT id,type,amount,category,note,date FROM transactions ORDER BY id DESC", null
+            "SELECT id,type,amount,category,note,date " +
+                "FROM transactions ORDER BY id DESC",
+            null
         ).use { cursor ->
             while (cursor.moveToNext()) {
                 result.add(
                     MoneyTransaction(
-                        cursor.getLong(0), cursor.getString(1), cursor.getLong(2),
-                        cursor.getString(3), cursor.getString(4), cursor.getString(5)
+                        cursor.getLong(0),
+                        cursor.getString(1),
+                        cursor.getLong(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)
                     )
                 )
             }
         }
+
         return result
     }
 }
