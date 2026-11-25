@@ -573,8 +573,32 @@ private fun FinanceApp(db: FinanceDb) {
     var page by remember { mutableStateOf("خانه") }
     var transactionFilter by remember { mutableStateOf("همه") }
 var refresh by remember { mutableIntStateOf(0) }
+val context = LocalContext.current
+
 var pendingBudgetAlerts by remember {
     mutableStateOf<List<BudgetAlert>>(emptyList())
+}
+
+LaunchedEffect(pendingBudgetAlerts) {
+    if (pendingBudgetAlerts.isNotEmpty()) {
+        val today = SimpleDateFormat(
+            "yyyy/MM/dd",
+            Locale("fa", "IR")
+        ).format(Date())
+
+        pendingBudgetAlerts.forEach { alert ->
+            try {
+                playBudgetAlert(context, alert)
+            } catch (e: Exception) {
+                // جلوگیری از متوقف شدن برنامه در صورت خطای هشدار
+            } finally {
+                db.markBudgetAlertTriggered(alert.id, today)
+            }
+        }
+
+        pendingBudgetAlerts = emptyList()
+    }
+
 }
 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 val scope = rememberCoroutineScope() 
