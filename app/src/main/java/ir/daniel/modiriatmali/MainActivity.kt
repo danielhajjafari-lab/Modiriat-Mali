@@ -240,7 +240,49 @@ private fun createBudgetTables(db: SQLiteDatabase) {
             arrayOf(id.toString())
         ) > 0
     }
-    
+    fun markBudgetAlertTriggered(id: Long, date: String): Boolean {
+    val values = ContentValues().apply {
+        put("last_triggered_date", date)
+    }
+
+    return writableDatabase.update(
+        "budget_alerts",
+        values,
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+}
+
+fun getBudgetAlertsNotTriggeredToday(date: String): List<BudgetAlert> {
+    val result = mutableListOf<BudgetAlert>()
+
+    readableDatabase.rawQuery(
+        """
+        SELECT id, percentage, enabled, alert_type,
+               sound_uri, duration_seconds, vibration
+        FROM budget_alerts
+        WHERE enabled = 1 AND last_triggered_date != ?
+        ORDER BY percentage ASC
+        """.trimIndent(),
+        arrayOf(date)
+    ).use { cursor ->
+        while (cursor.moveToNext()) {
+            result.add(
+                BudgetAlert(
+                    id = cursor.getLong(0),
+                    percentage = cursor.getInt(1),
+                    enabled = cursor.getInt(2) == 1,
+                    alertType = cursor.getString(3),
+                    soundUri = cursor.getString(4),
+                    durationSeconds = cursor.getInt(5),
+                    vibration = cursor.getInt(6) == 1
+                )
+            )
+        }
+    }
+
+    return result
+}
 fun getDailyLimit(): Long {
     readableDatabase.rawQuery(
         "SELECT daily_limit FROM budget_settings WHERE id = 1",
