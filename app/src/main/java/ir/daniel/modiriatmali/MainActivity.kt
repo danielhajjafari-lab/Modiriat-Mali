@@ -240,72 +240,7 @@ private fun createBudgetTables(db: SQLiteDatabase) {
             arrayOf(id.toString())
         ) > 0
     }
-    return result
-    }
-    fun addBudgetAlert(
-    percentage: Int,
-    alertType: String = "صدا",
-    durationSeconds: Int = 5,
-    vibration: Boolean = true
-): Boolean {
-        fun updateBudgetAlert(alert: BudgetAlert): Boolean {
-         fun deleteBudgetAlert(id: Long): Boolean {
-             fun setBudgetAlertEnabled(
-    id: Long,
-    enabled: Boolean
-): Boolean {
-    val values = ContentValues().apply {
-        put("enabled", if (enabled) 1 else 0)
-    }
-
-    return writableDatabase.update(
-        "budget_alerts",
-        values,
-        "id = ?",
-        arrayOf(id.toString())
-    ) > 0
-             }
-    return writableDatabase.delete(
-        "budget_alerts",
-        "id = ?",
-        arrayOf(id.toString())
-    ) > 0
-         }   
-    if (alert.percentage !in 1..100) return false
-
-    val values = ContentValues().apply {
-        put("percentage", alert.percentage)
-        put("enabled", if (alert.enabled) 1 else 0)
-        put("alert_type", alert.alertType)
-        put("sound_uri", alert.soundUri)
-        put("duration_seconds", alert.durationSeconds.coerceAtLeast(1))
-        put("vibration", if (alert.vibration) 1 else 0)
-    }
-
-    return writableDatabase.update(
-        "budget_alerts",
-        values,
-        "id = ?",
-        arrayOf(alert.id.toString())
-    ) > 0
-        }
-    if (percentage !in 1..100) return false
-
-    val values = ContentValues().apply {
-        put("percentage", percentage)
-        put("enabled", 1)
-        put("alert_type", alertType)
-        put("sound_uri", "")
-        put("duration_seconds", durationSeconds.coerceAtLeast(1))
-        put("vibration", if (vibration) 1 else 0)
-    }
-
-    return writableDatabase.insert(
-        "budget_alerts",
-        null,
-        values
-    ) != -1L
-    }
+    
 fun getDailyLimit(): Long {
     readableDatabase.rawQuery(
         "SELECT daily_limit FROM budget_settings WHERE id = 1",
