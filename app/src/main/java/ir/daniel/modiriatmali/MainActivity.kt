@@ -1892,6 +1892,9 @@ private fun BudgetAlertsScreen(db: FinanceDb) {
     var percentage by remember { mutableStateOf("85") }
     var alertType by remember { mutableStateOf("صدا") }
     var duration by remember { mutableStateOf("5") }
+    var editingAlert by remember {
+    mutableStateOf<BudgetAlert?>(null)
+    }
 
     Column(
         modifier = Modifier
