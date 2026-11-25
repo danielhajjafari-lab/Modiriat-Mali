@@ -2041,6 +2041,7 @@ if (editingAlert != null) {
             percentage = "85"
             duration = "5"
             alertType = "صدا"
+            soundUri = ""
         },
         modifier = Modifier.fillMaxWidth()
     ) {
