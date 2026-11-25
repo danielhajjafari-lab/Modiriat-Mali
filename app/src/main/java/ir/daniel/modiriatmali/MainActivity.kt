@@ -330,7 +330,7 @@ MaterialTheme(
     )
 ) {
 
-    )) {
+
                 ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
