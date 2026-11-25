@@ -492,7 +492,65 @@ class MainActivity : ComponentActivity() {
         setContent { FinanceApp(db) }
     }
 }
+private suspend fun playBudgetAlert(
+    context: Context,
+    alert: BudgetAlert
+) {
+    val duration = alert.durationSeconds.coerceIn(1, 60)
 
+    var ringtone: android.media.Ringtone? = null
+    var vibrator: Vibrator? = null
+
+    try {
+        if (alert.alertType == "صدا") {
+            val soundUri = if (alert.soundUri.isNotBlank()) {
+                Uri.parse(alert.soundUri)
+            } else {
+                RingtoneManager.getDefaultUri(
+                    RingtoneManager.TYPE_NOTIFICATION
+                )
+            }
+
+            ringtone = RingtoneManager.getRingtone(
+                context,
+                soundUri
+            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ringtone?.isLooping = true
+            }
+
+            ringtone?.play()
+        }
+
+        if (alert.vibration) {
+            vibrator = if (Build.VERSION.SDK_INT >= 31) {
+                context.getSystemService(
+                    VibratorManager::class.java
+                ).defaultVibrator
+            } else {
+                context.getSystemService(
+                    Context.VIBRATOR_SERVICE
+                ) as Vibrator
+            }
+
+            if (vibrator.hasVibrator()) {
+                vibrator.vibrate(
+                    VibrationEffect.createWaveform(
+                        longArrayOf(0, 500, 300, 500),
+                        0
+                    )
+                )
+            }
+        }
+
+        delay(duration * 1000L)
+
+    } finally {
+        ringtone?.stop()
+        vibrator?.cancel()
+    }
+}
 private fun money(value: Long): String =
     NumberFormat.getInstance(Locale("fa", "IR")).format(value) + " تومان"
 
