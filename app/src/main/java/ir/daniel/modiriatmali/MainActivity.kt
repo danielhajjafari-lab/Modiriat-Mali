@@ -194,7 +194,30 @@ private fun createBudgetTables(db: SQLiteDatabase) {
         }
         return result
     }
+fun addBudgetAlert(
+    percentage: Int,
+    alertType: String = "صدا",
+    durationSeconds: Int = 5,
+    vibration: Boolean = true,
+    soundUri: String = ""
+): Boolean {
+    if (percentage !in 1..100) return false
 
+    val values = ContentValues().apply {
+        put("percentage", percentage)
+        put("enabled", 1)
+        put("alert_type", alertType)
+        put("sound_uri", soundUri)
+        put("duration_seconds", durationSeconds.coerceAtLeast(1))
+        put("vibration", if (vibration) 1 else 0)
+    }
+
+    return writableDatabase.insert(
+        "budget_alerts",
+        null,
+        values
+    ) != -1L
+}
     
 
     fun updateBudgetAlert(alert: BudgetAlert): Boolean {
