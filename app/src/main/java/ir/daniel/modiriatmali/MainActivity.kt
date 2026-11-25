@@ -1995,6 +1995,29 @@ val soundPicker = rememberLauncherForActivityResult(
                     color = Green
                 )
             }
+            if (soundUri.isNotBlank()) {
+    OutlinedButton(
+        onClick = {
+            scope.launch {
+                playBudgetAlert(
+                    context,
+                    BudgetAlert(
+                        id = 0,
+                        percentage = 0,
+                        enabled = true,
+                        alertType = "صدا",
+                        soundUri = soundUri,
+                        durationSeconds = 3,
+                        vibration = false
+                    )
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("پخش آزمایشی صدا 🔊")
+    }
+            }
         }Button(
     onClick = {
         val p = percentage.toIntOrNull()
