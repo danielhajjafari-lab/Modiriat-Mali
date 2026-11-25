@@ -1947,23 +1947,41 @@ private fun BudgetAlertsScreen(db: FinanceDb) {
         }
 
         Button(
-            onClick = {
-                val p = percentage.toIntOrNull()
-                val d = duration.toIntOrNull()
+    onClick = {
+        val p = percentage.toIntOrNull()
+        val d = duration.toIntOrNull()
 
-                if (p != null && p in 1..100 && d != null && d in 1..60) {
-                    db.addBudgetAlert(
+        if (p != null && p in 1..100 && d != null && d in 1..60) {
+            val currentAlert = editingAlert
+
+            if (currentAlert != null) {
+                db.updateBudgetAlert(
+                    currentAlert.copy(
                         percentage = p,
                         alertType = alertType,
                         durationSeconds = d,
                         vibration = alertType != "بی‌صدا"
                     )
-                    alerts = db.getBudgetAlerts()
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("افزودن هشدار")
+                )
+                editingAlert = null
+            } else {
+                db.addBudgetAlert(
+                    percentage = p,
+                    alertType = alertType,
+                    durationSeconds = d,
+                    vibration = alertType != "بی‌صدا"
+                )
+            }
+
+            alerts = db.getBudgetAlerts()
+            percentage = "85"
+            duration = "5"
+            alertType = "صدا"
+        }
+    },
+    modifier = Modifier.fillMaxWidth()
+) {
+    Text(if (editingAlert != null) "ذخیره ویرایش" else "افزودن هشدار")
         }
 
         Divider(color = Color.DarkGray)
