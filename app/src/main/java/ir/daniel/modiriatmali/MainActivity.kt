@@ -371,7 +371,7 @@ val scope = rememberCoroutineScope()
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit) {
-private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit) {
+
     var amountText by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
     var customCategory by remember { mutableStateOf("") }
