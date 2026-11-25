@@ -2098,6 +2098,7 @@ TextButton(
         percentage = alert.percentage.toString()
         alertType = alert.alertType
         duration = alert.durationSeconds.toString()
+        soundUri = alert.soundUri
     }
 ) {
     Text("ویرایش", color = Cyan)
