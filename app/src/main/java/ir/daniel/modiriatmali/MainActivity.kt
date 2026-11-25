@@ -404,7 +404,10 @@ val scope = rememberCoroutineScope()
                     }
                 } else if (page == "ثبت درآمد" || page == "ثبت هزینه") {
                     Text(page, color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                    TransactionForm(page, onSave = { amount, category, note ->
+                    TransactionForm(
+    page,
+    categories = db.getCategories(if (page == "ثبت درآمد") "درآمد" else "هزینه"),
+    onSave = { amount, category, note ->
                         db.add(if (page == "ثبت درآمد") "درآمد" else "هزینه", amount, category, note)
                         refresh++
                         page = "خانه"
@@ -427,6 +430,11 @@ val scope = rememberCoroutineScope()
                                     onDelete = { deleting = item }
                                 )
                             }
+                        }
+                        "دسته‌بندی‌ها" -> {
+    CategoryManager(db) {
+        refresh++
+    }
                         }
                         else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلاعات مالی شما در این نسخه در بخش ثبت تراکنش‌ها ذخیره می‌شود.")
                     }
@@ -512,16 +520,21 @@ val scope = rememberCoroutineScope()
     }
 }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit) {
-
+private fun TransactionForm(
+    page: String,
+    categories: List<String>,
+    onSave: (Long, String, String) -> Unit
+) {
     var amountText by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
     var customCategory by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
+
 
     val categories = if (page == "ثبت درآمد") {
         listOf("حقوق", "پاداش", "فروش", "هدیه", "سود سرمایه‌گذاری", "سایر")
@@ -623,6 +636,176 @@ private fun TransactionForm(page: String, onSave: (Long, String, String) -> Unit
         color = Color.LightGray,
         fontSize = 12.sp
     )
+}
+
+@Composable
+private fun CategoryManager(
+    db: FinanceDb,
+    onChanged: () -> Unit
+) {
+    var type by remember { mutableStateOf("هزینه") }
+    var refresh by remember { mutableIntStateOf(0) }
+    var newName by remember { mutableStateOf("") }
+    var editingName by remember { mutableStateOf<String?>(null) }
+    var editText by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+
+    val categories = remember(type, refresh) {
+        db.getCategories(type)
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = { type = "هزینه"; message = "" },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (type == "هزینه") Cyan else Panel
+                ),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("دسته‌های هزینه")
+            }
+
+            Button(
+                onClick = { type = "درآمد"; message = "" },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (type == "درآمد") Cyan else Panel
+                ),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("دسته‌های درآمد")
+            }
+        }
+
+        OutlinedTextField(
+            value = newName,
+            onValueChange = { newName = it; message = "" },
+            label = { Text("نام دسته جدید") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Button(
+            onClick = {
+                if (newName.isBlank()) {
+                    message = "نام دسته را وارد کن."
+                } else if (db.addCategory(type, newName.trim())) {
+                    newName = ""
+                    refresh++
+                    onChanged()
+                    message = "دسته جدید اضافه شد."
+                } else {
+                    message = "این دسته قبلاً وجود دارد."
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("افزودن دسته")
+        }
+
+        if (message.isNotBlank()) {
+            Text(message, color = Cyan)
+        }
+
+        Text(
+            "فهرست دسته‌های ${type}",
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
+
+        categories.forEach { name ->
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Panel
+                )
+            ) {
+                Row(
+                    Modifier.fillMaxWidth().padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row {
+                        IconButton(
+                            onClick = {
+                                editingName = name
+                                editText = name
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Edit,
+                                "ویرایش",
+                                tint = Cyan
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                if (db.deleteCategory(type, name)) {
+                                    refresh++
+                                    onChanged()
+                                    message = "دسته حذف شد."
+                                } else {
+                                    message = "دسته «سایر» قابل حذف نیست."
+                                }
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Delete,
+                                "حذف",
+                                tint = Red
+                            )
+                        }
+                    }
+
+                    Text(name, color = Color.White)
+                }
+            }
+        }
+    }
+
+    editingName?.let { oldName ->
+        AlertDialog(
+            onDismissRequest = { editingName = null },
+            title = { Text("تغییر نام دسته") },
+            text = {
+                OutlinedTextField(
+                    value = editText,
+                    onValueChange = { editText = it },
+                    label = { Text("نام جدید") },
+                    singleLine = true
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (editText.isNotBlank()) {
+                            if (db.renameCategory(
+                                    type,
+                                    oldName,
+                                    editText.trim()
+                                )
+                            ) {
+                                refresh++
+                                onChanged()
+                                message = "نام دسته تغییر کرد."
+                                editingName = null
+                            } else {
+                                message = "تغییر نام انجام نشد؛ شاید نام تکراری باشد."
+                            }
+                        }
+                    }
+                ) {
+                    Text("ذخیره")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { editingName = null }) {
+                    Text("انصراف")
+                }
+            },
+            containerColor = Panel
+        )
+    }
 }
 
 
