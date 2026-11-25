@@ -1897,7 +1897,17 @@ private fun BudgetAlertsScreen(db: FinanceDb) {
     var editingAlert by remember {
     mutableStateOf<BudgetAlert?>(null)
     }
+var soundUri by remember {
+    mutableStateOf("")
+}
 
+val soundPicker = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.OpenDocument()
+) { uri ->
+    if (uri != null) {
+        soundUri = uri.toString()
+    }
+}
     Column(
         modifier = Modifier
             .fillMaxSize()
