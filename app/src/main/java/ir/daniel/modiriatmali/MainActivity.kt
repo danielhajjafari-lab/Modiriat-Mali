@@ -1453,6 +1453,145 @@ private fun TransactionRow(
 
 
 @Composable
+private fun BudgetScreen(
+    db: FinanceDb,
+    transactions: List<MoneyTransaction>
+) {
+    var limitText by remember {
+        mutableStateOf(db.getDailyLimit().takeIf { it > 0 }?.toString() ?: "")
+    }
+    var message by remember { mutableStateOf("") }
+
+    val today = SimpleDateFormat(
+        "yyyy/MM/dd",
+        Locale("fa", "IR")
+    ).format(Date())
+
+    val todayExpenses = transactions
+        .filter {
+            it.type == "هزینه" &&
+            it.date.startsWith(today)
+        }
+        .sumOf { it.amount }
+
+    val dailyLimit = limitText.toLongOrNull() ?: 0L
+    val remaining = (dailyLimit - todayExpenses).coerceAtLeast(0L)
+
+    val progress = if (dailyLimit > 0) {
+        (todayExpenses.toFloat() / dailyLimit.toFloat()).coerceIn(0f, 1f)
+    } else {
+        0f
+    }
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Panel),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "سقف هزینه روزانه",
+                    color = Cyan,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                OutlinedTextField(
+                    value = limitText,
+                    onValueChange = {
+                        limitText = toEnglishDigits(it).filter(Char::isDigit)
+                        message = ""
+                    },
+                    label = { Text("مبلغ به تومان") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                Button(
+                    onClick = {
+                        val amount = limitText.toLongOrNull()
+                        if (amount == null || amount <= 0L) {
+                            message = "یک مبلغ معتبر وارد کن."
+                        } else {
+                            db.setDailyLimit(amount)
+                            message = "سقف هزینه روزانه ذخیره شد."
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("ذخیره سقف روزانه")
+                }
+
+                if (message.isNotBlank()) {
+                    Text(message, color = Cyan)
+                }
+            }
+        }
+
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Panel),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "وضعیت هزینه‌های امروز",
+                    color = Cyan,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text("مجموع هزینه امروز", color = Color.LightGray)
+                Text(
+                    money(todayExpenses),
+                    color = Red,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text("باقی‌مانده بودجه", color = Color.LightGray)
+                Text(
+                    if (dailyLimit > 0) money(remaining) else "سقف بودجه تعیین نشده",
+                    color = Green,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    if (dailyLimit > 0)
+                        "درصد مصرف: ${(todayExpenses.toDouble() / dailyLimit * 100).toInt()}٪"
+                    else "درصد مصرف: نامشخص",
+                    color = Color.White
+                )
+
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth(),
+                    color = if (todayExpenses >= dailyLimit && dailyLimit > 0) Red else Cyan,
+                    trackColor = Color(0xFF35445B)
+                )
+
+                if (dailyLimit > 0 && todayExpenses > dailyLimit) {
+                    Text(
+                        "هشدار: از سقف هزینه روزانه عبور کرده‌ای!",
+                        color = Red,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun EmptyCard(message: String) {
     Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(16.dp)) {
         Text(message, Modifier.fillMaxWidth().padding(22.dp), color = Color.LightGray, textAlign = TextAlign.Center)
