@@ -747,10 +747,43 @@ MaterialTheme(
     page,
     categories = db.getCategories(if (page == "ثبت درآمد") "درآمد" else "هزینه"),
     onSave = { amount, category, note ->
-                        db.add(if (page == "ثبت درآمد") "درآمد" else "هزینه", amount, category, note)
-                        refresh++
-                        page = "خانه"
-                    })
+    val transactionType =
+        if (page == "ثبت درآمد") "درآمد" else "هزینه"
+
+    db.add(transactionType, amount, category, note)
+
+    if (transactionType == "هزینه") {
+        val today = SimpleDateFormat(
+            "yyyy/MM/dd",
+            Locale("fa", "IR")
+        ).format(Date())
+
+        val dailyLimit = db.getDailyLimit()
+
+        if (dailyLimit > 0L) {
+            val todayExpenses = db.all()
+                .filter {
+                    it.type == "هزینه" &&
+                    it.date.startsWith(today)
+                }
+                .sumOf { it.amount }
+
+            val percentage = (
+                todayExpenses.toDouble() /
+                dailyLimit.toDouble() * 100
+            ).toInt().coerceAtLeast(0)
+
+            pendingBudgetAlerts =
+                db.getBudgetAlertsForPercentage(
+                    percentage,
+                    today
+                )
+        }
+    }
+
+    refresh++
+    page = "خانه"
+})
                 } else {
                     Text(page, color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     when (page) {
