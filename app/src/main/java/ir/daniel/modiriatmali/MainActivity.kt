@@ -1595,7 +1595,143 @@ private fun BudgetScreen(
         }
     }
 }
+@Composable
+private fun BudgetAlertsScreen(db: FinanceDb) {
+    var alerts by remember { mutableStateOf(db.getBudgetAlerts()) }
+    var percentage by remember { mutableStateOf("85") }
+    var alertType by remember { mutableStateOf("صدا") }
+    var duration by remember { mutableStateOf("5") }
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            "تنظیم هشدارهای بودجه",
+            color = Cyan,
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            "برای هر درصد مصرف بودجه می‌توانی هشدار جداگانه بسازی.",
+            color = Color.LightGray
+        )
+
+        OutlinedTextField(
+            value = percentage,
+            onValueChange = {
+                percentage = it.filter(Char::isDigit).take(3)
+            },
+            label = { Text("درصد هشدار (۱ تا ۱۰۰)") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = duration,
+            onValueChange = {
+                duration = it.filter(Char::isDigit).take(2)
+            },
+            label = { Text("مدت هشدار به ثانیه") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text("نوع هشدار", color = Color.White)
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            listOf("صدا", "فقط لرزش", "بی‌صدا").forEach { type ->
+                FilterChip(
+                    selected = alertType == type,
+                    onClick = { alertType = type },
+                    label = { Text(type) }
+                )
+            }
+        }
+
+        Button(
+            onClick = {
+                val p = percentage.toIntOrNull()
+                val d = duration.toIntOrNull()
+
+                if (p != null && p in 1..100 && d != null && d in 1..60) {
+                    db.addBudgetAlert(
+                        percentage = p,
+                        alertType = alertType,
+                        durationSeconds = d,
+                        vibration = alertType != "بی‌صدا"
+                    )
+                    alerts = db.getBudgetAlerts()
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("افزودن هشدار")
+        }
+
+        Divider(color = Color.DarkGray)
+
+        Text("هشدارهای ثبت‌شده", color = Cyan, fontSize = 18.sp)
+
+        if (alerts.isEmpty()) {
+            Text("هنوز هشداری ثبت نشده است.", color = Color.Gray)
+        }
+
+        alerts.forEach { alert ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Panel)
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        "${alert.percentage}٪ مصرف بودجه",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        "نوع: ${alert.alertType} | مدت: ${alert.durationSeconds} ثانیه",
+                        color = Color.LightGray
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Switch(
+                            checked = alert.enabled,
+                            onCheckedChange = {
+                                db.setBudgetAlertEnabled(alert.id, it)
+                                alerts = db.getBudgetAlerts()
+                            }
+                        )
+
+                        Text(
+                            if (alert.enabled) "فعال" else "غیرفعال",
+                            color = if (alert.enabled) Green else Color.Gray
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        TextButton(
+                            onClick = {
+                                db.deleteBudgetAlert(alert.id)
+                                alerts = db.getBudgetAlerts()
+                            }
+                        ) {
+                            Text("حذف", color = Red)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 @Composable
 private fun EmptyCard(message: String) {
     Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(16.dp)) {
