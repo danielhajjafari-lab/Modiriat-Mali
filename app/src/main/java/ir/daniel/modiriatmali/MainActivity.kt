@@ -536,11 +536,6 @@ private fun TransactionForm(
     var error by remember { mutableStateOf("") }
 
 
-    val categories = if (page == "ثبت درآمد") {
-        listOf("حقوق", "پاداش", "فروش", "هدیه", "سود سرمایه‌گذاری", "سایر")
-    } else {
-        listOf("خوراک", "حمل‌ونقل", "خرید", "قبض و خدمات", "درمان", "پوشاک", "تفریح", "آموزش", "اجاره و مسکن", "قسط و بدهی", "سایر")
-    }
 
     OutlinedTextField(
         value = amountText,
