@@ -1890,6 +1890,7 @@ private fun BudgetScreen(
 }
 @Composable
 private fun BudgetAlertsScreen(db: FinanceDb) {
+    val context = LocalContext.current
     var alerts by remember { mutableStateOf(db.getBudgetAlerts()) }
     var percentage by remember { mutableStateOf("85") }
     var alertType by remember { mutableStateOf("صدا") }
