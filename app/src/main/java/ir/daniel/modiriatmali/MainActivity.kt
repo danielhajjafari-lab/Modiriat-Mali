@@ -199,7 +199,7 @@ private fun createBudgetTables(db: SQLiteDatabase) {
         percentage: Int,
         alertType: String = "صدا",
         durationSeconds: Int = 5,
-        vibration: Boolean = true
+        vibration: Boolean = true,
         soundUri: String = ""
     ): Boolean {
         if (percentage !in 1..100) return false
