@@ -547,40 +547,52 @@ private fun TransactionForm(
         singleLine = true
     )
 
-    Box(Modifier.fillMaxWidth()) {
-        OutlinedTextField(
-            value = category,
-            onValueChange = {},
-            readOnly = true,
-            label = {
-                Text(if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه")
-            },
-            trailingIcon = {
-                Icon(Icons.Default.ArrowDropDown, contentDescription = "انتخاب دسته")
-            },
-            modifier = Modifier.fillMaxWidth().clickable {
-                expanded = true
-            },
-            singleLine = true
-        )
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            categories.forEach { item ->
-                DropdownMenuItem(
-                    text = { Text(item) },
-                    onClick = {
-                        category = item
-                        customCategory = ""
-                        expanded = false
-                        error = ""
-                    }
+    
+Box(Modifier.fillMaxWidth()) {
+    OutlinedTextField(
+        value = category,
+        onValueChange = {},
+        readOnly = true,
+        label = {
+            Text(if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه")
+        },
+        trailingIcon = {
+            IconButton(onClick = { expanded = true }) {
+                Icon(
+                    Icons.Default.ArrowDropDown,
+                    contentDescription = "باز کردن دسته‌بندی‌ها",
+                    tint = Cyan
                 )
             }
+        },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true
+    )
+
+    Box(
+        Modifier
+            .matchParentSize()
+            .clickable { expanded = true }
+    )
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        categories.forEach { item ->
+            DropdownMenuItem(
+                text = { Text(item) },
+                onClick = {
+                    category = item
+                    customCategory = ""
+                    expanded = false
+                    error = ""
+                }
+            )
         }
     }
+}
+
 
     if (category == "سایر") {
         OutlinedTextField(
