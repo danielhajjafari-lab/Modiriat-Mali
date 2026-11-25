@@ -48,7 +48,7 @@ data class MoneyTransaction(
 
 
 class FinanceDb(context: Context) :
-    SQLiteOpenHelper(context, "finance.db", null, 2) {
+    SQLiteOpenHelper(context, "finance.db", null, 3) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -58,6 +58,7 @@ class FinanceDb(context: Context) :
                 "category TEXT NOT NULL, note TEXT NOT NULL, date TEXT NOT NULL)"
         )
         createCategoriesTable(db)
+        createBudgetTables(db)
     }
 
     override fun onUpgrade(
@@ -66,10 +67,43 @@ class FinanceDb(context: Context) :
         newVersion: Int
     ) {
         if (oldVersion < 2) {
+            if (oldVersion < 3) {
+    createBudgetTables(db)
+            }
             createCategoriesTable(db)
         }
     }
+private fun createBudgetTables(db: SQLiteDatabase) {
+    db.execSQL(
+        "CREATE TABLE IF NOT EXISTS budget_settings (" +
+            "id INTEGER PRIMARY KEY CHECK(id = 1), " +
+            "daily_limit INTEGER NOT NULL DEFAULT 0)"
+    )
 
+    db.execSQL(
+        "INSERT OR IGNORE INTO budget_settings (id, daily_limit) VALUES (1, 0)"
+    )
+
+    db.execSQL(
+        "CREATE TABLE IF NOT EXISTS budget_alerts (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "percentage INTEGER NOT NULL, " +
+            "enabled INTEGER NOT NULL DEFAULT 1, " +
+            "alert_type TEXT NOT NULL DEFAULT 'صدا', " +
+            "sound_uri TEXT NOT NULL DEFAULT '', " +
+            "duration_seconds INTEGER NOT NULL DEFAULT 5, " +
+            "vibration INTEGER NOT NULL DEFAULT 1, " +
+            "last_triggered_date TEXT NOT NULL DEFAULT '')"
+    )
+
+    db.execSQL(
+        "INSERT OR IGNORE INTO budget_alerts (percentage) VALUES (85)"
+    )
+
+    db.execSQL(
+        "INSERT OR IGNORE INTO budget_alerts (percentage) VALUES (100)"
+    )
+}
     private fun createCategoriesTable(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS categories (" +
