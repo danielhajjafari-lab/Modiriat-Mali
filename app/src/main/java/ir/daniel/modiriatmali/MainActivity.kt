@@ -1983,7 +1983,19 @@ private fun BudgetAlertsScreen(db: FinanceDb) {
 ) {
     Text(if (editingAlert != null) "ذخیره ویرایش" else "افزودن هشدار")
         }
-
+if (editingAlert != null) {
+    OutlinedButton(
+        onClick = {
+            editingAlert = null
+            percentage = "85"
+            duration = "5"
+            alertType = "صدا"
+        },
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("لغو ویرایش")
+    }
+}
         Divider(color = Color.DarkGray)
 
         Text("هشدارهای ثبت‌شده", color = Cyan, fontSize = 18.sp)
