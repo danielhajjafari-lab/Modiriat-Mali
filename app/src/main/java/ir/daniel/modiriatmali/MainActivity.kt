@@ -507,6 +507,9 @@ private fun FinanceApp(db: FinanceDb) {
     var page by remember { mutableStateOf("خانه") }
     var transactionFilter by remember { mutableStateOf("همه") }
 var refresh by remember { mutableIntStateOf(0) }
+var pendingBudgetAlerts by remember {
+    mutableStateOf<List<BudgetAlert>>(emptyList())
+}
 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 val scope = rememberCoroutineScope() 
 
