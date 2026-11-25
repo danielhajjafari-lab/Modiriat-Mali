@@ -300,9 +300,36 @@ val scope = rememberCoroutineScope()
         "شخصی‌سازی", "پشتیبانی هوشمند", "پشتیبان‌گیری", "تنظیمات"
     )
 
-    MaterialTheme(colorScheme = darkColorScheme(
-        background = Night, surface = Panel, primary = Cyan, secondary = Purple,
-        onBackground = Color.White, onSurface = Color.White
+    
+MaterialTheme(
+    colorScheme = darkColorScheme(
+        primary = Cyan,
+        onPrimary = Night,
+        primaryContainer = Color(0xFF123746),
+        onPrimaryContainer = Color(0xFFB9F5FF),
+
+        secondary = Purple,
+        onSecondary = Night,
+        secondaryContainer = Color(0xFF30264F),
+        onSecondaryContainer = Color(0xFFE5DAFF),
+
+        tertiary = Green,
+        onTertiary = Night,
+
+        background = Night,
+        onBackground = Color.White,
+
+        surface = Panel,
+        onSurface = Color.White,
+        surfaceVariant = Color(0xFF1B2940),
+        onSurfaceVariant = Color(0xFFC3D0E2),
+
+        outline = Color(0xFF52647C),
+        error = Red,
+        onError = Night
+    )
+) {
+
     )) {
                 ModalNavigationDrawer(
             drawerState = drawerState,
@@ -488,7 +515,9 @@ val scope = rememberCoroutineScope()
                     dismissButton = {
                         TextButton(onClick = { editing = null }) { Text("انصراف") }
                     },
-                    containerColor = Panel
+                    containerColor = Color(0xFF17263D),
+tonalElevation = 8.dp,
+shape = RoundedCornerShape(24.dp)
                 )
             }
 
@@ -512,7 +541,9 @@ val scope = rememberCoroutineScope()
                     dismissButton = {
                         TextButton(onClick = { deleting = null }) { Text("انصراف") }
                     },
-                    containerColor = Panel
+                    containerColor = Color(0xFF17263D),
+tonalElevation = 8.dp,
+shape = RoundedCornerShape(24.dp)
                 )
             }
         }
@@ -542,19 +573,61 @@ private fun TransactionForm(
             amountText = toEnglishDigits(it).filter(Char::isDigit)
             error = ""
         },
-        label = { Text("مبلغ به تومان") },
-        modifier = Modifier.fillMaxWidth(),
-        singleLine = true
+        label = {
+    Text(
+        "مبلغ به تومان",
+        color = Cyan
+    )
+},
+modifier = Modifier.fillMaxWidth(),
+shape = RoundedCornerShape(16.dp),
+colors = OutlinedTextFieldDefaults.colors(
+    focusedBorderColor = Cyan,
+    unfocusedBorderColor = Color(0xFF52647C),
+    focusedLabelColor = Cyan,
+    unfocusedLabelColor = Color.LightGray,
+    cursorColor = Cyan,
+    focusedTextColor = Color.White,
+    unfocusedTextColor = Color.White
+),
+singleLine = true
     )
 
     
 Box(Modifier.fillMaxWidth()) {
-    OutlinedTextField(
-        value = category,
-        onValueChange = {},
-        readOnly = true,
-        label = {
-            Text(if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه")
+    
+OutlinedTextField(
+    value = category,
+    onValueChange = {},
+    readOnly = true,
+    label = {
+        Text(
+            if (page == "ثبت درآمد") "دسته درآمد" else "دسته هزینه"
+        )
+    },
+    trailingIcon = {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                Icons.Default.ArrowDropDown,
+                contentDescription = "انتخاب دسته",
+                tint = Cyan
+            )
+        }
+    },
+    modifier = Modifier.fillMaxWidth(),
+    shape = RoundedCornerShape(16.dp),
+    colors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Cyan,
+        unfocusedBorderColor = Color(0xFF52647C),
+        focusedLabelColor = Cyan,
+        unfocusedLabelColor = Color.LightGray,
+        cursorColor = Cyan,
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White
+    ),
+    singleLine = true
+)
+
         },
         trailingIcon = {
             IconButton(onClick = { expanded = true }) {
@@ -607,12 +680,26 @@ Box(Modifier.fillMaxWidth()) {
         )
     }
 
-    OutlinedTextField(
-        value = note,
-        onValueChange = { note = it },
-        label = { Text("توضیحات (اختیاری)") },
-        modifier = Modifier.fillMaxWidth()
+    
+OutlinedTextField(
+    value = note,
+    onValueChange = { note = it },
+    label = {
+        Text("توضیحات (اختیاری)")
+    },
+    modifier = Modifier.fillMaxWidth(),
+    shape = RoundedCornerShape(16.dp),
+    colors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Cyan,
+        unfocusedBorderColor = Color(0xFF52647C),
+        focusedLabelColor = Cyan,
+        unfocusedLabelColor = Color.LightGray,
+        cursorColor = Cyan,
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White
     )
+)
+
 
     if (error.isNotBlank()) Text(error, color = Red)
 
@@ -632,9 +719,22 @@ Box(Modifier.fillMaxWidth()) {
                 else -> onSave(amount, finalCategory, note.trim())
             }
         },
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text("ذخیره تراکنش")
+        modifier = Modifier
+    .fillMaxWidth(),
+shape = RoundedCornerShape(18.dp),
+colors = ButtonDefaults.buttonColors(
+    containerColor = Cyan,
+    contentColor = Night
+),
+elevation = ButtonDefaults.buttonElevation(
+    defaultElevation = 5.dp
+)
+) {
+    Text(
+        "ذخیره تراکنش",
+        fontWeight = FontWeight.Bold
+    )
+    }
     }
 
     Text(
@@ -949,15 +1049,51 @@ private fun AdvancedTransactionSearch(
         }
     }
 }
+
 @Composable
-private fun SummaryCard(title: String, amount: String, color: Color, modifier: Modifier) {
-    Card(modifier, colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(18.dp)) {
-        Column(Modifier.padding(14.dp).fillMaxWidth(), horizontalAlignment = Alignment.End) {
-            Text(title, color = Color.LightGray, fontSize = 12.sp)
-            Text(amount, color = color, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+private fun SummaryCard(
+    title: String,
+    amount: String,
+    color: Color,
+    modifier: Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF142238)
+        ),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 5.dp
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            color.copy(alpha = 0.35f)
+        )
+    ) {
+        Column(
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                title,
+                color = Color(0xFFB8C8DA),
+                fontSize = 13.sp
+            )
+            Text(
+                amount,
+                color = color,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 17.sp
+            )
         }
     }
 }
+
+
 
 @Composable
 private fun QuickAction(
@@ -967,14 +1103,47 @@ private fun QuickAction(
     modifier: Modifier,
     onClick: () -> Unit
 ) {
-    Card(modifier.clickable(onClick = onClick), colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(16.dp)) {
-        Column(Modifier.fillMaxWidth().padding(vertical = 14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(icon, null, tint = tint, modifier = Modifier.size(28.dp))
-            Spacer(Modifier.height(6.dp))
-            Text(label, color = Color.White, fontSize = 12.sp, textAlign = TextAlign.Center)
+    Card(
+        modifier = modifier
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF142238)
+        ),
+        shape = RoundedCornerShape(22.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 5.dp
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            tint.copy(alpha = 0.4f)
+        )
+    ) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier.size(34.dp)
+            )
+
+            Text(
+                label,
+                color = Color.White,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
+
+
 
 @Composable
 private fun TransactionRow(
@@ -982,36 +1151,85 @@ private fun TransactionRow(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(14.dp)) {
+    val accent = if (item.type == "درآمد") Green else Red
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF142238)
+        ),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        ),
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            accent.copy(alpha = 0.25f)
+        )
+    ) {
         Row(
-            Modifier.fillMaxWidth().padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row {
                 IconButton(onClick = onEdit) {
-                    Icon(Icons.Default.Edit, "ویرایش", tint = Cyan)
+                    Icon(
+                        Icons.Default.Edit,
+                        "ویرایش",
+                        tint = Cyan
+                    )
                 }
+
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, "حذف", tint = Red)
+                    Icon(
+                        Icons.Default.Delete,
+                        "حذف",
+                        tint = Red
+                    )
                 }
             }
+
             Column(
-                Modifier.weight(1f).padding(end = 6.dp),
-                horizontalAlignment = Alignment.End
+                Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Text(item.category, color = Color.White, fontWeight = FontWeight.SemiBold)
-                Text(item.date, color = Color.LightGray, fontSize = 11.sp)
-                if (item.note.isNotBlank()) Text(item.note, color = Color.LightGray, fontSize = 12.sp)
                 Text(
-                    (if (item.type == "درآمد") "+" else "−") + money(item.amount),
-                    color = if (item.type == "درآمد") Green else Red,
-                    fontWeight = FontWeight.Bold
+                    item.category,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                )
+
+                Text(
+                    item.date,
+                    color = Color(0xFF9EADC2),
+                    fontSize = 11.sp
+                )
+
+                if (item.note.isNotBlank()) {
+                    Text(
+                        item.note,
+                        color = Color.LightGray,
+                        fontSize = 12.sp
+                    )
+                }
+
+                Text(
+                    (if (item.type == "درآمد") "+" else "−") +
+                        money(item.amount),
+                    color = accent,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 15.sp
                 )
             }
         }
     }
 }
+
 
 @Composable
 private fun EmptyCard(message: String) {
