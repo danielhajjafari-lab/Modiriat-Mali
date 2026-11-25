@@ -1906,8 +1906,17 @@ val soundPicker = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.OpenDocument()
 ) { uri ->
     if (uri != null) {
-        soundUri = uri.toString()
+        try {
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            soundUri = uri.toString()
+        } catch (e: Exception) {
+            soundUri = uri.toString()
+        }
     }
+}
 }
     Column(
         modifier = Modifier
