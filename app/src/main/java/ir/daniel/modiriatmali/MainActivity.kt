@@ -2011,7 +2011,16 @@ private fun BudgetAlertsScreen(db: FinanceDb) {
                         )
 
                         Spacer(modifier = Modifier.weight(1f))
-
+TextButton(
+    onClick = {
+        editingAlert = alert
+        percentage = alert.percentage.toString()
+        alertType = alert.alertType
+        duration = alert.durationSeconds.toString()
+    }
+) {
+    Text("ویرایش", color = Cyan)
+}
                         TextButton(
                             onClick = {
                                 db.deleteBudgetAlert(alert.id)
