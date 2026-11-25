@@ -761,6 +761,63 @@ MaterialTheme(
             ) {
                 if (page == "خانه") {
                     Text("داشبورد مالی", color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    if (dailyBudgetLimit > 0L) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Panel
+        ),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                "بودجه روزانه",
+                color = Cyan,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    "مصرف‌شده: ${budgetPercentage}٪",
+                    color = budgetColor,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "سقف: ${money(dailyBudgetLimit)}",
+                    color = Color.LightGray
+                )
+            }
+
+            LinearProgressIndicator(
+                progress = { budgetProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp),
+                color = budgetColor,
+                trackColor = Color(0xFF26354D)
+            )
+
+            Text(
+                if (todayExpenses >= dailyBudgetLimit) {
+                    "بودجه امروز به پایان رسیده است."
+                } else {
+                    "مانده بودجه: ${money(dailyBudgetLimit - todayExpenses)}"
+                },
+                color = if (budgetPercentage >= 100) Red else Color.White,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+                    }
                     Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(22.dp)) {
                         Column(
                             Modifier.fillMaxWidth().padding(20.dp),
