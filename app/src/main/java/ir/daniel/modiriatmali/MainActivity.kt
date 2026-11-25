@@ -283,6 +283,41 @@ fun getBudgetAlertsNotTriggeredToday(date: String): List<BudgetAlert> {
 
     return result
 }
+fun getBudgetAlertsForPercentage(
+    currentPercentage: Int,
+    today: String
+): List<BudgetAlert> {
+    val result = mutableListOf<BudgetAlert>()
+
+    readableDatabase.rawQuery(
+        """
+        SELECT id, percentage, enabled, alert_type,
+               sound_uri, duration_seconds, vibration
+        FROM budget_alerts
+        WHERE enabled = 1
+          AND percentage <= ?
+          AND last_triggered_date != ?
+        ORDER BY percentage ASC
+        """.trimIndent(),
+        arrayOf(currentPercentage.toString(), today)
+    ).use { cursor ->
+        while (cursor.moveToNext()) {
+            result.add(
+                BudgetAlert(
+                    id = cursor.getLong(0),
+                    percentage = cursor.getInt(1),
+                    enabled = cursor.getInt(2) == 1,
+                    alertType = cursor.getString(3),
+                    soundUri = cursor.getString(4),
+                    durationSeconds = cursor.getInt(5),
+                    vibration = cursor.getInt(6) == 1
+                )
+            )
+        }
+    }
+
+    return result
+}
 fun getDailyLimit(): Long {
     readableDatabase.rawQuery(
         "SELECT daily_limit FROM budget_settings WHERE id = 1",
