@@ -637,7 +637,38 @@ val monthlyBalance = monthlyIncome - monthlyExpenses
         "جستجو و تاریخچه", "بودجه‌بندی", "تنظیم هشدارها", "قفل بخش‌های خصوصی",
         "شخصی‌سازی", "پشتیبانی هوشمند", "پشتیبان‌گیری", "تنظیمات"
     )
+val todayDate = SimpleDateFormat(
+    "yyyy/MM/dd",
+    Locale("fa", "IR")
+).format(Date())
 
+val dailyBudgetLimit = db.getDailyLimit()
+
+val todayExpenses = transactions
+    .filter {
+        it.type == "هزینه" &&
+        it.date.startsWith(todayDate)
+    }
+    .sumOf { it.amount }
+
+val budgetPercentage = if (dailyBudgetLimit > 0L) {
+    (todayExpenses.toDouble() / dailyBudgetLimit * 100).toInt()
+} else {
+    0
+}
+
+val budgetProgress = if (dailyBudgetLimit > 0L) {
+    (todayExpenses.toFloat() / dailyBudgetLimit.toFloat())
+        .coerceIn(0f, 1f)
+} else {
+    0f
+}
+
+val budgetColor = when {
+    budgetPercentage >= 100 -> Red
+    budgetPercentage >= 85 -> Color(0xFFFF9800)
+    else -> Green
+}
     
 MaterialTheme(
     colorScheme = darkColorScheme(
