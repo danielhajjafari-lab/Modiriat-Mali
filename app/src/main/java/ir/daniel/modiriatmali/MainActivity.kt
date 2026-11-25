@@ -161,30 +161,85 @@ private fun createBudgetTables(db: SQLiteDatabase) {
             SQLiteDatabase.CONFLICT_IGNORE
         )
     }
-    fun getBudgetAlerts(): List<BudgetAlert> {
-    val result = mutableListOf<BudgetAlert>()
+        fun getBudgetAlerts(): List<BudgetAlert> {
+        val result = mutableListOf<BudgetAlert>()
 
-    readableDatabase.rawQuery(
-        "SELECT id, percentage, enabled, alert_type, " +
-            "sound_uri, duration_seconds, vibration " +
-            "FROM budget_alerts ORDER BY percentage ASC, id ASC",
-        null
-    ).use { cursor ->
-        while (cursor.moveToNext()) {
-            result.add(
-                BudgetAlert(
-                    id = cursor.getLong(0),
-                    percentage = cursor.getInt(1),
-                    enabled = cursor.getInt(2) == 1,
-                    alertType = cursor.getString(3),
-                    soundUri = cursor.getString(4),
-                    durationSeconds = cursor.getInt(5),
-                    vibration = cursor.getInt(6) == 1
+        readableDatabase.rawQuery(
+            "SELECT id, percentage, enabled, alert_type, sound_uri, duration_seconds, vibration FROM budget_alerts ORDER BY percentage ASC, id ASC",
+            null
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                result.add(
+                    BudgetAlert(
+                        id = cursor.getLong(0),
+                        percentage = cursor.getInt(1),
+                        enabled = cursor.getInt(2) == 1,
+                        alertType = cursor.getString(3),
+                        soundUri = cursor.getString(4),
+                        durationSeconds = cursor.getInt(5),
+                        vibration = cursor.getInt(6) == 1
+                    )
                 )
-            )
+            }
         }
+        return result
     }
 
+    fun addBudgetAlert(
+        percentage: Int,
+        alertType: String = "صدا",
+        durationSeconds: Int = 5,
+        vibration: Boolean = true
+    ): Boolean {
+        if (percentage !in 1..100) return false
+
+        val values = ContentValues().apply {
+            put("percentage", percentage)
+            put("enabled", 1)
+            put("alert_type", alertType)
+            put("sound_uri", "")
+            put("duration_seconds", durationSeconds.coerceAtLeast(1))
+            put("vibration", if (vibration) 1 else 0)
+        }
+
+        return writableDatabase.insert("budget_alerts", null, values) != -1L
+    }
+
+    fun updateBudgetAlert(alert: BudgetAlert): Boolean {
+        if (alert.percentage !in 1..100) return false
+
+        val values = ContentValues().apply {
+            put("percentage", alert.percentage)
+            put("enabled", if (alert.enabled) 1 else 0)
+            put("alert_type", alert.alertType)
+            put("sound_uri", alert.soundUri)
+            put("duration_seconds", alert.durationSeconds.coerceAtLeast(1))
+            put("vibration", if (alert.vibration) 1 else 0)
+        }
+
+        return writableDatabase.update(
+            "budget_alerts", values, "id = ?",
+            arrayOf(alert.id.toString())
+        ) > 0
+    }
+
+    fun deleteBudgetAlert(id: Long): Boolean {
+        return writableDatabase.delete(
+            "budget_alerts", "id = ?",
+            arrayOf(id.toString())
+        ) > 0
+    }
+
+    fun setBudgetAlertEnabled(id: Long, enabled: Boolean): Boolean {
+        val values = ContentValues().apply {
+            put("enabled", if (enabled) 1 else 0)
+        }
+
+        return writableDatabase.update(
+            "budget_alerts", values, "id = ?",
+            arrayOf(id.toString())
+        ) > 0
+    }
     return result
     }
     fun addBudgetAlert(
