@@ -3,6 +3,13 @@ package ir.daniel.modiriatmali
 import android.content.ContentValues
 import kotlinx.coroutines.launch
 import android.content.Context
+import android.media.RingtoneManager
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.net.Uri
+import kotlinx.coroutines.delay
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
