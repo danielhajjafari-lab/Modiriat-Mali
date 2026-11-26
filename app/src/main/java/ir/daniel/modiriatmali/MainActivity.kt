@@ -953,8 +953,10 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     "بودجه امروز به پایان رسیده است."
                 } else {
                     "مانده بودجه: ${money(dailyBudgetLimit - todayExpenses)}"
-                },
-                color = if (budgetPercentage >= 100) Red else Color.White,
+                },color = if (budgetPercentage >= 100)
+    Red
+else
+    MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Medium
             )
         }
