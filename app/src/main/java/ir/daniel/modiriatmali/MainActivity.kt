@@ -3125,7 +3125,7 @@ private fun ReportScreen(
     Column(
         modifier = Modifier
     .fillMaxWidth()
-    .padding(16.dp),,
+    .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
