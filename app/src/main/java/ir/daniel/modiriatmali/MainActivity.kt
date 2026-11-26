@@ -2255,3 +2255,101 @@ private fun EmptyCard(message: String) {
         Text(message, Modifier.fillMaxWidth().padding(22.dp), color = Color.LightGray, textAlign = TextAlign.Center)
     }
 }
+@Composable
+private fun AppThemeScreen(
+    selectedThemeId: String,
+    onThemeSelected: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Text(
+            "شخصی‌سازی ظاهر برنامه",
+            color = Cyan,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            "قالب مورد علاقه‌ات رو انتخاب کن.",
+            color = Color.LightGray
+        )
+
+        appThemePresets.forEach { preset ->
+            val selected = selectedThemeId == preset.id
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onThemeSelected(preset.id)
+                    },
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = preset.surface
+                ),
+                border = if (selected) {
+                    androidx.compose.foundation.BorderStroke(
+                        2.dp,
+                        preset.primary
+                    )
+                } else null
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            preset.name,
+                            color = preset.primary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+
+                        if (selected) {
+                            Icon(
+                                Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = preset.primary
+                            )
+                        }
+                    }
+
+                    Text(
+                        preset.description,
+                        color = if (preset.id == "light")
+                            Color.DarkGray else Color.LightGray
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        listOf(
+                            preset.background,
+                            preset.surface,
+                            preset.primary,
+                            preset.secondary
+                        ).forEach { color ->
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .background(
+                                        color,
+                                        RoundedCornerShape(10.dp)
+                                    )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
