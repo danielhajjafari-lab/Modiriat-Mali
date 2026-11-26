@@ -2319,7 +2319,10 @@ TextButton(
                                 alerts = db.getBudgetAlerts()
                             }
                         ) {
-                            Text("حذف", color = Red)
+                            Text(
+    "حذف",
+    color = Red
+)
                         }
                     }
                 }
