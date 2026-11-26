@@ -249,6 +249,18 @@ private fun createDebtsTable(db: SQLiteDatabase) {
         """.trimIndent()
     )
 }
+private fun createBanksTable(db: SQLiteDatabase) {
+    db.execSQL(
+        """
+        CREATE TABLE IF NOT EXISTS banks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            account_number TEXT NOT NULL DEFAULT '',
+            balance INTEGER NOT NULL DEFAULT 0
+        )
+        """.trimIndent()
+    )
+}
     private fun createCategoriesTable(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS categories (" +
