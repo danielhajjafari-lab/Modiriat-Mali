@@ -1554,7 +1554,7 @@ else MaterialTheme.colorScheme.surfaceVariant
                             Icon(
                                 Icons.Default.Edit,
                                 "ویرایش",
-                                tint = Cyan
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
 
