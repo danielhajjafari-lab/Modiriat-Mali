@@ -1621,7 +1621,7 @@ private fun CategoryManager(
                     Text("انصراف")
                 }
             },
-            containerColor = Panel
+            containerColor = MaterialTheme.colorScheme.surface
         )
     }
 }
