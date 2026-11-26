@@ -1406,7 +1406,7 @@ OutlinedTextField(
         unfocusedBorderColor = Color(0xFF52647C),
         focusedLabelColor = MaterialTheme.colorScheme.primary,
         unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        cursorColor = Cyan,
+        cursorColor = MaterialTheme.colorScheme.primary,
         focusedTextColor = MaterialTheme.colorScheme.onSurface,
 unfocusedTextColor = MaterialTheme.colorScheme.onSurface
     )
