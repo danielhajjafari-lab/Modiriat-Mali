@@ -1496,6 +1496,11 @@ alerts.forEach { alert ->
         refresh++
     }
                         }
+                        "مدیریت بانک‌ها" -> {
+    BankManagementScreen(db, refresh) {
+        refresh++
+    }
+                        }
                         "ماشین‌حساب" -> {
     FinanceCalculator()
                         }
