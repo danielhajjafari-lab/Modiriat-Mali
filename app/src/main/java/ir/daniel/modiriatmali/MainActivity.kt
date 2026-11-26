@@ -2279,7 +2279,7 @@ if (editingAlert != null) {
 
                     Text(
                         "نوع: ${alert.alertType} | مدت: ${alert.durationSeconds} ثانیه",
-                        color = Color.LightGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Row(
