@@ -924,19 +924,19 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
             )
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    "مصرف‌شده: ${budgetPercentage}٪",
-                    color = budgetColor,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-    "سقف: ${money(dailyBudgetLimit)}",
-    color = MaterialTheme.colorScheme.onSurfaceVariant
-)
-                )
+    modifier = Modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
+    Text(
+        "مصرف‌شده: ${budgetPercentage}٪",
+        color = budgetColor,
+        fontWeight = FontWeight.Bold
+    )
+
+    Text(
+        "سقف: ${money(dailyBudgetLimit)}",
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
             }
 
             LinearProgressIndicator(
