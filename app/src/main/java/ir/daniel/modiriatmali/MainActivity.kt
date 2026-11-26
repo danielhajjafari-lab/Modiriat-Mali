@@ -998,11 +998,33 @@ MaterialTheme(
                 dailyLimit.toDouble() * 100
             ).toInt().coerceAtLeast(0)
 
-            pendingBudgetAlerts =
-                db.getBudgetAlertsForPercentage(
-                    percentage,
-                    today
-                )
+            
+val alerts = db.getBudgetAlertsForPercentage(
+    percentage,
+    today
+)
+
+alerts.forEach { alert ->
+    val data = Data.Builder()
+        .putLong("alert_id", alert.id)
+        .putInt("percentage", alert.percentage)
+        .putString("alert_type", alert.alertType)
+        .putString("sound_uri", alert.soundUri)
+        .putInt("duration", alert.durationSeconds)
+        .putBoolean("vibration", alert.vibration)
+        .build()
+
+    val request = OneTimeWorkRequestBuilder<BudgetAlertWorker>()
+        .setInputData(data)
+        .build()
+
+    WorkManager.getInstance(context).enqueueUniqueWork(
+        "budget-alert-${alert.id}-$today",
+        ExistingWorkPolicy.KEEP,
+        request
+    )
+}
+
         }
     }
 
