@@ -1532,7 +1532,9 @@ alerts.forEach { alert ->
 "تنظیم هشدارها" -> {
     BudgetAlertsScreen(db)
 }
-
+"تنظیمات" -> {
+    SettingsScreen(themePreferences)
+}
 "شخصی‌سازی" -> {
     AppThemeScreen(
         selectedThemeId = selectedThemeId,
