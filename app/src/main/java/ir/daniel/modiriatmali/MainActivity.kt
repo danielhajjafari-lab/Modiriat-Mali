@@ -972,7 +972,12 @@ else
     color = MaterialTheme.colorScheme.onSurfaceVariant,
     fontSize = 14.sp
 )
-                            Text(money(income - expenses), color = Color.White, fontSize = 27.sp, fontWeight = FontWeight.Bold)
+                            Text(
+    money(income - expenses),
+    color = MaterialTheme.colorScheme.onSurface,
+    fontSize = 27.sp,
+    fontWeight = FontWeight.Bold
+)
                             Text("بر اساس تراکنش‌های ثبت‌شده در این دستگاه", color = Cyan, fontSize = 11.sp)
                         }
                     }
