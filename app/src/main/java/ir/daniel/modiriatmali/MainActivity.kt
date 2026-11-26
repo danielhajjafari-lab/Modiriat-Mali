@@ -1024,7 +1024,7 @@ else
             }
         }
 
-        HorizontalDivider(color = Color(0xFF26354D))
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Text(
             "خالص ماه: ${money(monthlyBalance)}",
