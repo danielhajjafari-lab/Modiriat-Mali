@@ -1488,7 +1488,8 @@ else MaterialTheme.colorScheme.surfaceVariant
             Button(
                 onClick = { type = "درآمد"; message = "" },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (type == "درآمد") Cyan else Panel
+                    containerColor = if (type == "درآمد") MaterialTheme.colorScheme.primary
+else MaterialTheme.colorScheme.surfaceVariant
                 ),
                 modifier = Modifier.weight(1f)
             ) {
