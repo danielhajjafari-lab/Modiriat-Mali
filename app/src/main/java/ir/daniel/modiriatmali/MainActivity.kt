@@ -1317,8 +1317,8 @@ colors = OutlinedTextFieldDefaults.colors(
     focusedLabelColor = Cyan,
     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
     cursorColor = Cyan,
-    focusedTextColor = Color.White,
-    unfocusedTextColor = Color.White
+    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+unfocusedTextColor = MaterialTheme.colorScheme.onSurface
 ),
 singleLine = true
     )
