@@ -2053,7 +2053,10 @@ Text(
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
-                    color = if (todayExpenses >= dailyLimit && dailyLimit > 0) Red else Cyan,
+                    color = if (todayExpenses >= dailyLimit && dailyLimit > 0)
+    Red
+else
+    MaterialTheme.colorScheme.primary,
                     trackColor = Color(0xFF35445B)
                 )
 
