@@ -994,7 +994,7 @@ private fun applyLauncherIcon(context: Context, iconId: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FinanceApp(db: FinanceDb) {
-    var page by remember { mutableStateOf("خانه") }
+    
     var transactionFilter by remember { mutableStateOf("همه") }
 var refresh by remember { mutableIntStateOf(0) }
 val context = LocalContext.current
@@ -1005,7 +1005,13 @@ val themePreferences = remember {
         Context.MODE_PRIVATE
     )
 }
+var page by remember {
+    mutableStateOf(
+        themePreferences.getString("start_page", "خانه") ?: "خانه"
+    )
+}
 
+val confirmDelete = themePreferences.getBoolean("confirm_delete", true)
 var selectedThemeId by remember {
     mutableStateOf(
         themePreferences.getString("theme_id", "neon") ?: "neon"
@@ -1402,7 +1408,14 @@ labelColor = MaterialTheme.colorScheme.onSurface
                                     editNote = item.note
                                     editError = ""
                                 },
-                                onDelete = { deleting = item }
+                                onDelete = {
+    if (confirmDelete) {
+        deleting = item
+    } else {
+        db.delete(item.id)
+        refresh++
+    }
+                                }
                             )
                         }
                     }
@@ -1515,7 +1528,13 @@ alerts.forEach { alert ->
             editError = ""
         },
         onDelete = { item ->
-            deleting = item
+    if (confirmDelete) {
+        deleting = item
+    } else {
+        db.delete(item.id)
+        refresh++
+    }
+        }
         }
     )
                         }
