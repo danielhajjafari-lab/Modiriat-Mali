@@ -1113,6 +1113,7 @@ val monthlyBalance = monthlyIncome - monthlyExpenses
     monthlyTransactions,
     currentMonth,
     currency
+            dateFormat
 )
     }
     }
@@ -4146,6 +4147,7 @@ private fun createMonthlyPdf(
     transactions: List<MoneyTransaction>,
     month: String,
     currency: String
+    dateFormat: String
 ) {
     val document = PdfDocument()
 
@@ -4240,7 +4242,7 @@ private fun createMonthlyPdf(
                     writeLine("توضیحات: ${item.note}")
                 }
 
-                writeLine("تاریخ: ${item.date}")
+                writeLine("تاریخ: ${formatDisplayDate(item.date, dateFormat)}")
                 writeLine("----------------------------------------")
             }
         }
