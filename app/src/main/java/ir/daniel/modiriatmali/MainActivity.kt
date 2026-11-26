@@ -1435,8 +1435,8 @@ unfocusedTextColor = MaterialTheme.colorScheme.onSurface
     .fillMaxWidth(),
 shape = RoundedCornerShape(18.dp),
 colors = ButtonDefaults.buttonColors(
-    containerColor = Cyan,
-    contentColor = Night
+    containerColor = MaterialTheme.colorScheme.primary,
+contentColor = MaterialTheme.colorScheme.onPrimary
 ),
 elevation = ButtonDefaults.buttonElevation(
     defaultElevation = 5.dp
