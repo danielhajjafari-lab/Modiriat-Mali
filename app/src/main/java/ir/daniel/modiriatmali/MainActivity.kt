@@ -1683,8 +1683,7 @@ private fun AdvancedTransactionSearch(
             singleLine = true
         )
 
-        Text("نوع تراکنش", color = Color.White)
-
+        Text("نوع تراکنش", color = MaterialTheme.colorScheme.onSurface)
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
