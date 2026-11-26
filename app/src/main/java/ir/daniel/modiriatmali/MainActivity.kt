@@ -235,6 +235,7 @@ class FinanceDb(context: Context) :
     if (oldVersion < 7) {
     createBanksTable(db)
     }
+ }
  
     
 private fun createBudgetTables(db: SQLiteDatabase) {
