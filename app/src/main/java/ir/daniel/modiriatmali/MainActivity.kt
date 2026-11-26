@@ -918,7 +918,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
         ) {
             Text(
                 "بودجه روزانه",
-                color = Cyan,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Bold
             )
