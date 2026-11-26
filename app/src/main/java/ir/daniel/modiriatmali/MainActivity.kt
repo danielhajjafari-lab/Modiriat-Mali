@@ -778,34 +778,50 @@ val budgetColor = when {
     else -> Green
 }
     
-MaterialTheme(
-    colorScheme = darkColorScheme(
-        primary = Cyan,
+
+val appColorScheme = if (selectedThemeId == "light") {
+    lightColorScheme(
+        primary = activeTheme.primary,
+        onPrimary = Color.White,
+        secondary = activeTheme.secondary,
+        onSecondary = Color.White,
+        tertiary = Green,
+        background = activeTheme.background,
+        onBackground = Color(0xFF1A2230),
+        surface = activeTheme.surface,
+        onSurface = Color(0xFF1A2230),
+        surfaceVariant = Color(0xFFE5EAF2),
+        onSurfaceVariant = Color(0xFF465365),
+        outline = Color(0xFF8290A3),
+        error = Red,
+        onError = Color.White
+    )
+} else {
+    darkColorScheme(
+        primary = activeTheme.primary,
         onPrimary = Night,
         primaryContainer = Color(0xFF123746),
         onPrimaryContainer = Color(0xFFB9F5FF),
-
-        secondary = Purple,
+        secondary = activeTheme.secondary,
         onSecondary = Night,
         secondaryContainer = Color(0xFF30264F),
         onSecondaryContainer = Color(0xFFE5DAFF),
-
         tertiary = Green,
         onTertiary = Night,
-
-        background = Night,
+        background = activeTheme.background,
         onBackground = Color.White,
-
-        surface = Panel,
+        surface = activeTheme.surface,
         onSurface = Color.White,
         surfaceVariant = Color(0xFF1B2940),
         onSurfaceVariant = Color(0xFFC3D0E2),
-
         outline = Color(0xFF52647C),
         error = Red,
         onError = Night
     )
-) {
+}
+
+MaterialTheme(colorScheme = appColorScheme) {
+
 
 
                 ModalNavigationDrawer(
