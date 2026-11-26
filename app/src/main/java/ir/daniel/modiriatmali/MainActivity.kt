@@ -2750,6 +2750,196 @@ private fun EmptyCard(message: String) {
     }
 }
 @Composable
+private fun SettingsScreen(
+    preferences: android.content.SharedPreferences
+) {
+    var currency by remember {
+        mutableStateOf(preferences.getString("currency", "تومان") ?: "تومان")
+    }
+
+    var startPage by remember {
+        mutableStateOf(preferences.getString("start_page", "خانه") ?: "خانه")
+    }
+
+    var confirmDelete by remember {
+        mutableStateOf(preferences.getBoolean("confirm_delete", true))
+    }
+
+    var dateFormat by remember {
+        mutableStateOf(preferences.getString("date_format", "شمسی") ?: "شمسی")
+    }
+
+    var showResetDialog by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf("") }
+
+    val startPages = listOf(
+        "خانه",
+        "ثبت درآمد",
+        "ثبت هزینه",
+        "مدیریت بانک‌ها",
+        "قرض و بدهی",
+        "پس‌انداز"
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            "تنظیمات عمومی",
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Card {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("واحد پول", fontWeight = FontWeight.Bold)
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(
+                        selected = currency == "تومان",
+                        onClick = {
+                            currency = "تومان"
+                            preferences.edit().putString("currency", currency).apply()
+                        },
+                        label = { Text("تومان") }
+                    )
+
+                    FilterChip(
+                        selected = currency == "ریال",
+                        onClick = {
+                            currency = "ریال"
+                            preferences.edit().putString("currency", currency).apply()
+                        },
+                        label = { Text("ریال") }
+                    )
+                }
+
+                HorizontalDivider()
+
+                Text("صفحه شروع برنامه", fontWeight = FontWeight.Bold)
+
+                startPages.forEach { item ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = startPage == item,
+                            onClick = {
+                                startPage = item
+                                preferences.edit().putString("start_page", item).apply()
+                            }
+                        )
+                        Text(item)
+                    }
+                }
+
+                HorizontalDivider()
+
+                Text("تأیید قبل از حذف اطلاعات", fontWeight = FontWeight.Bold)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(if (confirmDelete) "فعال" else "غیرفعال")
+                    Switch(
+                        checked = confirmDelete,
+                        onCheckedChange = {
+                            confirmDelete = it
+                            preferences.edit().putBoolean("confirm_delete", it).apply()
+                        }
+                    )
+                }
+
+                HorizontalDivider()
+
+                Text("فرمت تاریخ", fontWeight = FontWeight.Bold)
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(
+                        selected = dateFormat == "شمسی",
+                        onClick = {
+                            dateFormat = "شمسی"
+                            preferences.edit().putString("date_format", dateFormat).apply()
+                        },
+                        label = { Text("شمسی") }
+                    )
+
+                    FilterChip(
+                        selected = dateFormat == "میلادی",
+                        onClick = {
+                            dateFormat = "میلادی"
+                            preferences.edit().putString("date_format", dateFormat).apply()
+                        },
+                        label = { Text("میلادی") }
+                    )
+                }
+
+                HorizontalDivider()
+
+                Button(
+                    onClick = { showResetDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("بازنشانی تنظیمات")
+                }
+
+                if (message.isNotBlank()) {
+                    Text(message, color = MaterialTheme.colorScheme.primary)
+                }
+            }
+        }
+    }
+
+    if (showResetDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetDialog = false },
+            title = { Text("بازنشانی تنظیمات") },
+            text = {
+                Text("تنظیمات عمومی به حالت پیش‌فرض برگردند؟ اطلاعات مالی حذف نمی‌شوند.")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        preferences.edit()
+                            .remove("currency")
+                            .remove("start_page")
+                            .remove("confirm_delete")
+                            .remove("date_format")
+                            .apply()
+
+                        currency = "تومان"
+                        startPage = "خانه"
+                        confirmDelete = true
+                        dateFormat = "شمسی"
+                        message = "تنظیمات بازنشانی شدند."
+                        showResetDialog = false
+                    }
+                ) {
+                    Text("بله، بازنشانی کن")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetDialog = false }) {
+                    Text("انصراف")
+                }
+            }
+        )
+    }
+}
+@Composable
 private fun AppThemeScreen(
     selectedThemeId: String,
     onThemeSelected: (String) -> Unit,
