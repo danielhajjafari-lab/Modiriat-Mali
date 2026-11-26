@@ -227,6 +227,21 @@ db.execSQL(
         "INSERT OR IGNORE INTO budget_alerts (percentage) VALUES (100)"
     )
 }
+private fun createDebtsTable(db: SQLiteDatabase) {
+    db.execSQL(
+        """
+        CREATE TABLE IF NOT EXISTS debts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            person TEXT NOT NULL,
+            type TEXT NOT NULL,
+            amount INTEGER NOT NULL,
+            paid INTEGER NOT NULL DEFAULT 0,
+            note TEXT NOT NULL DEFAULT '',
+            date TEXT NOT NULL
+        )
+        """.trimIndent()
+    )
+}
     private fun createCategoriesTable(db: SQLiteDatabase) {
         db.execSQL(
             "CREATE TABLE IF NOT EXISTS categories (" +
