@@ -1564,27 +1564,26 @@ alerts.forEach { alert ->
                         "ماشین‌حساب" -> {
     FinanceCalculator()
                         }
-                        "جستجو و تاریخچه" -> {
-    AdvancedTransactionSearch(
-        transactions = transactions,
-        onEdit = { item ->
-            editing = item
-            editAmount = item.amount.toString()
-            editCategory = item.category
-            editNote = item.note
-            editError = ""
-        },
-        onDelete = { item ->
-    if (confirmDelete) {
-        deleting = item
-    } else {
-        db.delete(item.id)
-        refresh++
-    }
-        }
-        }
-    )
-                        }
+                                                "جستجو و تاریخچه" -> {
+                            AdvancedTransactionSearch(
+                                transactions = transactions,
+                                onEdit = { item ->
+                                    editing = item
+                                    editAmount = item.amount.toString()
+                                    editCategory = item.category
+                                    editNote = item.note
+                                    editError = ""
+                                },
+                                onDelete = { item ->
+                                    if (confirmDelete) {
+                                        deleting = item
+                                    } else {
+                                        db.delete(item.id)
+                                        refresh++
+                                    }
+                                }
+                            )
+                                                }
                         "دسته‌بندی‌ها" -> {
     CategoryManager(db) {
         refresh++
