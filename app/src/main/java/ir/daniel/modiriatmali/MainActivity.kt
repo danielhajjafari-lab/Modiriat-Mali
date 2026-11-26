@@ -2308,7 +2308,10 @@ TextButton(
         soundUri = alert.soundUri
     }
 ) {
-    Text("ویرایش", color = Cyan)
+    Text(
+    "ویرایش",
+    color = MaterialTheme.colorScheme.primary
+)
 }
                         TextButton(
                             onClick = {
