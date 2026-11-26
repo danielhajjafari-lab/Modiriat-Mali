@@ -1200,7 +1200,10 @@ else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلا�
                     title = { Text("ویرایش تراکنش", color = MaterialTheme.colorScheme.primary) },
                     text = {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text(if (item.type == "درآمد") "نوع: درآمد" else "نوع: هزینه", color = Color.LightGray)
+                            Text(
+    if (item.type == "درآمد") "نوع: درآمد" else "نوع: هزینه",
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+)
                             OutlinedTextField(
                                 value = editAmount,
                                 onValueChange = { editAmount = toEnglishDigits(it).filter(Char::isDigit); editError = "" },
