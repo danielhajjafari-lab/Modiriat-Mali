@@ -2464,7 +2464,65 @@ private fun AppThemeScreen(
             "قالب مورد علاقه‌ات رو انتخاب کن.",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+Text(
+    "انتخاب آیکون برنامه",
+    color = MaterialTheme.colorScheme.primary,
+    fontSize = 19.sp,
+    fontWeight = FontWeight.Bold
+)
 
+val launcherIcons = listOf(
+    Triple("wallet", "کیف پول", Icons.Default.AccountBalanceWallet),
+    Triple("chart", "نمودار", Icons.Default.BarChart),
+    Triple("coin", "سکه", Icons.Default.Paid)
+)
+
+launcherIcons.forEach { item ->
+    val selected = selectedIconId == item.first
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onIconSelected(item.first)
+            },
+        border = if (selected) {
+            androidx.compose.foundation.BorderStroke(
+                2.dp,
+                MaterialTheme.colorScheme.primary
+            )
+        } else null,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    item.third,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(item.second)
+            }
+
+            if (selected) {
+                Icon(
+                    Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
         appThemePresets.forEach { preset ->
             val selected = selectedThemeId == preset.id
 
