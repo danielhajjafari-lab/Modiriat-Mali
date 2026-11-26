@@ -3118,9 +3118,8 @@ private fun ReportScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+    .fillMaxWidth()
+    .padding(16.dp),,
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
