@@ -2107,14 +2107,14 @@ val soundPicker = rememberLauncherForActivityResult(
     ) {
         Text(
             "تنظیم هشدارهای بودجه",
-            color = Cyan,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 21.sp,
             fontWeight = FontWeight.Bold
         )
 
         Text(
             "برای هر درصد مصرف بودجه می‌توانی هشدار جداگانه بسازی.",
-            color = Color.LightGray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         OutlinedTextField(
