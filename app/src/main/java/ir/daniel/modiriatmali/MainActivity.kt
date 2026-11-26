@@ -1107,14 +1107,14 @@ val monthlyBalance = monthlyIncome - monthlyExpenses
     contract = ActivityResultContracts.CreateDocument("application/pdf")
 ) { uri ->
     if (uri != null) {
-        createMonthlyPdf(
-    context,
-    uri,
-    monthlyTransactions,
-    currentMonth,
-    currency,
+                createMonthlyPdf(
+            context,
+            uri,
+            monthlyTransactions,
+            currentMonth,
+            currency,
             dateFormat
-)
+        )
     }
     }
     val pages = listOf(
