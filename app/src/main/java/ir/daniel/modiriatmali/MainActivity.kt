@@ -688,6 +688,24 @@ private fun FinanceApp(db: FinanceDb) {
     var transactionFilter by remember { mutableStateOf("همه") }
 var refresh by remember { mutableIntStateOf(0) }
 val context = LocalContext.current
+    
+val themePreferences = remember {
+    context.getSharedPreferences(
+        "app_settings",
+        Context.MODE_PRIVATE
+    )
+}
+
+var selectedThemeId by remember {
+    mutableStateOf(
+        themePreferences.getString("theme_id", "neon") ?: "neon"
+    )
+}
+
+val activeTheme = appThemePresets.firstOrNull {
+    it.id == selectedThemeId
+} ?: appThemePresets.first()
+
 
 
 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
