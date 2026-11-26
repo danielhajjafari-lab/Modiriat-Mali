@@ -886,6 +886,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     colors = TopAppBarDefaults.topAppBarColors(
     containerColor = activeTheme.background
 )
+                    )
             }
         ) { padding ->
             
