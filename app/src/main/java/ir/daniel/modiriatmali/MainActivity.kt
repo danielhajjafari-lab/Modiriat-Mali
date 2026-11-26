@@ -654,6 +654,77 @@ fun deleteSavingsGoal(id: Long): Boolean {
         arrayOf(id.toString())
     ) > 0
 }
+fun addDebt(
+    person: String,
+    type: String,
+    amount: Long,
+    note: String
+): Boolean {
+    if (person.isBlank() || amount <= 0) return false
+
+    val values = ContentValues().apply {
+        put("person", person.trim())
+        put("type", type)
+        put("amount", amount)
+        put("paid", 0L)
+        put("note", note.trim())
+        put(
+            "date",
+            SimpleDateFormat(
+                "yyyy/MM/dd HH:mm",
+                Locale("fa", "IR")
+            ).format(Date())
+        )
+    }
+
+    return writableDatabase.insert("debts", null, values) != -1L
+}
+
+fun getDebts(): List<DebtItem> {
+    val result = mutableListOf<DebtItem>()
+
+    readableDatabase.rawQuery(
+        "SELECT id, person, type, amount, paid, note, date FROM debts ORDER BY id DESC",
+        null
+    ).use { cursor ->
+        while (cursor.moveToNext()) {
+            result.add(
+                DebtItem(
+                    cursor.getLong(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getLong(3),
+                    cursor.getLong(4),
+                    cursor.getString(5),
+                    cursor.getString(6)
+                )
+            )
+        }
+    }
+
+    return result
+}
+
+fun updateDebtPaid(id: Long, paid: Long): Boolean {
+    val values = ContentValues().apply {
+        put("paid", paid.coerceAtLeast(0L))
+    }
+
+    return writableDatabase.update(
+        "debts",
+        values,
+        "id = ? AND ? <= amount",
+        arrayOf(id.toString(), paid.toString())
+    ) > 0
+}
+
+fun deleteDebt(id: Long): Boolean {
+    return writableDatabase.delete(
+        "debts",
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+}
     fun all(): List<MoneyTransaction> {
         val result = mutableListOf<MoneyTransaction>()
 
