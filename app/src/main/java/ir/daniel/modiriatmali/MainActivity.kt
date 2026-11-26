@@ -1197,7 +1197,7 @@ else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلا�
             editing?.let { item ->
                 AlertDialog(
                     onDismissRequest = { editing = null },
-                    title = { Text("ویرایش تراکنش", color = Cyan) },
+                    title = { Text("ویرایش تراکنش", color = MaterialTheme.colorScheme.primary) },
                     text = {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                             Text(if (item.type == "درآمد") "نوع: درآمد" else "نوع: هزینه", color = Color.LightGray)
