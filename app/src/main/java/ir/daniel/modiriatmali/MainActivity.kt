@@ -1358,7 +1358,7 @@ else
         ) {
             Column {
                 Text("درآمد ماه", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
-                Text(money(monthlyIncome), color = Green, fontWeight = FontWeight.Bold)
+                Text(displayMoney(monthlyIncome), color = Green, fontWeight = FontWeight.Bold)
             }
 
             Column(horizontalAlignment = Alignment.End) {
@@ -3527,7 +3527,7 @@ private fun DebtScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
 
-                    Text("مبلغ اولیه: ${money(debt.amount)}")
+                    Text("مبلغ اولیه: ${displayMoney(debt.amount)}")
                     Text("پرداخت‌شده: ${displayMoney(debt.remaining)}")
 
                     Text(
