@@ -1477,7 +1477,8 @@ private fun CategoryManager(
             Button(
                 onClick = { type = "هزینه"; message = "" },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (type == "هزینه") Cyan else Panel
+                    containerColor = if (type == "هزینه") MaterialTheme.colorScheme.primary
+else MaterialTheme.colorScheme.surfaceVariant
                 ),
                 modifier = Modifier.weight(1f)
             ) {
