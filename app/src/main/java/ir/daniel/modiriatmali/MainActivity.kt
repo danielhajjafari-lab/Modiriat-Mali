@@ -68,7 +68,7 @@ data class BudgetAlert(
 
 
 class FinanceDb(context: Context) :
-    SQLiteOpenHelper(context, "finance.db", null, 3) {
+    SQLiteOpenHelper(context, "finance.db", null, 4) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
