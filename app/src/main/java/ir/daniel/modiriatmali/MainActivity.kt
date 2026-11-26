@@ -1014,7 +1014,7 @@ else
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text("درآمد ماه", color = Color.LightGray, fontSize = 12.sp)
+                Text("درآمد ماه", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                 Text(money(monthlyIncome), color = Green, fontWeight = FontWeight.Bold)
             }
 
