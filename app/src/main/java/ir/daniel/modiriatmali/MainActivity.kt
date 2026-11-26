@@ -1955,7 +1955,9 @@ private fun BudgetScreen(
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Card(
-            colors = CardDefaults.cardColors(containerColor = Panel),
+            colors = CardDefaults.cardColors(
+    containerColor = MaterialTheme.colorScheme.surface
+),
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(
@@ -2002,7 +2004,9 @@ private fun BudgetScreen(
         }
 
         Card(
-            colors = CardDefaults.cardColors(containerColor = Panel),
+            colors = CardDefaults.cardColors(
+    containerColor = MaterialTheme.colorScheme.surface
+),
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(
