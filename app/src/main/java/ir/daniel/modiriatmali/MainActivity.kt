@@ -867,10 +867,20 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
             containerColor = activeTheme.background,
             topBar = {
                 TopAppBar(
-                    title = { Text("مدیریت مالی", fontWeight = FontWeight.Bold, color = Color.White) },
+                    title = {
+    Text(
+        "مدیریت مالی",
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+},
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Default.Menu, "منو", tint = Cyan)
+                            Icon(
+    Icons.Default.Menu,
+    "منو",
+    tint = activeTheme.primary
+)
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
