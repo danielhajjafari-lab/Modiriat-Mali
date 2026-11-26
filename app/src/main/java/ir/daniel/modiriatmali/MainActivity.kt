@@ -1178,15 +1178,7 @@ alerts.forEach { alert ->
 
         }
     }
-"شخصی‌سازی" -> {
-    AppThemeScreen(
-        selectedThemeId = selectedThemeId,
-        onThemeSelected = { themeId ->
-            selectedThemeId = themeId
-            themePreferences.edit()
-                .putString("theme_id", themeId)
-                .apply()
-        },
+
         selectedIconId = selectedIconId,
         onIconSelected = { iconId ->
             selectedIconId = iconId
@@ -1240,6 +1232,14 @@ alerts.forEach { alert ->
             themePreferences.edit()
                 .putString("theme_id", themeId)
                 .apply()
+        },
+        selectedIconId = selectedIconId,
+        onIconSelected = { iconId ->
+            selectedIconId = iconId
+            themePreferences.edit()
+                .putString("icon_id", iconId)
+                .apply()
+            applyLauncherIcon(context, iconId)
         }
     )
 }
