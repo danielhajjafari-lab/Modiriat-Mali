@@ -130,7 +130,13 @@ private fun createBudgetTables(db: SQLiteDatabase) {
             "vibration INTEGER NOT NULL DEFAULT 1, " +
             "last_triggered_date TEXT NOT NULL DEFAULT '')"
     )
+db.execSQL(
+    "INSERT OR IGNORE INTO budget_alerts (percentage) VALUES (50)"
+)
 
+db.execSQL(
+    "INSERT OR IGNORE INTO budget_alerts (percentage) VALUES (75)"
+)
     db.execSQL(
         "INSERT OR IGNORE INTO budget_alerts (percentage) VALUES (85)"
     )
