@@ -1403,7 +1403,7 @@ OutlinedTextField(
     shape = RoundedCornerShape(16.dp),
     colors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = MaterialTheme.colorScheme.primary,
-        unfocusedBorderColor = Color(0xFF52647C),
+        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
         focusedLabelColor = MaterialTheme.colorScheme.primary,
         unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
         cursorColor = MaterialTheme.colorScheme.primary,
