@@ -54,6 +54,39 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 private val LocalCurrency = compositionLocalOf { "تومان" }
+private val LocalDateFormat = compositionLocalOf { "شمسی" }
+
+private fun formatDisplayDate(
+    value: String,
+    dateFormat: String
+): String {
+    return try {
+        val parser = SimpleDateFormat(
+            "yyyy/MM/dd HH:mm",
+            Locale("fa", "IR")
+        )
+        val date = parser.parse(value) ?: return value
+
+        val locale = if (dateFormat == "شمسی") {
+            android.icu.util.ULocale("fa_IR@calendar=persian")
+        } else {
+            android.icu.util.ULocale("fa_IR@calendar=gregorian")
+        }
+
+        val formatter = android.icu.text.SimpleDateFormat(
+            "yyyy/MM/dd HH:mm",
+            locale
+        )
+        formatter.format(date)
+    } catch (e: Exception) {
+        value
+    }
+}
+
+@Composable
+private fun displayDate(value: String): String {
+    return formatDisplayDate(value, LocalDateFormat.current)
+}
 
 private val Night = Color(0xFF080D18)
 private val Panel = Color(0xFF111B2D)
