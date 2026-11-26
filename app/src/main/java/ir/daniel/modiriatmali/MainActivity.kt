@@ -4180,9 +4180,9 @@ private fun createMonthlyPdf(
         startPage()
 
         writeLine("خلاصه عملکرد ماه", 17f, true)
-        writeLine("مجموع درآمد: ${money(income)}")
-        writeLine("مجموع هزینه: ${money(expenses)}")
-        writeLine("مانده نهایی: ${money(balance)}", 15f, true)
+        writeLine("مجموع درآمد: ${money(income, currency)}")
+        writeLine("مجموع هزینه: ${money(expenses, currency)}")
+        writeLine("مانده نهایی: ${money(balance, currency)}", 15f, true)
         writeLine("تعداد تراکنش‌ها: ${transactions.size}")
         writeLine("----------------------------------------")
 
@@ -4193,7 +4193,7 @@ private fun createMonthlyPdf(
         } else {
             transactions.sortedByDescending { it.date }.forEach { item ->
                 writeLine(
-                    "${item.type} - ${money(item.amount)}",
+                    "${item.type} - ${money(item.amount, currency)}",
                     14f,
                     true
                 )
