@@ -1891,7 +1891,7 @@ private fun TransactionRow(
                     Icon(
                         Icons.Default.Edit,
                         "ویرایش",
-                        tint = Cyan
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
 
