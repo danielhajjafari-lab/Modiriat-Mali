@@ -118,7 +118,7 @@ data class BudgetAlert(
 
 
 class FinanceDb(context: Context) :
-    SQLiteOpenHelper(context, "finance.db", null, 4) {
+    SQLiteOpenHelper(context, "finance.db", null, 5) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -129,6 +129,7 @@ class FinanceDb(context: Context) :
         )
         createCategoriesTable(db)
         createBudgetTables(db)
+        createSavingsTable(db)
     }
 
     override fun onUpgrade(
@@ -145,6 +146,9 @@ class FinanceDb(context: Context) :
     }
     if (oldVersion < 4) {
     db.execSQL(
+        if (oldVersion < 5) {
+    createSavingsTable(db)
+        }
         "INSERT INTO budget_alerts (percentage) " +
         "SELECT 50 WHERE NOT EXISTS " +
         "(SELECT 1 FROM budget_alerts WHERE percentage = 50)"
@@ -535,7 +539,75 @@ fun setDailyLimit(amount: Long) {
             arrayOf(id.toString())
         )
     }
+fun createSavingsTable(db: SQLiteDatabase) {
+    db.execSQL(
+        """
+        CREATE TABLE IF NOT EXISTS savings_goals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            target INTEGER NOT NULL,
+            saved INTEGER NOT NULL DEFAULT 0
+        )
+        """.trimIndent()
+    )
+}
 
+fun getSavingsGoals(): List<SavingsGoal> {
+    val result = mutableListOf<SavingsGoal>()
+
+    readableDatabase.rawQuery(
+        "SELECT id, title, target, saved FROM savings_goals ORDER BY id DESC",
+        null
+    ).use { cursor ->
+        while (cursor.moveToNext()) {
+            result.add(
+                SavingsGoal(
+                    cursor.getLong(0),
+                    cursor.getString(1),
+                    cursor.getLong(2),
+                    cursor.getLong(3)
+                )
+            )
+        }
+    }
+
+    return result
+}
+
+fun addSavingsGoal(title: String, target: Long): Boolean {
+    if (title.isBlank() || target <= 0) return false
+
+    val values = ContentValues().apply {
+        put("title", title.trim())
+        put("target", target)
+        put("saved", 0L)
+    }
+
+    return writableDatabase.insert(
+        "savings_goals", null, values
+    ) != -1L
+}
+
+fun updateSavingsAmount(id: Long, amount: Long): Boolean {
+    val values = ContentValues().apply {
+        put("saved", amount.coerceAtLeast(0L))
+    }
+
+    return writableDatabase.update(
+        "savings_goals",
+        values,
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+}
+
+fun deleteSavingsGoal(id: Long): Boolean {
+    return writableDatabase.delete(
+        "savings_goals",
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+}
     fun all(): List<MoneyTransaction> {
         val result = mutableListOf<MoneyTransaction>()
 
