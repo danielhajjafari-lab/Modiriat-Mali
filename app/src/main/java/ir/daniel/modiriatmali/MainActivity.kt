@@ -2598,7 +2598,7 @@ val launcherIcons = listOf(
     Triple("card", "کارت بانکی", Icons.Default.CreditCard)
 
 )
-)
+
 
 launcherIcons.forEach { item ->
     val selected = selectedIconId == item.first
@@ -2629,9 +2629,11 @@ launcherIcons.forEach { item ->
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Icon(
-                    item.third,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+    item.third,
+    contentDescription = null,
+    tint = MaterialTheme.colorScheme.primary,
+    modifier = Modifier.size(40.dp)
+)
                 )
                 Text(item.second)
             }
