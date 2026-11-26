@@ -838,7 +838,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
     color = MaterialTheme.colorScheme.primary,
     fontSize = 22.sp,
     fontWeight = FontWeight.Bold
-)
+
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
