@@ -1124,6 +1124,18 @@ alerts.forEach { alert ->
     BudgetAlertsScreen(db)
 }
 
+"شخصی‌سازی" -> {
+    AppThemeScreen(
+        selectedThemeId = selectedThemeId,
+        onThemeSelected = { themeId ->
+            selectedThemeId = themeId
+            themePreferences.edit()
+                .putString("theme_id", themeId)
+                .apply()
+        }
+    )
+}
+
 
 else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلاعات مالی شما در این نسخه در بخش ثبت تراکنش‌ها ذخیره می‌شود.")
                         
