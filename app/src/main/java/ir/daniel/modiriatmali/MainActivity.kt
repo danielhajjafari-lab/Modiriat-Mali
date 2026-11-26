@@ -1312,7 +1312,7 @@ private fun TransactionForm(
 modifier = Modifier.fillMaxWidth(),
 shape = RoundedCornerShape(16.dp),
 colors = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = Cyan,
+    focusedBorderColor = MaterialTheme.colorScheme.primary,
     unfocusedBorderColor = Color(0xFF52647C),
     focusedLabelColor = Cyan,
     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
