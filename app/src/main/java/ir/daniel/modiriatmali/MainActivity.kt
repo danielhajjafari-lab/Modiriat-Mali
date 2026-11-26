@@ -1019,7 +1019,7 @@ else
             }
 
             Column(horizontalAlignment = Alignment.End) {
-                Text("هزینه ماه", color = Color.LightGray, fontSize = 12.sp)
+                Text("هزینه ماه", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                 Text(money(monthlyExpenses), color = Red, fontWeight = FontWeight.Bold)
             }
         }
