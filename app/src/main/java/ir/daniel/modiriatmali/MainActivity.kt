@@ -1843,7 +1843,7 @@ private fun TransactionRow(
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF142238)
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
@@ -1887,7 +1887,7 @@ private fun TransactionRow(
             ) {
                 Text(
                     item.category,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
                 )
