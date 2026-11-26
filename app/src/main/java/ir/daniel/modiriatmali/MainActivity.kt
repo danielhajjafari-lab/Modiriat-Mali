@@ -1692,7 +1692,8 @@ private fun AdvancedTransactionSearch(
                     onClick = { selectedType = type },
                     colors = ButtonDefaults.buttonColors(
                         containerColor =
-                            if (selectedType == type) Cyan else Panel
+                            if (selectedType == type) MaterialTheme.colorScheme.primary
+else MaterialTheme.colorScheme.surfaceVariant
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
