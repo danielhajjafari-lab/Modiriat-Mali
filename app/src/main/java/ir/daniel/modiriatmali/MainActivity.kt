@@ -1748,7 +1748,7 @@ private fun SummaryCard(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF142238)
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
@@ -1768,7 +1768,7 @@ private fun SummaryCard(
         ) {
             Text(
                 title,
-                color = Color(0xFFB8C8DA),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
                 fontSize = 13.sp
             )
             Text(
