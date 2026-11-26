@@ -835,7 +835,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     Text(
                         "مدیریت مالی",
                         Modifier.fillMaxWidth().padding(20.dp),
-                        color = Cyan,
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
