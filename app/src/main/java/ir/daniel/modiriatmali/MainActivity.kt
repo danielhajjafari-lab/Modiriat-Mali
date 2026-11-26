@@ -2339,7 +2339,12 @@ TextButton(
 }
 @Composable
 private fun EmptyCard(message: String) {
-    Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(16.dp)) {
+    Card(
+    colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surface
+    ),
+    shape = RoundedCornerShape(16.dp)
+) {
         Text(message, Modifier.fillMaxWidth().padding(22.dp), color = Color.LightGray, textAlign = TextAlign.Center)
     }
 }
