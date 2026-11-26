@@ -3029,6 +3029,256 @@ private fun FinanceCalculator() {
     }
 } 
 @Composable
+private fun DebtScreen(
+    db: FinanceDb,
+    refresh: Int,
+    onChanged: () -> Unit
+) {
+    var person by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("") }
+    var note by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf("طلب از دیگران") }
+    var message by remember { mutableStateOf("") }
+
+    val debts = remember(refresh) {
+        db.getDebts()
+    }
+
+    var paidInputs by remember(refresh) {
+        mutableStateOf(
+            debts.associate { it.id to it.paid.toString() }
+        )
+    }
+
+    val totalRemaining = debts.sumOf { it.remaining }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "ثبت قرض و بدهی",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Text("نوع حساب")
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    FilterChip(
+                        selected = type == "طلب از دیگران",
+                        onClick = { type = "طلب از دیگران" },
+                        label = { Text("طلب از دیگران") }
+                    )
+
+                    FilterChip(
+                        selected = type == "بدهی به دیگران",
+                        onClick = { type = "بدهی به دیگران" },
+                        label = { Text("بدهی به دیگران") }
+                    )
+                }
+
+                OutlinedTextField(
+                    value = person,
+                    onValueChange = { person = it },
+                    label = { Text("نام شخص") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = amount,
+                    onValueChange = {
+                        amount = toEnglishDigits(it).filter(Char::isDigit)
+                    },
+                    label = { Text("مبلغ به تومان") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = note,
+                    onValueChange = { note = it },
+                    label = { Text("توضیحات (اختیاری)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Button(
+                    onClick = {
+                        val value = amount.toLongOrNull()
+
+                        if (person.isBlank() || value == null || value <= 0L) {
+                            message = "نام شخص و مبلغ معتبر وارد کن."
+                        } else if (db.addDebt(person, type, value, note)) {
+                            person = ""
+                            amount = ""
+                            note = ""
+                            message = "با موفقیت ثبت شد."
+                            onChanged()
+                        } else {
+                            message = "ثبت اطلاعات انجام نشد."
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("ثبت اطلاعات")
+                }
+
+                if (message.isNotBlank()) {
+                    Text(
+                        message,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    "مجموع مانده حساب‌ها",
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    money(totalRemaining),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Text("تعداد حساب‌ها: ${debts.size}")
+            }
+        }
+
+        Text(
+            "فهرست قرض و بدهی‌ها",
+            fontSize = 19.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        if (debts.isEmpty()) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    "هنوز هیچ قرض یا بدهی ثبت نکرده‌ای.",
+                    modifier = Modifier.padding(18.dp)
+                )
+            }
+        }
+
+        debts.forEach { debt ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(9.dp)
+                ) {
+                    Text(
+                        debt.person,
+                        fontSize = 19.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        debt.type,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Text("مبلغ اولیه: ${money(debt.amount)}")
+                    Text("پرداخت‌شده: ${money(debt.paid)}")
+
+                    Text(
+                        "مانده: ${money(debt.remaining)}",
+                        fontWeight = FontWeight.Bold,
+                        color = if (debt.remaining > 0L) Red else Green
+                    )
+
+                    if (debt.note.isNotBlank()) {
+                        Text("توضیحات: ${debt.note}")
+                    }
+
+                    Text(
+                        "تاریخ ثبت: ${debt.date}",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    HorizontalDivider()
+
+                    OutlinedTextField(
+                        value = paidInputs[debt.id] ?: debt.paid.toString(),
+                        onValueChange = {
+                            paidInputs = paidInputs.toMutableMap().apply {
+                                put(
+                                    debt.id,
+                                    toEnglishDigits(it).filter(Char::isDigit)
+                                )
+                            }
+                        },
+                        label = { Text("مجموع پرداخت یا دریافت‌شده") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+
+                    Button(
+                        onClick = {
+                            val paid = paidInputs[debt.id]?.toLongOrNull()
+
+                            if (paid == null || paid < 0L || paid > debt.amount) {
+                                message = "مبلغ باید بین صفر و مبلغ اولیه باشد."
+                            } else if (db.updateDebtPaid(debt.id, paid)) {
+                                message = "مبلغ به‌روزرسانی شد."
+                                onChanged()
+                            } else {
+                                message = "به‌روزرسانی انجام نشد."
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("ذخیره پرداخت")
+                    }
+
+                    TextButton(
+                        onClick = {
+                            db.deleteDebt(debt.id)
+                            message = "حساب حذف شد."
+                            onChanged()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "حذف این حساب",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+@Composable
 private fun SavingsScreen(
     db: FinanceDb,
     refresh: Int,
