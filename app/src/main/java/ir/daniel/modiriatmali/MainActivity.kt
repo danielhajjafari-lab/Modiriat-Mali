@@ -770,9 +770,15 @@ private fun toEnglishDigits(value: String): String {
 }
 private fun applyLauncherIcon(context: Context, iconId: String) {
     val aliases = mapOf(
-        "wallet" to ".WalletIcon",
-        "chart" to ".ChartIcon",
-        "coin" to ".CoinIcon"
+    "wallet" to ".WalletIcon",
+    "chart" to ".ChartIcon",
+    "coin" to ".CoinIcon",
+    "bank" to ".BankIcon",
+    "savings" to ".SavingsIcon",
+    "receipt" to ".ReceiptIcon",
+    "calculator" to ".CalculatorIcon",
+    "card" to ".CardIcon"
+)
     )
 
     val selectedAlias = aliases[iconId] ?: ".WalletIcon"
