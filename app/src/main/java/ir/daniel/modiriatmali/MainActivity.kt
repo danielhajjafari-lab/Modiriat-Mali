@@ -2366,7 +2366,7 @@ private fun AppThemeScreen(
     ) {
         Text(
             "شخصی‌سازی ظاهر برنامه",
-            color = Cyan,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
