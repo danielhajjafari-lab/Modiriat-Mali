@@ -1534,7 +1534,7 @@ private fun CategoryManager(
         categories.forEach { name ->
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Panel
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 Row(
