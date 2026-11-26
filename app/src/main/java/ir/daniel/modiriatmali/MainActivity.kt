@@ -1575,7 +1575,7 @@ private fun CategoryManager(
                         }
                     }
 
-                    Text(name, color = Color.White)
+                    Text(name, color = MaterialTheme.colorScheme.onSurface)
                 }
             }
         }
