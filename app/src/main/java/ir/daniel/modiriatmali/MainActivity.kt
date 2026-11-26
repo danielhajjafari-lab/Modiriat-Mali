@@ -2586,10 +2586,18 @@ Text(
     fontWeight = FontWeight.Bold
 )
 
+
 val launcherIcons = listOf(
     Triple("wallet", "کیف پول", Icons.Default.AccountBalanceWallet),
     Triple("chart", "نمودار", Icons.Default.BarChart),
-    Triple("coin", "سکه", Icons.Default.Paid)
+    Triple("coin", "سکه", Icons.Default.Paid),
+    Triple("bank", "بانک", Icons.Default.AccountBalance),
+    Triple("savings", "پس‌انداز", Icons.Default.Savings),
+    Triple("receipt", "رسید مالی", Icons.Default.ReceiptLong),
+    Triple("calculator", "ماشین‌حساب", Icons.Default.Calculate),
+    Triple("card", "کارت بانکی", Icons.Default.CreditCard)
+
+)
 )
 
 launcherIcons.forEach { item ->
