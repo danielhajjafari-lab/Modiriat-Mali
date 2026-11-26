@@ -116,7 +116,12 @@ data class BudgetAlert(
     val vibration: Boolean
 )
 
-
+data class SavingsGoal(
+    val id: Long,
+    val title: String,
+    val target: Long,
+    val saved: Long
+)
 class FinanceDb(context: Context) :
     SQLiteOpenHelper(context, "finance.db", null, 5) {
 
@@ -132,7 +137,7 @@ class FinanceDb(context: Context) :
         createSavingsTable(db)
     }
 
-    override fun onUpgrade(
+ override fun onUpgrade(
     db: SQLiteDatabase,
     oldVersion: Int,
     newVersion: Int
@@ -144,23 +149,25 @@ class FinanceDb(context: Context) :
     if (oldVersion < 3) {
         createBudgetTables(db)
     }
-    if (oldVersion < 4) {
-    db.execSQL(
-        if (oldVersion < 5) {
-    createSavingsTable(db)
-        }
-        "INSERT INTO budget_alerts (percentage) " +
-        "SELECT 50 WHERE NOT EXISTS " +
-        "(SELECT 1 FROM budget_alerts WHERE percentage = 50)"
-    )
 
-    db.execSQL(
-        "INSERT INTO budget_alerts (percentage) " +
-        "SELECT 75 WHERE NOT EXISTS " +
-        "(SELECT 1 FROM budget_alerts WHERE percentage = 75)"
-    )
+    if (oldVersion < 4) {
+        db.execSQL(
+            "INSERT INTO budget_alerts (percentage) " +
+            "SELECT 50 WHERE NOT EXISTS " +
+            "(SELECT 1 FROM budget_alerts WHERE percentage = 50)"
+        )
+
+        db.execSQL(
+            "INSERT INTO budget_alerts (percentage) " +
+            "SELECT 75 WHERE NOT EXISTS " +
+            "(SELECT 1 FROM budget_alerts WHERE percentage = 75)"
+        )
     }
+
+    if (oldVersion < 5) {
+        createSavingsTable(db)
     }
+ }
     
 private fun createBudgetTables(db: SQLiteDatabase) {
     db.execSQL(
