@@ -945,7 +945,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     .fillMaxWidth()
                     .height(10.dp),
                 color = budgetColor,
-                trackColor = Color(0xFF26354D)
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
 
             Text(
