@@ -1044,6 +1044,7 @@ val themePreferences = remember {
     )
 }
 val currency = themePreferences.getString("currency", "تومان") ?: "تومان"
+    val dateFormat = themePreferences.getString("date_format", "شمسی") ?: "شمسی"
 var page by remember {
     mutableStateOf(
         themePreferences.getString("start_page", "خانه") ?: "خانه"
@@ -1196,7 +1197,10 @@ val appColorScheme = if (selectedThemeId == "light") {
     )
 }
 
-CompositionLocalProvider(LocalCurrency provides currency) {
+CompositionLocalProvider(
+    LocalCurrency provides currency,
+    LocalDateFormat provides dateFormat
+) {
     MaterialTheme(colorScheme = appColorScheme) {
 
 
@@ -2349,7 +2353,7 @@ fontWeight = FontWeight.Bold,
                 )
 
                 Text(
-                    item.date,
+                    displayDate(item.date),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
@@ -4098,7 +4102,7 @@ private fun ReportScreen(
                         }
 
                         Text(
-                            "تاریخ: ${item.date}",
+                            "تاریخ: ${displayDate(item.date)}",
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
