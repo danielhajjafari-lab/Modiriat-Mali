@@ -155,6 +155,7 @@ class FinanceDb(context: Context) :
         createCategoriesTable(db)
         createBudgetTables(db)
         createSavingsTable(db)
+        createDebtsTable(db)
     }
 
  override fun onUpgrade(
