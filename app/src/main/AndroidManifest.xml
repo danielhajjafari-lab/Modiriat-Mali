@@ -52,5 +52,70 @@
             </intent-filter>
         </activity-alias>
 
+        <activity-alias
+            android:name=".BankIcon"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_bank"
+            android:label="مدیریت مالی">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".SavingsIcon"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_savings"
+            android:label="مدیریت مالی">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ReceiptIcon"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_receipt"
+            android:label="مدیریت مالی">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".CalculatorIcon"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_calculator"
+            android:label="مدیریت مالی">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".CardIcon"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_card"
+            android:label="مدیریت مالی">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
     </application>
 </manifest>
