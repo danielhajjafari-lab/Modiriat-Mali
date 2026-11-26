@@ -779,7 +779,7 @@ private fun applyLauncherIcon(context: Context, iconId: String) {
     "calculator" to ".CalculatorIcon",
     "card" to ".CardIcon"
 )
-    )
+    
 
     val selectedAlias = aliases[iconId] ?: ".WalletIcon"
 
