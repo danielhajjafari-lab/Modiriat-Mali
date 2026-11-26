@@ -93,6 +93,19 @@ class FinanceDb(context: Context) :
     if (oldVersion < 3) {
         createBudgetTables(db)
     }
+    if (oldVersion < 4) {
+    db.execSQL(
+        "INSERT INTO budget_alerts (percentage) " +
+        "SELECT 50 WHERE NOT EXISTS " +
+        "(SELECT 1 FROM budget_alerts WHERE percentage = 50)"
+    )
+
+    db.execSQL(
+        "INSERT INTO budget_alerts (percentage) " +
+        "SELECT 75 WHERE NOT EXISTS " +
+        "(SELECT 1 FROM budget_alerts WHERE percentage = 75)"
+    )
+    }
     }
     
 private fun createBudgetTables(db: SQLiteDatabase) {
