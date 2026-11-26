@@ -1120,8 +1120,10 @@ labelColor = MaterialTheme.colorScheme.onSurface
                 } else if (page == "ثبت درآمد" || page == "ثبت هزینه") {
                     Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     TransactionForm(
-    page,
-    categories = db.getCategories(if (page == "ثبت درآمد") "درآمد" else "هزینه"),
+    page = page,
+    categories = db.getCategories(
+        if (page == "ثبت درآمد") "درآمد" else "هزینه"
+    ),
     onSave = { amount, category, note ->
     val transactionType =
         if (page == "ثبت درآمد") "درآمد" else "هزینه"
@@ -1179,16 +1181,7 @@ alerts.forEach { alert ->
         }
     }
 
-        selectedIconId = selectedIconId,
-        onIconSelected = { iconId ->
-            selectedIconId = iconId
-            themePreferences.edit()
-                .putString("icon_id", iconId)
-                .apply()
-            applyLauncherIcon(context, iconId)
-        }
-    )
-}
+        
     refresh++
     page = "خانه"
 })
