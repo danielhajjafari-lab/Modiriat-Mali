@@ -967,7 +967,11 @@ else
                             Modifier.fillMaxWidth().padding(20.dp),
                             horizontalAlignment = Alignment.End
                         ) {
-                            Text("موجودی محاسبه‌شده", color = Color.LightGray, fontSize = 14.sp)
+                            Text(
+    "موجودی محاسبه‌شده",
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    fontSize = 14.sp
+)
                             Text(money(income - expenses), color = Color.White, fontSize = 27.sp, fontWeight = FontWeight.Bold)
                             Text("بر اساس تراکنش‌های ثبت‌شده در این دستگاه", color = Cyan, fontSize = 11.sp)
                         }
