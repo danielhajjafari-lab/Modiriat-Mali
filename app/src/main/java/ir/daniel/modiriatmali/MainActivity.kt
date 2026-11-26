@@ -2019,16 +2019,20 @@ private fun BudgetScreen(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-
-                Text("مجموع هزینه امروز", color = MaterialTheme.colorScheme.onSurfaceVariant
+Text(
+    "مجموع هزینه امروز",
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+)
                 Text(
                     money(todayExpenses),
                     color = Red,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
-
-                Text("باقی‌مانده بودجه", color = MaterialTheme.colorScheme.onSurfaceVariant
+Text(
+    "باقی‌مانده بودجه",
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+)
                 Text(
                     if (dailyLimit > 0) money(remaining) else "سقف بودجه تعیین نشده",
                     color = Green,
