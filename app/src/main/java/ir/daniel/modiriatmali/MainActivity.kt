@@ -2443,7 +2443,9 @@ private fun EmptyCard(message: String) {
 @Composable
 private fun AppThemeScreen(
     selectedThemeId: String,
-    onThemeSelected: (String) -> Unit
+    onThemeSelected: (String) -> Unit,
+    selectedIconId: String,
+    onIconSelected: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
