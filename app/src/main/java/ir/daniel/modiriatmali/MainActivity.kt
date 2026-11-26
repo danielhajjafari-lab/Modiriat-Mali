@@ -1340,7 +1340,7 @@ Box(Modifier.fillMaxWidth()) {
                 Icon(
                     Icons.Default.ArrowDropDown,
                     contentDescription = "انتخاب دسته",
-                    tint = Cyan
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         },
