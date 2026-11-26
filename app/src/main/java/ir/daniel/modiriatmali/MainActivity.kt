@@ -2634,7 +2634,7 @@ launcherIcons.forEach { item ->
     tint = MaterialTheme.colorScheme.primary,
     modifier = Modifier.size(40.dp)
 )
-                )
+                
                 Text(item.second)
             }
 
