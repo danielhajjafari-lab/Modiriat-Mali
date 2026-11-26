@@ -130,6 +130,18 @@ data class SavingsGoal(
     val target: Long,
     val saved: Long
 )
+data class DebtItem(
+    val id: Long,
+    val person: String,
+    val type: String,
+    val amount: Long,
+    val paid: Long,
+    val note: String,
+    val date: String
+) {
+    val remaining: Long
+        get() = (amount - paid).coerceAtLeast(0L)
+}
 class FinanceDb(context: Context) :
     SQLiteOpenHelper(context, "finance.db", null, 5) {
 
