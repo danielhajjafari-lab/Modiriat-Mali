@@ -19,6 +19,13 @@ import kotlinx.coroutines.delay
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.pdf.PdfDocument
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextDirectionHeuristics
+import android.text.TextPaint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -3091,5 +3098,262 @@ private fun SavingsScreen(
                 }
             }
         }
+    }
+}
+@Composable
+private fun ReportScreen(
+    transactions: List<MoneyTransaction>,
+    month: String,
+    onExport: () -> Unit
+) {
+    val income = transactions
+        .filter { it.type == "درآمد" }
+        .sumOf { it.amount }
+
+    val expenses = transactions
+        .filter { it.type == "هزینه" }
+        .sumOf { it.amount }
+
+    val balance = income - expenses
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Text(
+            "گزارش مالی ماه $month",
+            fontSize = 21.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.End
+        )
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("خلاصه عملکرد ماه", fontWeight = FontWeight.Bold)
+
+                Text("مجموع درآمد: ${money(income)}", color = Green)
+                Text("مجموع هزینه: ${money(expenses)}", color = Red)
+
+                HorizontalDivider()
+
+                Text(
+                    "مانده نهایی: ${money(balance)}",
+                    fontWeight = FontWeight.Bold,
+                    color = if (balance >= 0) Green else Red
+                )
+
+                Text("تعداد تراکنش‌ها: ${transactions.size}")
+            }
+        }
+
+        Button(
+            onClick = onExport,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("ذخیره گزارش به صورت PDF")
+        }
+
+        Text(
+            "جزئیات تراکنش‌های این ماه",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        if (transactions.isEmpty()) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    "هنوز تراکنشی در این ماه ثبت نشده است.",
+                    modifier = Modifier.padding(18.dp)
+                )
+            }
+        } else {
+            transactions.sortedByDescending { it.date }.forEach { item ->
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            item.type,
+                            fontWeight = FontWeight.Bold,
+                            color = if (item.type == "درآمد") Green else Red
+                        )
+
+                        Text("مبلغ: ${money(item.amount)}")
+                        Text("دسته‌بندی: ${item.category}")
+
+                        if (item.note.isNotBlank()) {
+                            Text("توضیحات: ${item.note}")
+                        }
+
+                        Text(
+                            "تاریخ: ${item.date}",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun buildPdfLayout(
+    text: String,
+    width: Int,
+    textSize: Float,
+    bold: Boolean
+): StaticLayout {
+    val paint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = android.graphics.Color.BLACK
+        this.textSize = textSize
+        typeface = Typeface.create(
+            "sans-serif",
+            if (bold) Typeface.BOLD else Typeface.NORMAL
+        )
+    }
+
+    return StaticLayout.Builder.obtain(
+        text,
+        0,
+        text.length,
+        paint,
+        width
+    )
+        .setAlignment(Layout.Alignment.ALIGN_OPPOSITE)
+        .setTextDirection(TextDirectionHeuristics.RTL)
+        .setIncludePad(false)
+        .build()
+}
+
+private fun createMonthlyPdf(
+    context: Context,
+    uri: Uri,
+    transactions: List<MoneyTransaction>,
+    month: String
+) {
+    val document = PdfDocument()
+
+    var pageNumber = 0
+    var currentPage: PdfDocument.Page? = null
+    var canvas: Canvas? = null
+    var y = 0f
+
+    val income = transactions
+        .filter { it.type == "درآمد" }
+        .sumOf { it.amount }
+
+    val expenses = transactions
+        .filter { it.type == "هزینه" }
+        .sumOf { it.amount }
+
+    val balance = income - expenses
+
+    fun startPage() {
+        currentPage?.let { document.finishPage(it) }
+
+        pageNumber++
+
+        val info = PdfDocument.PageInfo.Builder(
+            595,
+            842,
+            pageNumber
+        ).create()
+
+        currentPage = document.startPage(info)
+        canvas = currentPage!!.canvas
+        y = 45f
+
+        val titleLayout = buildPdfLayout(
+            "گزارش مالی ماه $month",
+            515,
+            21f,
+            true
+        )
+
+        canvas!!.save()
+        canvas!!.translate(40f, y)
+        titleLayout.draw(canvas!!)
+        canvas!!.restore()
+
+        y += titleLayout.height + 25f
+    }
+
+    fun writeLine(
+        text: String,
+        size: Float = 14f,
+        bold: Boolean = false
+    ) {
+        val layout = buildPdfLayout(text, 515, size, bold)
+
+        if (y + layout.height > 790f) {
+            startPage()
+        }
+
+        canvas!!.save()
+        canvas!!.translate(40f, y)
+        layout.draw(canvas!!)
+        canvas!!.restore()
+
+        y += layout.height + 12f
+    }
+
+    try {
+        startPage()
+
+        writeLine("خلاصه عملکرد ماه", 17f, true)
+        writeLine("مجموع درآمد: ${money(income)}")
+        writeLine("مجموع هزینه: ${money(expenses)}")
+        writeLine("مانده نهایی: ${money(balance)}", 15f, true)
+        writeLine("تعداد تراکنش‌ها: ${transactions.size}")
+        writeLine("----------------------------------------")
+
+        writeLine("جزئیات تراکنش‌ها", 17f, true)
+
+        if (transactions.isEmpty()) {
+            writeLine("در این ماه هیچ تراکنشی ثبت نشده است.")
+        } else {
+            transactions.sortedByDescending { it.date }.forEach { item ->
+                writeLine(
+                    "${item.type} - ${money(item.amount)}",
+                    14f,
+                    true
+                )
+                writeLine("دسته‌بندی: ${item.category}")
+
+                if (item.note.isNotBlank()) {
+                    writeLine("توضیحات: ${item.note}")
+                }
+
+                writeLine("تاریخ: ${item.date}")
+                writeLine("----------------------------------------")
+            }
+        }
+
+        currentPage?.let {
+            document.finishPage(it)
+            currentPage = null
+        }
+
+        val output = context.contentResolver.openOutputStream(uri)
+            ?: throw Exception("امکان باز کردن فایل وجود ندارد.")
+
+        output.use {
+            document.writeTo(it)
+        }
+
+    } catch (e: Exception) {
+        e.printStackTrace()
+    } finally {
+        currentPage?.let {
+            document.finishPage(it)
+        }
+        document.close()
     }
 }
