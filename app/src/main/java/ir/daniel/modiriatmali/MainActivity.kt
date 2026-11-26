@@ -839,7 +839,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    HorizontalDivider(color = Color(0xFF26354D))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
                     Column(
                         Modifier.fillMaxHeight()
