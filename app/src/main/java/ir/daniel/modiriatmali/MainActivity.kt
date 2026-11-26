@@ -1280,6 +1280,15 @@ alerts.forEach { alert ->
                 } else {
                     Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     when (page) {
+                        "گزارش‌ها و PDF" -> {
+    ReportScreen(
+        transactions = monthlyTransactions,
+        month = currentMonth,
+        onExport = {
+            pdfLauncher.launch("گزارش مالی $currentMonth.pdf")
+        }
+    )
+                        }
                         "پس‌انداز" -> {
     SavingsScreen(db, refresh) {
         refresh++
