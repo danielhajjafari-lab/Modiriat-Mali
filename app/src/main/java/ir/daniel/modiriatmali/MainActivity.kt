@@ -1768,8 +1768,8 @@ private fun SummaryCard(
         ) {
             Text(
                 title,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-                fontSize = 13.sp
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+fontSize = 13.sp
             )
             Text(
                 amount,
