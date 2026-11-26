@@ -833,9 +833,12 @@ MaterialTheme(colorScheme = appColorScheme) {
 drawerContentColor = MaterialTheme.colorScheme.onSurface
                 ) {
                     Text(
-                        "مدیریت مالی",
-                        Modifier.fillMaxWidth().padding(20.dp),
-                        Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+    "مدیریت مالی",
+    modifier = Modifier.fillMaxWidth().padding(20.dp),
+    color = MaterialTheme.colorScheme.primary,
+    fontSize = 22.sp,
+    fontWeight = FontWeight.Bold
+)
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
