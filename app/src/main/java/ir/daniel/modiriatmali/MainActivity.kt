@@ -1004,7 +1004,7 @@ else
     ) {
         Text(
             "عملکرد این ماه",
-            color = Cyan,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 17.sp,
             fontWeight = FontWeight.Bold
         )
