@@ -1074,11 +1074,12 @@ val monthlyBalance = monthlyIncome - monthlyExpenses
 ) { uri ->
     if (uri != null) {
         createMonthlyPdf(
-            context,
-            uri,
-            monthlyTransactions,
-            currentMonth
-        )
+    context,
+    uri,
+    monthlyTransactions,
+    currentMonth,
+    currency
+)
     }
     }
     val pages = listOf(
@@ -4106,7 +4107,8 @@ private fun createMonthlyPdf(
     context: Context,
     uri: Uri,
     transactions: List<MoneyTransaction>,
-    month: String
+    month: String,
+    currency: String
 ) {
     val document = PdfDocument()
 
