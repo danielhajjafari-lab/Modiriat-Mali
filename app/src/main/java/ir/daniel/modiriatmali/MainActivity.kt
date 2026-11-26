@@ -1998,7 +1998,10 @@ private fun BudgetScreen(
                 }
 
                 if (message.isNotBlank()) {
-                    Text(message, color = Cyan)
+                    Text(
+    message,
+    color = MaterialTheme.colorScheme.primary
+)
                 }
             }
         }
