@@ -1010,6 +1010,7 @@ val themePreferences = remember {
         Context.MODE_PRIVATE
     )
 }
+val currency = themePreferences.getString("currency", "تومان") ?: "تومان"
 var page by remember {
     mutableStateOf(
         themePreferences.getString("start_page", "خانه") ?: "خانه"
@@ -1276,7 +1277,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
     )
 
     Text(
-        "سقف: ${money(dailyBudgetLimit)}",
+        "سقف: ${displayMoney(dailyBudgetLimit)}",
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
             }
@@ -1294,7 +1295,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                 if (todayExpenses >= dailyBudgetLimit) {
                     "بودجه امروز به پایان رسیده است."
                 } else {
-                    "مانده بودجه: ${money(dailyBudgetLimit - todayExpenses)}"
+                    "مانده بودجه: ${displayMoney(dailyBudgetLimit - todayExpenses)}"
                 },color = if (budgetPercentage >= 100)
     Red
 else
@@ -1315,7 +1316,7 @@ else
     fontSize = 14.sp
 )
                             Text(
-    money(income - expenses),
+    displayMoney(income - expenses),
     color = MaterialTheme.colorScheme.onSurface,
     fontSize = 27.sp,
     fontWeight = FontWeight.Bold
@@ -1328,8 +1329,8 @@ else
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        SummaryCard("مجموع درآمد", money(income), Green, Modifier.weight(1f))
-                        SummaryCard("مجموع هزینه", money(expenses), Red, Modifier.weight(1f))
+                        SummaryCard("مجموع درآمد", displayMoney(income), Green, Modifier.weight(1f))
+                        SummaryCard("مجموع هزینه", displayMoney(expenses), Red, Modifier.weight(1f))
                     }
                     Card(
     modifier = Modifier.fillMaxWidth(),
@@ -1362,14 +1363,14 @@ else
 
             Column(horizontalAlignment = Alignment.End) {
                 Text("هزینه ماه", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
-                Text(money(monthlyExpenses), color = Red, fontWeight = FontWeight.Bold)
+                Text(displayMoney(monthlyIncome), color = Red, fontWeight = FontWeight.Bold)
             }
         }
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Text(
-            "خالص ماه: ${money(monthlyBalance)}",
+            "خالص ماه: ${displayMoney(monthlyExpenses)}",
             color = if (monthlyBalance >= 0) Green else Red,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
@@ -1651,7 +1652,8 @@ shape = RoundedCornerShape(24.dp)
                     title = { Text("حذف تراکنش", color = Red) },
                     text = {
                         Text(
-                            "از حذف این ${item.type} به مبلغ ${money(item.amount)} مطمئنی؟ این کار قابل بازگشت نیست.",
+                            "از حذف این ${item.type} به مبلغ ${displayMoney(item.amount)
+                            } مطمئنی؟ این کار قابل بازگشت نیست.",
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     },
@@ -2328,7 +2330,7 @@ fontWeight = FontWeight.Bold,
 
                 Text(
                     (if (item.type == "درآمد") "+" else "−") +
-                        money(item.amount),
+                        displayMoney(item.amount),
                     color = accent,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 15.sp
@@ -2447,7 +2449,7 @@ Text(
     color = MaterialTheme.colorScheme.onSurfaceVariant
 )
                 Text(
-                    money(todayExpenses),
+                    displayMoney(todayExpenses),
                     color = Red,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -2457,7 +2459,9 @@ Text(
     color = MaterialTheme.colorScheme.onSurfaceVariant
 )
                 Text(
-                    if (dailyLimit > 0) money(remaining) else "سقف بودجه تعیین نشده",
+                    if (dailyLimit > 0) displayMoney(remaining)
+                
+            else "سقف بودجه تعیین نشده",
                     color = Green,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -3477,7 +3481,7 @@ private fun DebtScreen(
                 )
 
                 Text(
-                    money(totalRemaining),
+                    displayMoney(totalRemaining),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -3524,10 +3528,10 @@ private fun DebtScreen(
                     )
 
                     Text("مبلغ اولیه: ${money(debt.amount)}")
-                    Text("پرداخت‌شده: ${money(debt.paid)}")
+                    Text("پرداخت‌شده: ${displayMoney(debt.remaining)}")
 
                     Text(
-                        "مانده: ${money(debt.remaining)}",
+                        "مانده: ${displayMoney(debt.amount)}",
                         fontWeight = FontWeight.Bold,
                         color = if (debt.remaining > 0L) Red else Green
                     )
@@ -3891,10 +3895,10 @@ private fun SavingsScreen(
                         fontWeight = FontWeight.Bold
                     )
 
-                    Text("مبلغ هدف: ${money(goal.target)}")
-                    Text("پس‌انداز شده: ${money(goal.saved)}")
+                    Text("مبلغ هدف: ${displayMoney(goal.target)}")
+                    Text("پس‌انداز شده: ${displayMoney(goal.saved)}")
                     Text(
-                        "مانده تا هدف: ${money((goal.target - goal.saved).coerceAtLeast(0L))}"
+                        "مانده تا هدف: ${displayMoney((goal.target - goal.saved).coerceAtLeast(0L))}"
                     )
 
                     LinearProgressIndicator(
@@ -4004,13 +4008,13 @@ private fun ReportScreen(
             ) {
                 Text("خلاصه عملکرد ماه", fontWeight = FontWeight.Bold)
 
-                Text("مجموع درآمد: ${money(income)}", color = Green)
-                Text("مجموع هزینه: ${money(expenses)}", color = Red)
+                Text("مجموع درآمد: ${displayMoney(income)}", color = Green)
+                Text("مجموع هزینه: ${displayMoney(expenses)}", color = Red)
 
                 HorizontalDivider()
 
                 Text(
-                    "مانده نهایی: ${money(balance)}",
+                    "مانده نهایی: ${displayMoney(balance)}",
                     fontWeight = FontWeight.Bold,
                     color = if (balance >= 0) Green else Red
                 )
@@ -4052,7 +4056,7 @@ private fun ReportScreen(
                             color = if (item.type == "درآمد") Green else Red
                         )
 
-                        Text("مبلغ: ${money(item.amount)}")
+                        Text("مبلغ: ${displayMoney(item.amount)}")
                         Text("دسته‌بندی: ${item.category}")
 
                         if (item.note.isNotBlank()) {
