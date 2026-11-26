@@ -1795,7 +1795,7 @@ private fun QuickAction(
         modifier = modifier
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF142238)
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(22.dp),
         elevation = CardDefaults.cardElevation(
@@ -1822,7 +1822,7 @@ private fun QuickAction(
 
             Text(
                 label,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
