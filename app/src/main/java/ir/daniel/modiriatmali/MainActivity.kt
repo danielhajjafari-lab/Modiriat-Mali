@@ -3373,6 +3373,184 @@ private fun DebtScreen(
     }
 }
 @Composable
+private fun BankManagementScreen(
+    db: FinanceDb,
+    refresh: Int,
+    onChanged: () -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var accountNumber by remember { mutableStateOf("") }
+    var balance by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+
+    val banks = remember(refresh) {
+        db.getBanks()
+    }
+
+    var balanceInputs by remember(refresh) {
+        mutableStateOf(
+            banks.associate { it.id to it.balance.toString() }
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "افزودن حساب بانکی",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("نام بانک") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = accountNumber,
+                    onValueChange = { accountNumber = it },
+                    label = { Text("شماره حساب یا کارت (اختیاری)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = balance,
+                    onValueChange = {
+                        balance = toEnglishDigits(it).filter(Char::isDigit)
+                    },
+                    label = { Text("موجودی اولیه به تومان") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                Button(
+                    onClick = {
+                        val amount = balance.toLongOrNull() ?: 0L
+
+                        if (name.isBlank()) {
+                            message = "نام بانک را وارد کن."
+                        } else if (db.addBank(name, accountNumber, amount)) {
+                            name = ""
+                            accountNumber = ""
+                            balance = ""
+                            message = "حساب بانکی اضافه شد."
+                            onChanged()
+                        } else {
+                            message = "ثبت حساب انجام نشد."
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("افزودن بانک")
+                }
+
+                if (message.isNotBlank()) {
+                    Text(
+                        message,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+
+        Text(
+            "حساب‌های بانکی",
+            fontSize = 19.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        if (banks.isEmpty()) {
+            Text("هنوز حساب بانکی ثبت نشده است.")
+        }
+
+        banks.forEach { bank ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        bank.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    if (bank.accountNumber.isNotBlank()) {
+                        Text("شماره حساب: ${bank.accountNumber}")
+                    }
+
+                    OutlinedTextField(
+                        value = balanceInputs[bank.id] ?: bank.balance.toString(),
+                        onValueChange = {
+                            balanceInputs = balanceInputs.toMutableMap().apply {
+                                put(
+                                    bank.id,
+                                    toEnglishDigits(it).filter(Char::isDigit)
+                                )
+                            }
+                        },
+                        label = { Text("موجودی به تومان") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+
+                    Button(
+                        onClick = {
+                            val amount = balanceInputs[bank.id]?.toLongOrNull()
+
+                            if (amount == null) {
+                                message = "موجودی معتبر وارد کن."
+                            } else if (db.updateBankBalance(bank.id, amount)) {
+                                message = "موجودی به‌روزرسانی شد."
+                                onChanged()
+                            } else {
+                                message = "به‌روزرسانی انجام نشد."
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("ذخیره موجودی")
+                    }
+
+                    TextButton(
+                        onClick = {
+                            db.deleteBank(bank.id)
+                            message = "حساب بانکی حذف شد."
+                            onChanged()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "حذف حساب بانکی",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+@Composable
 private fun SavingsScreen(
     db: FinanceDb,
     refresh: Int,
