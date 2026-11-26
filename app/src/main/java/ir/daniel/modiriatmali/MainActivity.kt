@@ -2261,7 +2261,10 @@ if (editingAlert != null) {
 )
 
         if (alerts.isEmpty()) {
-            Text("هنوز هشداری ثبت نشده است.", color = Color.Gray)
+            Text(
+    "هنوز هشداری ثبت نشده است.",
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+)
         }
 
         alerts.forEach { alert ->
