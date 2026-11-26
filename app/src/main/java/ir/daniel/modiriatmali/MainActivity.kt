@@ -1715,7 +1715,7 @@ shape = RoundedCornerShape(24.dp)
     }
 }
 }
-
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TransactionForm(
