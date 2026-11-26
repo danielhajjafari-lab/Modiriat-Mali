@@ -747,6 +747,66 @@ fun deleteDebt(id: Long): Boolean {
         arrayOf(id.toString())
     ) > 0
 }
+fun addBank(
+    name: String,
+    accountNumber: String,
+    balance: Long
+): Boolean {
+    if (name.isBlank() || balance < 0) return false
+
+    val values = ContentValues().apply {
+        put("name", name.trim())
+        put("account_number", accountNumber.trim())
+        put("balance", balance)
+    }
+
+    return writableDatabase.insert("banks", null, values) != -1L
+}
+
+fun getBanks(): List<BankItem> {
+    val result = mutableListOf<BankItem>()
+
+    readableDatabase.rawQuery(
+        "SELECT id, name, account_number, balance FROM banks ORDER BY id DESC",
+        null
+    ).use { cursor ->
+        while (cursor.moveToNext()) {
+            result.add(
+                BankItem(
+                    cursor.getLong(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getLong(3)
+                )
+            )
+        }
+    }
+
+    return result
+}
+
+fun updateBankBalance(id: Long, balance: Long): Boolean {
+    if (balance < 0) return false
+
+    val values = ContentValues().apply {
+        put("balance", balance)
+    }
+
+    return writableDatabase.update(
+        "banks",
+        values,
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+}
+
+fun deleteBank(id: Long): Boolean {
+    return writableDatabase.delete(
+        "banks",
+        "id = ?",
+        arrayOf(id.toString())
+    ) > 0
+}
     fun all(): List<MoneyTransaction> {
         val result = mutableListOf<MoneyTransaction>()
 
