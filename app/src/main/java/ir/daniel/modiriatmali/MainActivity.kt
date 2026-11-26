@@ -53,6 +53,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+private val LocalCurrency = compositionLocalOf { "تومان" }
 
 private val Night = Color(0xFF080D18)
 private val Panel = Color(0xFF111B2D)
@@ -938,9 +939,13 @@ class BudgetAlertWorker(
         }
     }
 }
-private fun money(value: Long): String =
-    NumberFormat.getInstance(Locale("fa", "IR")).format(value) + " تومان"
+private fun money(value: Long, currency: String = "تومان"): String =
+    NumberFormat.getInstance(Locale("fa", "IR")).format(value) + " " + currency
 
+@Composable
+private fun displayMoney(value: Long): String {
+    return money(value, LocalCurrency.current)
+}
 private fun toEnglishDigits(value: String): String {
     val persian = "۰۱۲۳۴۵۶۷۸۹"
     val arabic = "٠١٢٣٤٥٦٧٨٩"
@@ -1156,7 +1161,8 @@ val appColorScheme = if (selectedThemeId == "light") {
     )
 }
 
-MaterialTheme(colorScheme = appColorScheme) {
+CompositionLocalProvider(LocalCurrency provides currency) {
+    MaterialTheme(colorScheme = appColorScheme) {
 
 
 
