@@ -2263,7 +2263,9 @@ if (editingAlert != null) {
         alerts.forEach { alert ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Panel)
+                colors = CardDefaults.cardColors(
+    containerColor = MaterialTheme.colorScheme.surface
+)
             ) {
                 Column(
                     modifier = Modifier.padding(12.dp),
