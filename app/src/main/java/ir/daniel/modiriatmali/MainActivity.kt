@@ -1966,7 +1966,7 @@ private fun BudgetScreen(
             ) {
                 Text(
                     "سقف هزینه روزانه",
-                    color = Cyan,
+                    color = MaterialTheme.colorScheme.primary,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -2015,12 +2015,12 @@ private fun BudgetScreen(
             ) {
                 Text(
                     "وضعیت هزینه‌های امروز",
-                    color = Cyan,
+                    color = MaterialTheme.colorScheme.primary,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-                Text("مجموع هزینه امروز", color = Color.LightGray)
+                Text("مجموع هزینه امروز", color = MaterialTheme.colorScheme.onSurfaceVariant
                 Text(
                     money(todayExpenses),
                     color = Red,
@@ -2028,7 +2028,7 @@ private fun BudgetScreen(
                     fontWeight = FontWeight.Bold
                 )
 
-                Text("باقی‌مانده بودجه", color = Color.LightGray)
+                Text("باقی‌مانده بودجه", color = MaterialTheme.colorScheme.onSurfaceVariant
                 Text(
                     if (dailyLimit > 0) money(remaining) else "سقف بودجه تعیین نشده",
                     color = Green,
@@ -2040,7 +2040,7 @@ private fun BudgetScreen(
                     if (dailyLimit > 0)
                         "درصد مصرف: ${(todayExpenses.toDouble() / dailyLimit * 100).toInt()}٪"
                     else "درصد مصرف: نامشخص",
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 LinearProgressIndicator(
