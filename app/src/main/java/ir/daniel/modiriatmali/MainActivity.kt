@@ -933,8 +933,9 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    "سقف: ${money(dailyBudgetLimit)}",
-                    color = Color.LightGray
+    "سقف: ${money(dailyBudgetLimit)}",
+    color = MaterialTheme.colorScheme.onSurfaceVariant
+)
                 )
             }
 
