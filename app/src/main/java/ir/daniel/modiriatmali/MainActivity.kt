@@ -900,7 +900,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Panel
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         shape = RoundedCornerShape(20.dp)
     ) {
@@ -953,7 +953,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
         }
     }
                     }
-                    Card(colors = CardDefaults.cardColors(containerColor = Panel), shape = RoundedCornerShape(22.dp)) {
+                    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), shape = RoundedCornerShape(22.dp)) {
                         Column(
                             Modifier.fillMaxWidth().padding(20.dp),
                             horizontalAlignment = Alignment.End
@@ -970,7 +970,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     Card(
     modifier = Modifier.fillMaxWidth(),
     colors = CardDefaults.cardColors(
-        containerColor = Panel
+        containerColor = MaterialTheme.colorScheme.surface
     ),
     shape = RoundedCornerShape(20.dp)
 ) {
