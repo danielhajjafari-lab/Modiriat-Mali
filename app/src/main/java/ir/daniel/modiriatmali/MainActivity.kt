@@ -143,7 +143,7 @@ data class DebtItem(
         get() = (amount - paid).coerceAtLeast(0L)
 }
 class FinanceDb(context: Context) :
-    SQLiteOpenHelper(context, "finance.db", null, 6) {
+    SQLiteOpenHelper(context, "finance.db", null, 7) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -156,6 +156,7 @@ class FinanceDb(context: Context) :
         createBudgetTables(db)
         createSavingsTable(db)
         createDebtsTable(db)
+        createBanksTable(db)
     }
 
  override fun onUpgrade(
@@ -190,6 +191,9 @@ class FinanceDb(context: Context) :
     }
     if (oldVersion < 6) {
     createDebtsTable(db)
+    }
+    if (oldVersion < 7) {
+    createBanksTable(db)
     }
  
     
