@@ -2450,7 +2450,7 @@ private fun AppThemeScreen(
                     Text(
                         preset.description,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
-                            Color.DarkGray else Color.LightGray
+                            
                     )
 
                     Row(
