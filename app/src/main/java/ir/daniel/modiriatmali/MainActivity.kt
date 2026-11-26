@@ -52,6 +52,49 @@ private val Purple = Color(0xFF9B7BFF)
 private val Green = Color(0xFF36D399)
 private val Red = Color(0xFFFF647C)
 
+data class AppThemePreset(
+    val id: String,
+    val name: String,
+    val description: String,
+    val background: Color,
+    val surface: Color,
+    val primary: Color,
+    val secondary: Color
+)
+
+private val appThemePresets = listOf(
+    AppThemePreset(
+        "neon", "نئونی دیجیتال", "قالب فعلی برنامه",
+        Color(0xFF080D18), Color(0xFF111B2D),
+        Color(0xFF27D7F2), Color(0xFF9B7BFF)
+    ),
+    AppThemePreset(
+        "royal", "سلطنتی", "مشکی و طلایی لوکس",
+        Color(0xFF100D0A), Color(0xFF211A12),
+        Color(0xFFFFC857), Color(0xFFD49B42)
+    ),
+    AppThemePreset(
+        "ocean", "اقیانوسی", "آبی عمیق و آرام",
+        Color(0xFF071522), Color(0xFF102A40),
+        Color(0xFF45B7E8), Color(0xFF58D6C5)
+    ),
+    AppThemePreset(
+        "forest", "جنگلی", "سبز تیره و طبیعی",
+        Color(0xFF0B1711), Color(0xFF17291E),
+        Color(0xFF65D68A), Color(0xFFB2D96C)
+    ),
+    AppThemePreset(
+        "purple", "بنفش مدرن", "بنفش و سرمه‌ای",
+        Color(0xFF100D20), Color(0xFF211A38),
+        Color(0xFFB69AFF), Color(0xFFEC91D8)
+    ),
+    AppThemePreset(
+        "light", "روشن مینیمال", "سفید و آبی ملایم",
+        Color(0xFFF2F5FA), Color(0xFFFFFFFF),
+        Color(0xFF2878D0), Color(0xFF7356C7)
+    )
+)
+
 
 data class MoneyTransaction(
     val id: Long,
