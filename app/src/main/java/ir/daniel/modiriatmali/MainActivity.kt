@@ -2252,7 +2252,7 @@ if (editingAlert != null) {
         Text("لغو ویرایش")
     }
 }
-        Divider(color = Color.DarkGray)
+        Divider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Text(
     "هشدارهای ثبت‌شده",
