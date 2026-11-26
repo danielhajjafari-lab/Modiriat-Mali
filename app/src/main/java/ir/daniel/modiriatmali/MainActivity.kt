@@ -1743,7 +1743,7 @@ private fun AdvancedTransactionSearch(
 
         Text(
             "تعداد نتایج: ${filtered.size}",
-            color = Cyan,
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
 
