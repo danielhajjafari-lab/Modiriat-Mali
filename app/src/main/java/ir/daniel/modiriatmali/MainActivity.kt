@@ -1353,8 +1353,8 @@ Box(Modifier.fillMaxWidth()) {
             unfocusedBorderColor = Color(0xFF52647C),
             focusedLabelColor = Cyan,
             unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+unfocusedTextColor = MaterialTheme.colorScheme.onSurface
         ),
         singleLine = true
     )
