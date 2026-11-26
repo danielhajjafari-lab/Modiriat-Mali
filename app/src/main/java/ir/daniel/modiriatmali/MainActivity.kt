@@ -1527,7 +1527,7 @@ private fun CategoryManager(
 
         Text(
             "فهرست دسته‌های ${type}",
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
 
