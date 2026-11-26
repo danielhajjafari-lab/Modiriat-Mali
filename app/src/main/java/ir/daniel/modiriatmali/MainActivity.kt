@@ -1050,9 +1050,9 @@ else
             onClick = { transactionFilter = type },
             label = { Text(type) },
             colors = FilterChipDefaults.filterChipColors(
-                selectedContainerColor = Cyan,
-                selectedLabelColor = Night,
-                labelColor = Color.White
+                selectedContainerColor = MaterialTheme.colorScheme.primary,
+selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+labelColor = MaterialTheme.colorScheme.onSurface
             )
         )
     }
