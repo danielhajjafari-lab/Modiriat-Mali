@@ -3004,7 +3004,19 @@ private fun FinanceCalculator() {
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
+Text(
+    if (storedValue != null && pendingOperator != null) {
+        "${formatNumber(storedValue!!)}  $pendingOperator  ${if (startNewNumber) "" else display}"
+    } else {
+        ""
+    },
+    fontSize = 20.sp,
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    textAlign = TextAlign.End,
+    modifier = Modifier.fillMaxWidth()
+)
 
+Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     display,
                     fontSize = 34.sp,
