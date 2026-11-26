@@ -1258,7 +1258,7 @@ shape = RoundedCornerShape(24.dp)
                     text = {
                         Text(
                             "از حذف این ${item.type} به مبلغ ${money(item.amount)} مطمئنی؟ این کار قابل بازگشت نیست.",
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     },
                     confirmButton = {
