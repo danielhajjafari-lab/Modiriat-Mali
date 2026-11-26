@@ -2057,7 +2057,7 @@ Text(
     Red
 else
     MaterialTheme.colorScheme.primary,
-                    trackColor = Color(0xFF35445B)
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
 
                 if (dailyLimit > 0 && todayExpenses > dailyLimit) {
