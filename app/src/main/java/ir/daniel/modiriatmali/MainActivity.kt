@@ -2345,7 +2345,12 @@ private fun EmptyCard(message: String) {
     ),
     shape = RoundedCornerShape(16.dp)
 ) {
-        Text(message, Modifier.fillMaxWidth().padding(22.dp), color = Color.LightGray, textAlign = TextAlign.Center)
+        Text(
+    message,
+    Modifier.fillMaxWidth().padding(22.dp),
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    textAlign = TextAlign.Center
+)
     }
 }
 @Composable
