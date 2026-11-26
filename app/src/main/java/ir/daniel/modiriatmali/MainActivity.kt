@@ -864,7 +864,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
             }
         ) {
         Scaffold(
-            containerColor = Night,
+            containerColor = activeTheme.background,
             topBar = {
                 TopAppBar(
                     title = { Text("مدیریت مالی", fontWeight = FontWeight.Bold, color = Color.White) },
@@ -873,8 +873,9 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                             Icon(Icons.Default.Menu, "منو", tint = Cyan)
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Night)
-                )
+                    colors = TopAppBarDefaults.topAppBarColors(
+    containerColor = activeTheme.background
+)
             }
         ) { padding ->
             
