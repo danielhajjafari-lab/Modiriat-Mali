@@ -1887,8 +1887,8 @@ private fun TransactionRow(
             ) {
                 Text(
                     item.category,
-                    color = MaterialTheme.colorScheme.onSurface
-                    fontWeight = FontWeight.Bold,
+color = MaterialTheme.colorScheme.onSurface,
+fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
                 )
 
