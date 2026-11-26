@@ -896,8 +896,12 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                 Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                if (page == "خانه") {
-                    Text("داشبورد مالی", color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                if (page == "خانه") {Text(
+    "داشبورد مالی",
+    color = MaterialTheme.colorScheme.primary,
+    fontSize = 22.sp,
+    fontWeight = FontWeight.Bold
+)
                     if (dailyBudgetLimit > 0L) {
     Card(
         modifier = Modifier.fillMaxWidth(),
