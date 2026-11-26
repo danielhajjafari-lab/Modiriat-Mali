@@ -1112,7 +1112,7 @@ val monthlyBalance = monthlyIncome - monthlyExpenses
     uri,
     monthlyTransactions,
     currentMonth,
-    currency
+    currency,
             dateFormat
 )
     }
@@ -4146,7 +4146,7 @@ private fun createMonthlyPdf(
     uri: Uri,
     transactions: List<MoneyTransaction>,
     month: String,
-    currency: String
+    currency: String,
     dateFormat: String
 ) {
     val document = PdfDocument()
