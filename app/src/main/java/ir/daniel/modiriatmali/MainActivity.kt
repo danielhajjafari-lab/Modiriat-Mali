@@ -2373,7 +2373,7 @@ private fun AppThemeScreen(
 
         Text(
             "قالب مورد علاقه‌ات رو انتخاب کن.",
-            color = Color.LightGray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         appThemePresets.forEach { preset ->
