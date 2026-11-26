@@ -1409,6 +1409,11 @@ alerts.forEach { alert ->
         refresh++
     }
                         }
+                        "قرض و بدهی" -> {
+    DebtScreen(db, refresh) {
+        refresh++
+    }
+                        }
                         "ماشین‌حساب" -> {
     FinanceCalculator()
                         }
