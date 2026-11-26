@@ -1267,6 +1267,11 @@ alerts.forEach { alert ->
                 } else {
                     Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     when (page) {
+                        "پس‌انداز" -> {
+    SavingsScreen(db, refresh) {
+        refresh++
+    }
+                        }
                         "ماشین‌حساب" -> {
     FinanceCalculator()
                         }
@@ -2871,3 +2876,198 @@ private fun FinanceCalculator() {
         }
     }
 } 
+@Composable
+private fun SavingsScreen(
+    db: FinanceDb,
+    refresh: Int,
+    onChanged: () -> Unit
+) {
+    var title by remember { mutableStateOf("") }
+    var target by remember { mutableStateOf("") }
+    var editingId by remember { mutableStateOf<Long?>(null) }
+    var savedAmount by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+
+    val goals = remember(refresh) {
+        db.getSavingsGoals()
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    "ایجاد هدف پس‌انداز",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("عنوان هدف؛ مثلاً خرید گوشی") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = target,
+                    onValueChange = {
+                        target = toEnglishDigits(it).filter(Char::isDigit)
+                    },
+                    label = { Text("مبلغ هدف به تومان") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                Button(
+                    onClick = {
+                        val amount = target.toLongOrNull()
+
+                        if (title.isBlank() || amount == null || amount <= 0L) {
+                            message = "عنوان و مبلغ معتبر وارد کن."
+                        } else if (db.addSavingsGoal(title, amount)) {
+                            title = ""
+                            target = ""
+                            message = "هدف پس‌انداز اضافه شد."
+                            onChanged()
+                        } else {
+                            message = "ثبت هدف انجام نشد."
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("افزودن هدف")
+                }
+
+                if (message.isNotBlank()) {
+                    Text(
+                        message,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+
+        Text(
+            "هدف‌های پس‌انداز من",
+            fontSize = 19.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        if (goals.isEmpty()) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    "هنوز هدفی ثبت نکرده‌ای.",
+                    modifier = Modifier.padding(18.dp)
+                )
+            }
+        }
+
+        goals.forEach { goal ->
+            val progress = (
+                goal.saved.toFloat() / goal.target.toFloat()
+            ).coerceIn(0f, 1f)
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        goal.title,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text("مبلغ هدف: ${money(goal.target)}")
+                    Text("پس‌انداز شده: ${money(goal.saved)}")
+                    Text(
+                        "مانده تا هدف: ${money((goal.target - goal.saved).coerceAtLeast(0L))}"
+                    )
+
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Text(
+                        "پیشرفت: ${(progress * 100).toInt()}٪",
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    OutlinedTextField(
+                        value = if (editingId == goal.id) savedAmount else "",
+                        onValueChange = {
+                            savedAmount = toEnglishDigits(it).filter(Char::isDigit)
+                        },
+                        label = { Text("مبلغ پس‌انداز فعلی به تومان") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                editingId = goal.id
+                                val amount = savedAmount.toLongOrNull()
+                                if (amount == null) {
+                                    savedAmount = goal.saved.toString()
+                                }
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("ویرایش مبلغ")
+                        }
+
+                        Button(
+                            onClick = {
+                                val amount = savedAmount.toLongOrNull()
+                                if (editingId != goal.id || amount == null) {
+                                    message = "ابتدا مبلغ را وارد کن و ویرایش را بزن."
+                                } else if (db.updateSavingsAmount(goal.id, amount)) {
+                                    editingId = null
+                                    savedAmount = ""
+                                    message = "مبلغ پس‌انداز به‌روزرسانی شد."
+                                    onChanged()
+                                }
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("ذخیره مبلغ")
+                        }
+                    }
+
+                    TextButton(
+                        onClick = {
+                            db.deleteSavingsGoal(goal.id)
+                            editingId = null
+                            savedAmount = ""
+                            onChanged()
+                        }
+                    ) {
+                        Text("حذف این هدف", color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            }
+        }
+    }
+}
