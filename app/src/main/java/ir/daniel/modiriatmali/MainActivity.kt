@@ -1451,7 +1451,7 @@ elevation = ButtonDefaults.buttonElevation(
 
     Text(
         "مبلغ‌ها به تومان ثبت می‌شوند و روی همین گوشی ذخیره می‌مانند.",
-        color = Color.LightGray,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontSize = 12.sp
     )
 }
