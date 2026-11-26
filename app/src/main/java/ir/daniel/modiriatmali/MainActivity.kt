@@ -828,8 +828,8 @@ MaterialTheme(colorScheme = appColorScheme) {
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = Panel,
-                    drawerContentColor = Color.White
+                    drawerContainerColor = activeTheme.surface,
+drawerContentColor = MaterialTheme.colorScheme.onSurface
                 ) {
                     Text(
                         "مدیریت مالی",
