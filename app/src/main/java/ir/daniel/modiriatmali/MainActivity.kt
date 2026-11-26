@@ -1894,14 +1894,14 @@ fontWeight = FontWeight.Bold,
 
                 Text(
                     item.date,
-                    color = Color(0xFF9EADC2),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
 
                 if (item.note.isNotBlank()) {
                     Text(
                         item.note,
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
                     )
                 }
