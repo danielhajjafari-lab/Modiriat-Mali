@@ -978,7 +978,11 @@ else
     fontSize = 27.sp,
     fontWeight = FontWeight.Bold
 )
-                            Text("بر اساس تراکنش‌های ثبت‌شده در این دستگاه", color = Cyan, fontSize = 11.sp)
+                            Text(
+    "بر اساس تراکنش‌های ثبت‌شده در این دستگاه",
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    fontSize = 11.sp
+)
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
