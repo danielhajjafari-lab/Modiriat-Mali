@@ -2137,7 +2137,10 @@ val soundPicker = rememberLauncherForActivityResult(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Text("نوع هشدار", color = Color.White)
+        Text(
+    "نوع هشدار",
+    color = MaterialTheme.colorScheme.onSurface
+)
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("صدا", "فقط لرزش", "بی‌صدا").forEach { type ->
