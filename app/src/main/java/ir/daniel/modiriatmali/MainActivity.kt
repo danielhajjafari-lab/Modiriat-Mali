@@ -1305,9 +1305,9 @@ private fun TransactionForm(
         },
         label = {
     Text(
-        "مبلغ به تومان",
-        color = Cyan
-    )
+    "مبلغ به تومان",
+    color = MaterialTheme.colorScheme.primary
+)
 },
 modifier = Modifier.fillMaxWidth(),
 shape = RoundedCornerShape(16.dp),
