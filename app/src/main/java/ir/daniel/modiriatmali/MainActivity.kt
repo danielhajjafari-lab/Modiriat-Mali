@@ -1188,6 +1188,9 @@ alerts.forEach { alert ->
                 } else {
                     Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     when (page) {
+                        "ماشین‌حساب" -> {
+    FinanceCalculator()
+                        }
                         "جستجو و تاریخچه" -> {
     AdvancedTransactionSearch(
         transactions = transactions,
@@ -2591,3 +2594,201 @@ launcherIcons.forEach { item ->
         }
     }
 }
+@Composable
+private fun FinanceCalculator() {
+    var display by remember { mutableStateOf("0") }
+    var storedValue by remember { mutableStateOf<Double?>(null) }
+    var pendingOperator by remember { mutableStateOf<String?>(null) }
+    var startNewNumber by remember { mutableStateOf(false) }
+
+    fun formatNumber(value: Double): String {
+        if (!value.isFinite()) return "خطا"
+        if (kotlin.math.abs(value) < 0.00000001) return "0"
+
+        return if (value % 1.0 == 0.0) {
+            value.toLong().toString()
+        } else {
+            String.format(Locale.US, "%.8f", value)
+                .trimEnd('0')
+                .trimEnd('.')
+        }
+    }
+
+    fun calculate(a: Double, b: Double, op: String): Double? {
+        return when (op) {
+            "+" -> a + b
+            "−" -> a - b
+            "×" -> a * b
+            "÷" -> if (b == 0.0) null else a / b
+            else -> b
+        }
+    }
+
+    fun press(key: String) {
+        when (key) {
+            "C" -> {
+                display = "0"
+                storedValue = null
+                pendingOperator = null
+                startNewNumber = false
+            }
+
+            "⌫" -> {
+                if (!startNewNumber) {
+                    display = if (display.length <= 1) "0"
+                    else display.dropLast(1)
+                }
+            }
+
+            "+/−" -> {
+                if (display != "0" && display != "خطا") {
+                    display = if (display.startsWith("-")) {
+                        display.drop(1)
+                    } else {
+                        "-$display"
+                    }
+                }
+            }
+
+            "%" -> {
+                val value = display.toDoubleOrNull() ?: 0.0
+                display = formatNumber(value / 100.0)
+            }
+
+            "+", "−", "×", "÷" -> {
+                val current = display.toDoubleOrNull() ?: return
+
+                if (storedValue != null &&
+                    pendingOperator != null &&
+                    !startNewNumber
+                ) {
+                    val result = calculate(
+                        storedValue!!,
+                        current,
+                        pendingOperator!!
+                    )
+
+                    if (result == null) {
+                        display = "خطا"
+                        storedValue = null
+                        pendingOperator = null
+                        return
+                    }
+
+                    storedValue = result
+                    display = formatNumber(result)
+                } else {
+                    storedValue = current
+                }
+
+                pendingOperator = key
+                startNewNumber = true
+            }
+
+            "=" -> {
+                val first = storedValue
+                val op = pendingOperator
+                val second = display.toDoubleOrNull()
+
+                if (first != null && op != null && second != null) {
+                    val result = calculate(first, second, op)
+                    display = result?.let { formatNumber(it) } ?: "خطا"
+                    storedValue = null
+                    pendingOperator = null
+                    startNewNumber = true
+                }
+            }
+
+            "." -> {
+                if (startNewNumber) {
+                    display = "0."
+                    startNewNumber = false
+                } else if (!display.contains(".")) {
+                    display += "."
+                }
+            }
+
+            else -> {
+                if (key.all { it.isDigit() }) {
+                    if (startNewNumber || display == "0" || display == "خطا") {
+                        display = key
+                        startNewNumber = false
+                    } else if (display.length < 15) {
+                        display += key
+                    }
+                }
+            }
+        }
+    }
+
+    val rows = listOf(
+        listOf("C", "⌫", "%", "÷"),
+        listOf("7", "8", "9", "×"),
+        listOf("4", "5", "6", "−"),
+        listOf("1", "2", "3", "+"),
+        listOf("+/−", "0", ".", "=")
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    "ماشین‌حساب مالی",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 16.sp
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    display,
+                    fontSize = 34.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Text(
+                    "تومان",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        rows.forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                row.forEach { key ->
+                    Button(
+                        onClick = { press(key) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(58.dp),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text(
+                            key,
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+} 
