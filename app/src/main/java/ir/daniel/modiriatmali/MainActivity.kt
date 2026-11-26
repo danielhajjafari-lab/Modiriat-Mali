@@ -681,7 +681,39 @@ private fun toEnglishDigits(value: String): String {
         }
     }.joinToString("")
 }
+private fun applyLauncherIcon(context: Context, iconId: String) {
+    val aliases = mapOf(
+        "wallet" to ".WalletIcon",
+        "chart" to ".ChartIcon",
+        "coin" to ".CoinIcon"
+    )
 
+    val selectedAlias = aliases[iconId] ?: ".WalletIcon"
+
+    val packageManager = context.packageManager
+
+    packageManager.setComponentEnabledSetting(
+        android.content.ComponentName(
+            context.packageName,
+            context.packageName + selectedAlias
+        ),
+        android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+        android.content.pm.PackageManager.DONT_KILL_APP
+    )
+
+    aliases.values
+        .filter { it != selectedAlias }
+        .forEach { alias ->
+            packageManager.setComponentEnabledSetting(
+                android.content.ComponentName(
+                    context.packageName,
+                    context.packageName + alias
+                ),
+                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                android.content.pm.PackageManager.DONT_KILL_APP
+            )
+        }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FinanceApp(db: FinanceDb) {
