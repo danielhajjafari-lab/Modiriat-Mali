@@ -1075,7 +1075,7 @@ else
                         }
                     }
                 } else if (page == "ثبت درآمد" || page == "ثبت هزینه") {
-                    Text(page, color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     TransactionForm(
     page,
     categories = db.getCategories(if (page == "ثبت درآمد") "درآمد" else "هزینه"),
