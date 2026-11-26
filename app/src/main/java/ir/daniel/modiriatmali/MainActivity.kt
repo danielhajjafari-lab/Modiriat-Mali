@@ -18,6 +18,7 @@ import android.net.Uri
 import kotlinx.coroutines.delay
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -859,6 +860,18 @@ val monthlyExpenses = monthlyTransactions
     .sumOf { it.amount }
 
 val monthlyBalance = monthlyIncome - monthlyExpenses
+    val pdfLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.CreateDocument("application/pdf")
+) { uri ->
+    if (uri != null) {
+        createMonthlyPdf(
+            context,
+            uri,
+            monthlyTransactions,
+            currentMonth
+        )
+    }
+    }
     val pages = listOf(
         "خانه", "ثبت درآمد", "ثبت هزینه", "قرض و بدهی", "پس‌انداز",
         "گزارش‌ها و PDF", "دسته‌بندی‌ها", "مدیریت بانک‌ها", "ماشین‌حساب",
