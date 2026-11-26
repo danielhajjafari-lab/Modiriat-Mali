@@ -1142,7 +1142,7 @@ alerts.forEach { alert ->
     page = "خانه"
 })
                 } else {
-                    Text(page, color = Cyan, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     when (page) {
                         "جستجو و تاریخچه" -> {
     AdvancedTransactionSearch(
