@@ -2254,7 +2254,11 @@ if (editingAlert != null) {
 }
         Divider(color = Color.DarkGray)
 
-        Text("هشدارهای ثبت‌شده", color = Cyan, fontSize = 18.sp)
+        Text(
+    "هشدارهای ثبت‌شده",
+    color = MaterialTheme.colorScheme.primary,
+    fontSize = 18.sp
+)
 
         if (alerts.isEmpty()) {
             Text("هنوز هشداری ثبت نشده است.", color = Color.Gray)
