@@ -580,6 +580,45 @@ private suspend fun playBudgetAlert(
         vibrator?.cancel()
     }
 }
+class BudgetAlertWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+        val alertId = inputData.getLong("alert_id", -1L)
+
+        if (alertId <= 0L) {
+            return Result.failure()
+        }
+
+        val alert = BudgetAlert(
+            id = alertId,
+            percentage = inputData.getInt("percentage", 0),
+            enabled = true,
+            alertType = inputData.getString("alert_type") ?: "صدا",
+            soundUri = inputData.getString("sound_uri") ?: "",
+            durationSeconds = inputData.getInt("duration", 5),
+            vibration = inputData.getBoolean("vibration", true)
+        )
+
+        return try {
+            playBudgetAlert(applicationContext, alert)
+
+            val today = SimpleDateFormat(
+                "yyyy/MM/dd",
+                Locale("fa", "IR")
+            ).format(Date())
+
+            FinanceDb(applicationContext)
+                .markBudgetAlertTriggered(alertId, today)
+
+            Result.success()
+        } catch (e: Exception) {
+            Result.retry()
+        }
+    }
+}
 private fun money(value: Long): String =
     NumberFormat.getInstance(Locale("fa", "IR")).format(value) + " تومان"
 
