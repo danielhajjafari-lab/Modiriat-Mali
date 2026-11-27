@@ -32,6 +32,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -5039,25 +5040,63 @@ private fun SmartSupportScreen() {
     var searchText by remember { mutableStateOf("") }
     var selectedQuestion by remember { mutableStateOf<String?>(null) }
 
-    val helpItems = listOf(
-        "ثبت درآمد" to "از بخش ثبت درآمد می‌توانی مبلغ، تاریخ، دسته‌بندی و توضیحات درآمد را وارد کنی.",
-        "ثبت هزینه" to "برای ثبت هزینه، مبلغ و دسته‌بندی موردنظر را انتخاب و اطلاعات را ذخیره کن.",
-        "مدیریت بانک‌ها" to "در این قسمت حساب‌ها و بانک‌های خودت را مدیریت می‌کنی.",
-        "قرض و بدهی" to "برای ثبت قرض، دریافت یا پرداخت بدهی از این بخش استفاده کن.",
-        "پس‌انداز" to "می‌توانی هدف پس‌انداز بسازی و واریزها و برداشت‌های آن را ثبت کنی.",
-        "بودجه‌بندی" to "برای هر دسته هزینه، سقف بودجه تعیین کن و میزان مصرف را بررسی کن.",
-        "تنظیم هشدارها" to "در این قسمت درصد و نوع هشدارهای مالی را تنظیم کن.",
-        "گزارش‌ها و PDF" to "گزارش‌های مالی را مشاهده و به صورت PDF ذخیره کن.",
-        "جستجو و تاریخچه" to "تراکنش‌های قبلی را جستجو و بررسی کن.",
-        "پشتیبان‌گیری" to "ابتدا فایل پشتیبان ZIP بساز و آن را در محل امن نگهداری کن. برای بازیابی، فایل ZIP را از داخل برنامه انتخاب کن.",
-        "قفل بخش‌های خصوصی" to "ابتدا رمز چهاررقمی تعیین کن و سپس بخش‌هایی را که می‌خواهی قفل شوند فعال کن.",
-        "شخصی‌سازی" to "از این بخش می‌توانی قالب ظاهری و آیکون برنامه را تغییر بدهی.",
-        "ماشین‌حساب" to "برای محاسبات مالی روزمره از ماشین‌حساب برنامه استفاده کن."
+@Composable
+private fun SmartSupportScreen() {
+    var searchText by remember { mutableStateOf("") }
+    var selectedQuestion by remember { mutableStateOf<String?>(null) }
+    var selectedCategory by remember { mutableStateOf("همه") }
+
+    data class HelpItem(
+        val category: String,
+        val title: String,
+        val answer: String
     )
 
-    val filteredItems = helpItems.filter {
-        it.first.contains(searchText, ignoreCase = true) ||
-        it.second.contains(searchText, ignoreCase = true)
+    val categories = listOf(
+        "همه",
+        "تراکنش‌ها",
+        "حساب‌ها",
+        "برنامه‌ریزی",
+        "امنیت",
+        "ابزارها"
+    )
+
+    val helpItems = listOf(
+        HelpItem("تراکنش‌ها", "ثبت درآمد",
+            "۱. وارد ثبت درآمد شو.\n۲. مبلغ درآمد را وارد کن.\n۳. دسته‌بندی و تاریخ را انتخاب کن.\n۴. اطلاعات را ذخیره کن."),
+        HelpItem("تراکنش‌ها", "ثبت هزینه",
+            "۱. وارد ثبت هزینه شو.\n۲. مبلغ هزینه را وارد کن.\n۳. دسته‌بندی مناسب را انتخاب کن.\n۴. تراکنش را ذخیره کن."),
+        HelpItem("تراکنش‌ها", "جستجو و تاریخچه",
+            "از بخش جستجو و تاریخچه می‌توانی تراکنش‌ها را بر اساس اطلاعات موجود جستجو و بررسی کنی."),
+        HelpItem("حساب‌ها", "مدیریت بانک‌ها",
+            "در این بخش حساب‌های بانکی را مدیریت کن و اطلاعات حساب‌هایت را بررسی کن."),
+        HelpItem("حساب‌ها", "قرض و بدهی",
+            "برای ثبت قرض، دریافت یا پرداخت بدهی از بخش قرض و بدهی استفاده کن."),
+        HelpItem("برنامه‌ریزی", "پس‌انداز",
+            "۱. یک هدف پس‌انداز بساز.\n۲. نام و مبلغ هدف را مشخص کن.\n۳. واریزها و برداشت‌ها را ثبت کن.\n۴. پیشرفت هدفت را بررسی کن."),
+        HelpItem("برنامه‌ریزی", "بودجه‌بندی",
+            "برای دسته‌های هزینه سقف بودجه تعیین کن و میزان مصرف بودجه را بررسی کن."),
+        HelpItem("برنامه‌ریزی", "تنظیم هشدارها",
+            "در این قسمت درصد و نوع هشدارهای مالی را مطابق نیازت تنظیم کن."),
+        HelpItem("ابزارها", "گزارش‌ها و PDF",
+            "گزارش‌های مالی را مشاهده کن و در صورت نیاز خروجی PDF بگیر."),
+        HelpItem("امنیت", "قفل بخش‌های خصوصی",
+            "ابتدا رمز چهاررقمی تعیین کن. سپس بخش‌هایی را که می‌خواهی قفل شوند فعال کن."),
+        HelpItem("امنیت", "پشتیبان‌گیری",
+            "برای تهیه نسخه پشتیبان، فایل ZIP بساز و در محل امن نگهداری کن. برای بازیابی، فایل ZIP را از داخل برنامه انتخاب کن."),
+        HelpItem("ابزارها", "شخصی‌سازی",
+            "از این بخش می‌توانی قالب ظاهری و آیکون برنامه را تغییر بدهی."),
+        HelpItem("ابزارها", "ماشین‌حساب",
+            "از ماشین‌حساب برای محاسبات مالی روزمره استفاده کن.")
+    )
+
+    val filteredItems = helpItems.filter { item ->
+        (selectedCategory == "همه" || item.category == selectedCategory) &&
+        (
+            item.title.contains(searchText, ignoreCase = true) ||
+            item.answer.contains(searchText, ignoreCase = true) ||
+            item.category.contains(searchText, ignoreCase = true)
+        )
     }
 
     Column(
@@ -5090,6 +5129,27 @@ private fun SmartSupportScreen() {
         )
 
         Text(
+            "دسته‌بندی آموزش‌ها",
+            fontWeight = FontWeight.Bold
+        )
+
+        Row(
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            categories.forEach { category ->
+                FilterChip(
+                    selected = selectedCategory == category,
+                    onClick = {
+                        selectedCategory = category
+                        selectedQuestion = null
+                    },
+                    label = { Text(category) }
+                )
+            }
+        }
+
+        Text(
             "راهنمای آفلاین",
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -5101,8 +5161,8 @@ private fun SmartSupportScreen() {
                     .fillMaxWidth()
                     .clickable {
                         selectedQuestion =
-                            if (selectedQuestion == item.first) null
-                            else item.first
+                            if (selectedQuestion == item.title) null
+                            else item.title
                     }
             ) {
                 Column(
@@ -5110,12 +5170,18 @@ private fun SmartSupportScreen() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        item.first,
+                        item.category,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Text(
+                        item.title,
                         fontWeight = FontWeight.Bold
                     )
 
-                    if (selectedQuestion == item.first) {
-                        Text(item.second)
+                    if (selectedQuestion == item.title) {
+                        Divider()
+                        Text(item.answer)
                     }
                 }
             }
@@ -5128,13 +5194,27 @@ private fun SmartSupportScreen() {
         Divider()
 
         Text(
+            "سؤالات پرتکرار",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Text("چطور از اطلاعاتم نسخه پشتیبان بگیرم؟")
+        Text("از بخش پشتیبان‌گیری گزینه ایجاد فایل پشتیبان را انتخاب کن.")
+
+        Text("اگر رمز بخش خصوصی را فراموش کنم چه کنم؟")
+        Text("برای جلوگیری از ازدست‌رفتن دسترسی، قبل از فعال‌کردن قفل‌ها رمز خود را در جای امن نگهداری کن.")
+
+        Divider()
+
+        Text(
             "پشتیبانی آنلاین هوشمند",
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            "اتصال به دستیار هوش مصنوعی در مرحله بعد اضافه می‌شود. راهنمای آفلاین همین حالا قابل استفاده است."
+            "اتصال دستیار آنلاین در مرحله بعد اضافه می‌شود."
         )
 
         Text(
@@ -5143,8 +5223,9 @@ private fun SmartSupportScreen() {
         )
 
         Text(
-            "اطلاعات تماس سازنده در نسخه بعدی این بخش اضافه می‌شود."
+            "اطلاعات تماس سازنده در نسخه بعدی اضافه می‌شود."
         )
     }
 }
+
 
