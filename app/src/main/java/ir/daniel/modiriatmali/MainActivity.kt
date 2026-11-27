@@ -4339,6 +4339,7 @@ Card(
         }
     }
     }
+    }
 @Composable
 private fun DebtScreen(
     db: FinanceDb,
