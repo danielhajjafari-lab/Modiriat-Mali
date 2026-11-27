@@ -1822,6 +1822,9 @@ alerts.forEach { alert ->
         }
     )
 }
+"پشتیبانی هوشمند" -> {
+    SmartSupportScreen()
+}
 "پشتیبان‌گیری" -> {
     BackupScreen(
         message = backupMessage,
