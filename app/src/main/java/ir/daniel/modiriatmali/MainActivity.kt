@@ -1801,11 +1801,16 @@ alerts.forEach { alert ->
 }
 "پشتیبان‌گیری" -> {
     BackupScreen(
-        context = context,
-        db = db,
-        preferences = themePreferences,
+        message = backupMessage,
+        onCreateBackup = {
+            backupMessage = ""
+            backupLauncher.launch("ModiriatMali_Backup.zip")
+        },
         onRestore = {
-            refresh++
+            backupMessage = ""
+            restoreLauncher.launch(
+                arrayOf("application/zip", "application/octet-stream")
+            )
         }
     )
 }
