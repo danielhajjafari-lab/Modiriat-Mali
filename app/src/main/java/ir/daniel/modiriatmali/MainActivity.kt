@@ -1488,7 +1488,7 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
                 }
         }
     }
-    .padding(horizontal = 16.dp, vertical = 17.dp),
+    .padding(horizontal = 16.dp, vertical = 22.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
