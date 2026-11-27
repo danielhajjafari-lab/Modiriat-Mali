@@ -1770,7 +1770,6 @@ alerts.forEach { alert ->
     )
 }
 "پشتیبان‌گیری" -> {
-"پشتیبان‌گیری" -> {
     BackupScreen(
         context = context,
         db = db,
