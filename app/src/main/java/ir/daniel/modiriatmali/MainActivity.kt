@@ -5096,12 +5096,11 @@ private fun SmartSupportScreen() {
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp),
+    verticalArrangement = Arrangement.spacedBy(12.dp)
+) {
         Text(
             "پشتیبانی هوشمند",
             fontSize = 24.sp,
