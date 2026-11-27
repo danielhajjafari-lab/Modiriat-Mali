@@ -4069,7 +4069,9 @@ Spacer(modifier = Modifier.height(8.dp))
             }
                 if (calculationHistory.isNotEmpty()) {
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+    .fillMaxWidth()
+    .animateContentSize(),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Column(
