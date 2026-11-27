@@ -2820,6 +2820,81 @@ TextButton(
     }
 }
 @Composable
+private fun PrivateSectionLockScreen(
+    preferences: android.content.SharedPreferences
+) {
+    val sections = listOf(
+        "گزارش‌ها و PDF" to "lock_reports",
+        "قرض و بدهی" to "lock_debts",
+        "جستجو و تاریخچه" to "lock_history",
+        "پس‌انداز" to "lock_savings",
+        "مدیریت بانک‌ها" to "lock_banks",
+        "ماشین‌حساب" to "lock_calculator"
+    )
+
+    var lockStates by remember {
+        mutableStateOf(
+            sections.associate { (name, key) ->
+                key to preferences.getBoolean(key, false)
+            }
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            "قفل بخش‌های خصوصی",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Text(
+            "بخش‌هایی را که می‌خواهی محافظت شوند انتخاب کن.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        sections.forEach { (name, key) ->
+            Card(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(name)
+
+                    Switch(
+                        checked = lockStates[key] == true,
+                        onCheckedChange = { enabled ->
+                            preferences.edit()
+                                .putBoolean(key, enabled)
+                                .apply()
+
+                            lockStates = lockStates.toMutableMap().apply {
+                                put(key, enabled)
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
+        Text(
+            "فعلاً این قسمت تنظیم انتخاب بخش‌هاست؛ در مرحله بعد قفل واقعی و رمز ورود را به آن وصل می‌کنیم.",
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+@Composable
 private fun EmptyCard(message: String) {
     Card(
     colors = CardDefaults.cardColors(
