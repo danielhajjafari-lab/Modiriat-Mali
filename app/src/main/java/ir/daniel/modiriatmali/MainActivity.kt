@@ -28,6 +28,7 @@ import android.text.TextDirectionHeuristics
 import android.text.TextPaint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -882,7 +883,8 @@ fun deleteBank(id: Long): Boolean {
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    installSplashScreen()
+    super.onCreate(savedInstanceState)
         val db = FinanceDb(this)
         setContent { FinanceApp(db) }
     }
