@@ -5033,3 +5033,118 @@ tempDatabase.delete()
 
     editor.apply()
 }
+
+@Composable
+private fun SmartSupportScreen() {
+    var searchText by remember { mutableStateOf("") }
+    var selectedQuestion by remember { mutableStateOf<String?>(null) }
+
+    val helpItems = listOf(
+        "ثبت درآمد" to "از بخش ثبت درآمد می‌توانی مبلغ، تاریخ، دسته‌بندی و توضیحات درآمد را وارد کنی.",
+        "ثبت هزینه" to "برای ثبت هزینه، مبلغ و دسته‌بندی موردنظر را انتخاب و اطلاعات را ذخیره کن.",
+        "مدیریت بانک‌ها" to "در این قسمت حساب‌ها و بانک‌های خودت را مدیریت می‌کنی.",
+        "قرض و بدهی" to "برای ثبت قرض، دریافت یا پرداخت بدهی از این بخش استفاده کن.",
+        "پس‌انداز" to "می‌توانی هدف پس‌انداز بسازی و واریزها و برداشت‌های آن را ثبت کنی.",
+        "بودجه‌بندی" to "برای هر دسته هزینه، سقف بودجه تعیین کن و میزان مصرف را بررسی کن.",
+        "تنظیم هشدارها" to "در این قسمت درصد و نوع هشدارهای مالی را تنظیم کن.",
+        "گزارش‌ها و PDF" to "گزارش‌های مالی را مشاهده و به صورت PDF ذخیره کن.",
+        "جستجو و تاریخچه" to "تراکنش‌های قبلی را جستجو و بررسی کن.",
+        "پشتیبان‌گیری" to "ابتدا فایل پشتیبان ZIP بساز و آن را در محل امن نگهداری کن. برای بازیابی، فایل ZIP را از داخل برنامه انتخاب کن.",
+        "قفل بخش‌های خصوصی" to "ابتدا رمز چهاررقمی تعیین کن و سپس بخش‌هایی را که می‌خواهی قفل شوند فعال کن.",
+        "شخصی‌سازی" to "از این بخش می‌توانی قالب ظاهری و آیکون برنامه را تغییر بدهی.",
+        "ماشین‌حساب" to "برای محاسبات مالی روزمره از ماشین‌حساب برنامه استفاده کن."
+    )
+
+    val filteredItems = helpItems.filter {
+        it.first.contains(searchText, ignoreCase = true) ||
+        it.second.contains(searchText, ignoreCase = true)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            "پشتیبانی هوشمند",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            "راهنمای استفاده از مدیریت مالی",
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = {
+                searchText = it
+                selectedQuestion = null
+            },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text("جستجو در راهنما") },
+            singleLine = true
+        )
+
+        Text(
+            "راهنمای آفلاین",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        filteredItems.forEach { item ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        selectedQuestion =
+                            if (selectedQuestion == item.first) null
+                            else item.first
+                    }
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        item.first,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    if (selectedQuestion == item.first) {
+                        Text(item.second)
+                    }
+                }
+            }
+        }
+
+        if (filteredItems.isEmpty()) {
+            Text("موردی پیدا نشد.")
+        }
+
+        Divider()
+
+        Text(
+            "پشتیبانی آنلاین هوشمند",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Text(
+            "اتصال به دستیار هوش مصنوعی در مرحله بعد اضافه می‌شود. راهنمای آفلاین همین حالا قابل استفاده است."
+        )
+
+        Text(
+            "تماس با سازنده",
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            "اطلاعات تماس سازنده در نسخه بعدی این بخش اضافه می‌شود."
+        )
+    }
+}
+
