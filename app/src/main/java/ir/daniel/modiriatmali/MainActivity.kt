@@ -3912,7 +3912,45 @@ var calculationHistory by remember {
                 pendingOperator = key
                 startNewNumber = true
             }
+"=" -> {
+    val first = storedValue
+    val op = pendingOperator
+    val second = display.toDoubleOrNull()
 
+    if (first != null && op != null && second != null) {
+        val result = calculate(first, second, op)
+
+        if (result != null) {
+            val expression =
+                "${formatNumber(first)} $op ${formatNumber(second)}"
+            val resultText = formatNumber(result)
+
+            calculationHistory =
+                (listOf(expression to resultText) + calculationHistory).take(100)
+
+            val jsonArray = org.json.JSONArray()
+            calculationHistory.forEach { item ->
+                jsonArray.put(
+                    org.json.JSONObject()
+                        .put("expression", item.first)
+                        .put("result", item.second)
+                )
+            }
+
+            calculatorPrefs.edit()
+                .putString("history", jsonArray.toString())
+                .apply()
+
+            display = resultText
+        } else {
+            display = "خطا"
+        }
+
+        storedValue = null
+        pendingOperator = null
+        startNewNumber = true
+    }
+}
             
             "." -> {
                 if (startNewNumber) {
