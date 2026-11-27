@@ -1466,26 +1466,23 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-    if (groupTitle == "خانه") {
-        navigateTo("خانه")
-        scope.launch {
-            drawerState.close()
+    .fillMaxWidth()
+    .clickable {
+        if (groupTitle == "خانه") {
+            navigateTo("خانه")
+            scope.launch {
+                drawerState.close()
+            }
+        } else {
+            expandedDrawerGroups =
+                if (isExpanded) {
+                    expandedDrawerGroups - groupTitle
+                } else {
+                    expandedDrawerGroups + groupTitle
+                }
         }
-    } else {
-        expandedDrawerGroups =
-            if (isExpanded) {
-                expandedDrawerGroups - groupTitle
-            } else {
-                expandedDrawerGroups + groupTitle
-            }
     }
-            } else {
-                        expandedDrawerGroups + groupTitle
-                    }
-            }
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+    .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
