@@ -4039,7 +4039,7 @@ var historyExpanded by remember { mutableStateOf(false) }
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 Text(
     if (storedValue != null && pendingOperator != null) {
         "${formatNumber(storedValue!!)}  $pendingOperator  ${if (startNewNumber) "" else display}"
