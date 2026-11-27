@@ -4534,15 +4534,27 @@ FileInputStream(tempDatabase).use { inputStream ->
 File(databaseFile.path + "-wal").delete()
 File(databaseFile.path + "-shm").delete()
 
-if (databaseFile.exists() && !databaseFile.delete()) {
+val oldDatabaseFile = File(
+    databaseFile.parentFile,
+    "finance_before_restore.db"
+)
+
+oldDatabaseFile.delete()
+
+if (databaseFile.exists() && !databaseFile.renameTo(oldDatabaseFile)) {
     newDatabaseFile.delete()
-    throw Exception("جایگزینی فایل دیتابیس انجام نشد.")
+    throw Exception("ذخیره اطلاعات قبلی ناموفق بود.")
 }
 
 if (!newDatabaseFile.renameTo(databaseFile)) {
+    if (oldDatabaseFile.exists()) {
+        oldDatabaseFile.renameTo(databaseFile)
+    }
     newDatabaseFile.delete()
-    throw Exception("انتقال فایل دیتابیس انجام نشد.")
+    throw Exception("بازیابی انجام نشد؛ اطلاعات قبلی حفظ شدند.")
 }
+
+oldDatabaseFile.delete()
 
 tempDatabase.delete()
 
