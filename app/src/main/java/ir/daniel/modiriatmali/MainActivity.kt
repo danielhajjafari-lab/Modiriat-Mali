@@ -1382,7 +1382,6 @@ onClick = {
     scope.launch { drawerState.close() }
 },
 
-                                },
                                 icon = {
                                     Icon(Icons.Default.Menu, contentDescription = null)
                                 },
