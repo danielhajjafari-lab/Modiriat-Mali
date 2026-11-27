@@ -4020,7 +4020,25 @@ var historyExpanded by remember { mutableStateOf(false) }
                 horizontalAlignment = Alignment.End
             ) {
                                 
-
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        onClick = {
+                            calculationHistory = emptyList()
+                            calculatorPrefs.edit()
+                                .putString("history", "[]")
+                                .apply()
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "پاک کردن حافظه",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(20.dp))
 Text(
     if (storedValue != null && pendingOperator != null) {
