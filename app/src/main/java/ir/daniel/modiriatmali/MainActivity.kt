@@ -3824,6 +3824,7 @@ var calculationHistory by remember {
         }.getOrDefault(emptyList())
     )
 }
+var historyExpanded by remember { mutableStateOf(false) }
     var display by remember { mutableStateOf("0") }
     var storedValue by remember { mutableStateOf<Double?>(null) }
     var pendingOperator by remember { mutableStateOf<String?>(null) }
