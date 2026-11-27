@@ -4725,57 +4725,6 @@ private fun createMonthlyPdf(
 }
 @Composable
 private fun BackupScreen(
-    context: Context,
-    db: FinanceDb,
-    preferences: android.content.SharedPreferences,
-    onRestore: () -> Unit
-) {
-    var message by remember { mutableStateOf("") }
-    var showConfirm by remember { mutableStateOf(false) }
-
-    val backupLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("application/zip")
-    ) { uri ->
-        if (uri != null) {
-            try {
-                createFinanceBackup(context, db, preferences, uri)
-                message = "پشتیبان‌گیری با موفقیت انجام شد."
-            } catch (e: Exception) {
-                message = "خطا در پشتیبان‌گیری: ${e.message}"
-            }
-        }
-    }
-
-    val restoreLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        if (uri != null) {
-            try {
-                restoreFinanceBackup(context, db, preferences, uri)
-                message = "بازیابی اطلاعات با موفقیت انجام شد."
-                onRestore()
-            } catch (e: Exception) {
-                message = "خطا در بازیابی: ${e.message}"
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            "پشتیبان‌گیری اطلاعات",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-
-@Composable
-private fun BackupScreen(
     message: String,
     onCreateBackup: () -> Unit,
     onRestore: () -> Unit
