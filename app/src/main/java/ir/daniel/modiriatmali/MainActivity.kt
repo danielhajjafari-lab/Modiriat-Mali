@@ -4411,34 +4411,42 @@ private fun createFinanceBackup(
     db.writableDatabase.execSQL("PRAGMA wal_checkpoint(FULL)")
     db.close()
 
-    val settings = Properties()
-
-    preferences.all.forEach { (key, value) ->
-        when (value) {
-            is String -> settings.setProperty(key, "S|$value")
-            is Boolean -> settings.setProperty(key, "B|$value")
-            is Int -> settings.setProperty(key, "I|$value")
-            is Long -> settings.setProperty(key, "L|$value")
-            is Float -> settings.setProperty(key, "F|$value")
+    try {
+        if (!databaseFile.exists() || databaseFile.length() == 0L) {
+            throw Exception("فایل اطلاعات برنامه پیدا نشد.")
         }
-    }
 
-    val output = context.contentResolver.openOutputStream(uri)
-        ?: throw Exception("فایل قابل ذخیره نیست.")
+        val settings = Properties()
 
-    ZipOutputStream(output).use { zip ->
-        zip.putNextEntry(ZipEntry("finance.db"))
-        FileInputStream(databaseFile).use { input ->
-            input.copyTo(zip)
+        preferences.all.forEach { (key, value) ->
+            when (value) {
+                is String -> settings.setProperty(key, "S|$value")
+                is Boolean -> settings.setProperty(key, "B|$value")
+                is Int -> settings.setProperty(key, "I|$value")
+                is Long -> settings.setProperty(key, "L|$value")
+                is Float -> settings.setProperty(key, "F|$value")
+            }
         }
-        zip.closeEntry()
 
-        zip.putNextEntry(ZipEntry("settings.properties"))
-        settings.store(zip, "Finance App Backup")
-        zip.closeEntry()
+        val output = context.contentResolver.openOutputStream(uri)
+            ?: throw Exception("فایل قابل ذخیره نیست.")
+
+        ZipOutputStream(output).use { zip ->
+            zip.putNextEntry(ZipEntry("finance.db"))
+
+            FileInputStream(databaseFile).use { input ->
+                input.copyTo(zip)
+            }
+
+            zip.closeEntry()
+
+            zip.putNextEntry(ZipEntry("settings.properties"))
+            settings.store(zip, "Finance App Backup")
+            zip.closeEntry()
+        }
+    } finally {
+        db.writableDatabase
     }
-
-    db.writableDatabase
 }
 
 private fun restoreFinanceBackup(
