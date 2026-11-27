@@ -1611,9 +1611,7 @@ alerts.forEach { alert ->
 "تنظیمات" -> {
     SettingsScreen(themePreferences)
 }
-"تنظیمات" -> {
-    SettingsScreen(themePreferences)
-}
+
 "شخصی‌سازی" -> {
     AppThemeScreen(
         selectedThemeId = selectedThemeId,
