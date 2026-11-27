@@ -1770,13 +1770,11 @@ alerts.forEach { alert ->
     )
 }
 "پشتیبان‌گیری" -> {
-    BackupScreen(
-        context = context,
-        db = db,
-        preferences = themePreferences,
-        onRestore = {
-            refresh++
-        }
+    Text(
+        text = "صفحه پشتیبان‌گیری باز شد",
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     )
 }
 
