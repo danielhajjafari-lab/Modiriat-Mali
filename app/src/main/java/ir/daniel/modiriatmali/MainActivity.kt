@@ -4083,15 +4083,26 @@ Spacer(modifier = Modifier.height(8.dp))
                             .height(28.dp)
                             
                             .pointerInput(Unit) {
-                                detectVerticalDragGestures { change, dragAmount ->
-                                    change.consume()
-                                    if (dragAmount > 2f) {
-                                        historyExpanded = true
-                                    } else if (dragAmount < -2f) {
-                                        historyExpanded = false
-                                    }
-                                }
-                            },
+    var totalDrag = 0f
+
+    detectVerticalDragGestures(
+        onVerticalDrag = { change, dragAmount ->
+            change.consume()
+            totalDrag += dragAmount
+        },
+        onDragEnd = {
+            if (totalDrag > 35f) {
+                historyExpanded = true
+            } else if (totalDrag < -35f) {
+                historyExpanded = false
+            }
+            totalDrag = 0f
+        },
+        onDragCancel = {
+            totalDrag = 0f
+        }
+    )
+},
                         contentAlignment = Alignment.Center
                     ) {
                         Box(
