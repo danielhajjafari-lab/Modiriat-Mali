@@ -4546,8 +4546,6 @@ if (!newDatabaseFile.renameTo(databaseFile)) {
 
 tempDatabase.delete()
 
-tempDatabase.delete()
-
     db.writableDatabase
 
     val editor = preferences.edit().clear()
