@@ -3875,7 +3875,7 @@ var historyExpanded by remember { mutableStateOf(false) }
 
     fun press(key: String) {
         when (key) {
-            "C" -> {
+            "AC" -> {
                 display = "0"
                 storedValue = null
                 pendingOperator = null
