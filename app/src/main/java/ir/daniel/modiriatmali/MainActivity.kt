@@ -1109,7 +1109,8 @@ LaunchedEffect(Unit) {
     ) {
         pendingPrivatePage = startPage
     } else {
-        page = startPage
+    pageHistory = emptyList()
+    page = startPage
     }
 }
 
