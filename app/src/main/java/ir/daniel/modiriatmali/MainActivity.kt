@@ -5035,10 +5035,6 @@ tempDatabase.delete()
     editor.apply()
 }
 
-@Composable
-private fun SmartSupportScreen() {
-    var searchText by remember { mutableStateOf("") }
-    var selectedQuestion by remember { mutableStateOf<String?>(null) }
 
 @Composable
 private fun SmartSupportScreen() {
