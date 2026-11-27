@@ -1599,11 +1599,29 @@ tint = MaterialTheme.colorScheme.primary
 },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-    Icons.Default.Menu,
-    "منو",
-    tint = activeTheme.primary
-)
+                                                        Column(
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                Box(
+                                    Modifier
+                                        .width(24.dp)
+                                        .height(3.dp)
+                                        .background(activeTheme.primary, RoundedCornerShape(2.dp))
+                                )
+                                Box(
+                                    Modifier
+                                        .width(17.dp)
+                                        .height(3.dp)
+                                        .background(activeTheme.primary, RoundedCornerShape(2.dp))
+                                )
+                                Box(
+                                    Modifier
+                                        .width(10.dp)
+                                        .height(3.dp)
+                                        .background(activeTheme.primary, RoundedCornerShape(2.dp))
+                                )
+                                                        }
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
