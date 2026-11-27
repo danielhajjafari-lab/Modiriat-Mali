@@ -3996,7 +3996,7 @@ var historyExpanded by remember { mutableStateOf(false) }
     }
 
     val rows = listOf(
-        listOf("C", "⌫", "%", "÷"),
+        listOf("AC", "⌫", "%", "÷"),
         listOf("7", "8", "9", "×"),
         listOf("4", "5", "6", "−"),
         listOf("1", "2", "3", "+"),
