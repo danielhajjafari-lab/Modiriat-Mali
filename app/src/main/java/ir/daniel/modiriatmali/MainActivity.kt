@@ -1476,10 +1476,20 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                expandedDrawerGroups =
-                    if (isExpanded) {
-                        expandedDrawerGroups - groupTitle
-                    } else {
+    if (groupTitle == "خانه") {
+        navigateTo("خانه")
+        scope.launch {
+            drawerState.close()
+        }
+    } else {
+        expandedDrawerGroups =
+            if (isExpanded) {
+                expandedDrawerGroups - groupTitle
+            } else {
+                expandedDrawerGroups + groupTitle
+            }
+    }
+            } else {
                         expandedDrawerGroups + groupTitle
                     }
             }
