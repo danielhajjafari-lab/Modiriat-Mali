@@ -1832,10 +1832,8 @@ alerts.forEach { alert ->
         onRestore = {
             backupMessage = ""
             restoreLauncher.launch(
-                restoreLauncher.launch(
     arrayOf("*/*")
 )
-            )
         }
     )
 }
