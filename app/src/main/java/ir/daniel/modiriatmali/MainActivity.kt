@@ -1558,6 +1558,7 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
 
                 }
             }
+            }
         ) {
         Scaffold(
             containerColor = activeTheme.background,
