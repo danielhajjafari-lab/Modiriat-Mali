@@ -4081,9 +4081,7 @@ Spacer(modifier = Modifier.height(8.dp))
                         modifier = Modifier
                             .width(64.dp)
                             .height(28.dp)
-                            .clickable {
-                                historyExpanded = !historyExpanded
-                            }
+                            
                             .pointerInput(Unit) {
                                 detectVerticalDragGestures { change, dragAmount ->
                                     change.consume()
