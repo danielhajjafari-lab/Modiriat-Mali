@@ -1832,7 +1832,9 @@ alerts.forEach { alert ->
         onRestore = {
             backupMessage = ""
             restoreLauncher.launch(
-                arrayOf("application/zip", "application/octet-stream")
+                restoreLauncher.launch(
+    arrayOf("*/*")
+)
             )
         }
     )
