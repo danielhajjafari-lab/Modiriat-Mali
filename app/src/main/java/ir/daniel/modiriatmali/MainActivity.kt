@@ -1130,9 +1130,13 @@ var selectedThemeId by remember {
 val activeTheme = appThemePresets.firstOrNull {
     it.id == selectedThemeId
 } ?: appThemePresets.first()
+val savedIconId = themePreferences.getString("icon_id", null)
+
 var selectedIconId by remember {
     mutableStateOf(
-        themePreferences.getString("icon_id", "wallet") ?: "wallet"
+        if (savedIconId == null || savedIconId == "wallet") "coin" else savedIconId
+    )
+}
     )
 }
 
