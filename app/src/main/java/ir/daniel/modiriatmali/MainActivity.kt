@@ -4019,11 +4019,33 @@ var historyExpanded by remember { mutableStateOf(false) }
                     .padding(20.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                Text(
-                    "ماشین‌حساب مالی",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 16.sp
-                )
+                                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "ماشین‌حساب مالی",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 16.sp
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    IconButton(
+                        onClick = {
+                            calculationHistory = emptyList()
+                            calculatorPrefs.edit()
+                                .putString("history", "[]")
+                                .apply()
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = "پاک کردن حافظه",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                                }
 
                 Spacer(modifier = Modifier.height(20.dp))
 Text(
