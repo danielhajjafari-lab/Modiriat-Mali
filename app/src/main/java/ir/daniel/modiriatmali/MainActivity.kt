@@ -4055,7 +4055,7 @@ Text(
 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     display,
-                    fontSize = 48.sp,
+                    fontSize = 56.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End,
                     modifier = Modifier.fillMaxWidth()
