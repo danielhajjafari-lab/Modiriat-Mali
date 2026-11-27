@@ -4116,6 +4116,8 @@ Spacer(modifier = Modifier.height(8.dp))
                                     MaterialTheme.colorScheme.onSurfaceVariant,
                                     RoundedCornerShape(50)
                                 )
+                                )
+                    }
 
 Card(
     modifier = Modifier
