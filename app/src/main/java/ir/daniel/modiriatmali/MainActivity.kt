@@ -1058,7 +1058,24 @@ val currency = themePreferences.getString("currency", "تومان") ?: "توما
 var page by remember {
     mutableStateOf("خانه")
 }
+var pageHistory by remember {
+    mutableStateOf(listOf<String>())
+}
 
+val navigateTo: (String) -> Unit = { target ->
+    if (target == "خانه") {
+        pageHistory = emptyList()
+        page = "خانه"
+    } else if (target != page) {
+        pageHistory = pageHistory + page
+        page = target
+    }
+}
+
+BackHandler(enabled = pageHistory.isNotEmpty()) {
+    page = pageHistory.last()
+    pageHistory = pageHistory.dropLast(1)
+}
 var pendingPrivatePage by remember {
     mutableStateOf<String?>(null)
 }
