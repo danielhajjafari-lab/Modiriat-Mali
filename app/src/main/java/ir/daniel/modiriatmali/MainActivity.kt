@@ -2824,6 +2824,42 @@ TextButton(
         }
     }
 }
+
+private fun createPrivatePinSalt(): String {
+    val bytes = ByteArray(16)
+    java.security.SecureRandom().nextBytes(bytes)
+    return android.util.Base64.encodeToString(
+        bytes,
+        android.util.Base64.NO_WRAP
+    )
+}
+
+private fun hashPrivatePin(pin: String, salt: String): String {
+    val saltBytes = android.util.Base64.decode(
+        salt,
+        android.util.Base64.NO_WRAP
+    )
+
+    val spec = javax.crypto.spec.PBEKeySpec(
+        pin.toCharArray(),
+        saltBytes,
+        120000,
+        256
+    )
+
+    val hash = javax.crypto.SecretKeyFactory
+        .getInstance("PBKDF2WithHmacSHA1")
+        .generateSecret(spec)
+        .encoded
+
+    spec.clearPassword()
+
+    return android.util.Base64.encodeToString(
+        hash,
+        android.util.Base64.NO_WRAP
+    )
+}
+
 @Composable
 private fun PrivateSectionLockScreen(
     preferences: android.content.SharedPreferences
