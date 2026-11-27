@@ -4179,7 +4179,7 @@ Spacer(modifier = Modifier.height(8.dp))
                         modifier = Modifier
                             .weight(1f)
                             .aspectRatio(1.15f),
-                        shape = CircleShape,
+                        shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (key) {
                                 "+", "−", "×", "÷", "=" ->
