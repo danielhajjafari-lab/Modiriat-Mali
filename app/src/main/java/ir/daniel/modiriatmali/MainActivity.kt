@@ -4082,8 +4082,8 @@ Spacer(modifier = Modifier.height(8.dp))
                 ) {
                     Box(
                         modifier = Modifier
-                            .width(64.dp)
-                            .height(28.dp)
+                            .fillMaxWidth()
+.height(36.dp)
                             
                             .pointerInput(Unit) {
     var totalDrag = 0f
