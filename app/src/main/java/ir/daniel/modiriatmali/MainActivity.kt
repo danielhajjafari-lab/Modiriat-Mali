@@ -1589,11 +1589,13 @@ tint = MaterialTheme.colorScheme.primary
             topBar = {
                 TopAppBar(
                     title = {
-    Text(
-        "مدیریت مالی",
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onBackground
-    )
+    if (page == "خانه") {
+        Text(
+            "مدیریت مالی",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
 },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
