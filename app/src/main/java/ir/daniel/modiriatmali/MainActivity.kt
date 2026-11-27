@@ -4032,8 +4032,7 @@ Spacer(modifier = Modifier.height(8.dp))
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
-if (calculationHistory.isNotEmpty()) {
+        }if (calculationHistory.isNotEmpty()) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp)
@@ -4041,76 +4040,84 @@ if (calculationHistory.isNotEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                "حافظه محاسبات",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+            Box(
+                modifier = Modifier
+                    .width(42.dp)
+                    .height(5.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                        RoundedCornerShape(50)
+                    )
+                    .clickable {
+                        historyExpanded = !historyExpanded
+                    }
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            if (historyExpanded) {
+                Spacer(modifier = Modifier.height(12.dp))
 
-            calculationHistory.forEachIndexed { index, item ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.End
+                Text(
+                    "حافظه محاسبات",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                calculationHistory.forEachIndexed { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            item.first,
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            "= ${item.second}",
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    TextButton(
-                        onClick = {
-                            calculationHistory =
-                                calculationHistory.filterIndexed { i, _ -> i != index }
-
-                            val jsonArray = org.json.JSONArray()
-                            calculationHistory.forEach { historyItem ->
-                                jsonArray.put(
-                                    org.json.JSONObject()
-                                        .put("expression", historyItem.first)
-                                        .put("result", historyItem.second)
-                                )
-                            }
-
-                            calculatorPrefs.edit()
-                                .putString("history", jsonArray.toString())
-                                .apply()
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text(item.first, fontSize = 14.sp)
+                            Text(
+                                "= ${item.second}",
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-                    ) {
-                        Text(
-                            "×",
-                            color = MaterialTheme.colorScheme.error,
-                            fontSize = 22.sp
-                        )
-                    }
-                }
 
-                if (index < calculationHistory.lastIndex) {
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.outlineVariant
-                    )
+                        TextButton(
+                            onClick = {
+                                calculationHistory =
+                                    calculationHistory.filterIndexed { i, _ -> i != index }
+
+                                val jsonArray = org.json.JSONArray()
+                                calculationHistory.forEach { historyItem ->
+                                    jsonArray.put(
+                                        org.json.JSONObject()
+                                            .put("expression", historyItem.first)
+                                            .put("result", historyItem.second)
+                                    )
+                                }
+
+                                calculatorPrefs.edit()
+                                    .putString("history", jsonArray.toString())
+                                    .apply()
+                            }
+                        ) {
+                            Text("×", fontSize = 22.sp)
+                        }
+                    }
+
+                    if (index < calculationHistory.lastIndex) {
+                        HorizontalDivider()
+                    }
                 }
             }
         }
     }
-}
+        
         rows.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
