@@ -1553,7 +1553,7 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
                         privatePinInput = ""
                         privatePinError = ""
                     } else {
-                        page = item
+                        navigateTo(item)
                     }
 
                     scope.launch {
