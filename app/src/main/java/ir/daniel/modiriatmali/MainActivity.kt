@@ -2860,6 +2860,7 @@ private fun hashPrivatePin(pin: String, salt: String): String {
     )
 }
 
+
 @Composable
 private fun PrivateSectionLockScreen(
     preferences: android.content.SharedPreferences
@@ -2872,6 +2873,17 @@ private fun PrivateSectionLockScreen(
         "مدیریت بانک‌ها" to "lock_banks",
         "ماشین‌حساب" to "lock_calculator"
     )
+
+    var pinConfigured by remember {
+        mutableStateOf(
+            preferences.contains("private_pin_hash")
+        )
+    }
+
+    var currentPin by remember { mutableStateOf("") }
+    var newPin by remember { mutableStateOf("") }
+    var confirmPin by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf("") }
 
     var lockStates by remember {
         mutableStateOf(
@@ -2896,8 +2908,142 @@ private fun PrivateSectionLockScreen(
         )
 
         Text(
-            "بخش‌هایی را که می‌خواهی محافظت شوند انتخاب کن.",
+            if (pinConfigured)
+                "رمز خصوصی تنظیم شده است. برای تغییر آن، رمز فعلی را وارد کن."
+            else
+                "ابتدا یک رمز چهاررقمی برای بخش‌های خصوصی تعیین کن.",
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        if (pinConfigured) {
+            OutlinedTextField(
+                value = currentPin,
+                onValueChange = {
+                    if (it.length <= 4 && it.all(Char::isDigit)) {
+                        currentPin = it
+                        error = ""
+                    }
+                },
+                label = { Text("رمز فعلی") },
+                visualTransformation =
+                    androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                keyboardOptions =
+                    androidx.compose.foundation.text.KeyboardOptions(
+                        keyboardType =
+                            androidx.compose.ui.text.input.KeyboardType.Number
+                    ),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        OutlinedTextField(
+            value = newPin,
+            onValueChange = {
+                if (it.length <= 4 && it.all(Char::isDigit)) {
+                    newPin = it
+                    error = ""
+                }
+            },
+            label = {
+                Text(if (pinConfigured) "رمز جدید" else "رمز چهاررقمی")
+            },
+            visualTransformation =
+                androidx.compose.ui.text.input.PasswordVisualTransformation(),
+            keyboardOptions =
+                androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType =
+                        androidx.compose.ui.text.input.KeyboardType.Number
+                ),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = confirmPin,
+            onValueChange = {
+                if (it.length <= 4 && it.all(Char::isDigit)) {
+                    confirmPin = it
+                    error = ""
+                }
+            },
+            label = { Text("تکرار رمز") },
+            visualTransformation =
+                androidx.compose.ui.text.input.PasswordVisualTransformation(),
+            keyboardOptions =
+                androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType =
+                        androidx.compose.ui.text.input.KeyboardType.Number
+                ),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(
+            onClick = {
+                when {
+                    pinConfigured && currentPin.length != 4 ->
+                        error = "رمز فعلی باید چهار رقم باشد."
+
+                    pinConfigured &&
+                        hashPrivatePin(
+                            currentPin,
+                            preferences.getString(
+                                "private_pin_salt",
+                                ""
+                            ) ?: ""
+                        ) != preferences.getString(
+                            "private_pin_hash",
+                            ""
+                        ) ->
+                        error = "رمز فعلی اشتباه است."
+
+                    newPin.length != 4 ->
+                        error = "رمز جدید باید دقیقاً چهار رقم باشد."
+
+                    newPin != confirmPin ->
+                        error = "تکرار رمز با رمز جدید مطابقت ندارد."
+
+                    else -> {
+                        val salt = createPrivatePinSalt()
+
+                        preferences.edit()
+                            .putString("private_pin_salt", salt)
+                            .putString(
+                                "private_pin_hash",
+                                hashPrivatePin(newPin, salt)
+                            )
+                            .apply()
+
+                        pinConfigured = true
+                        currentPin = ""
+                        newPin = ""
+                        confirmPin = ""
+                        error = "رمز با موفقیت ذخیره شد."
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(if (pinConfigured) "تغییر رمز" else "ذخیره رمز")
+        }
+
+        if (error.isNotEmpty()) {
+            Text(
+                error,
+                color = if (error.contains("موفقیت"))
+                    Green
+                else
+                    MaterialTheme.colorScheme.error
+            )
+        }
+
+        HorizontalDivider()
+
+        Text(
+            "انتخاب بخش‌های قفل‌شونده",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
         )
 
         sections.forEach { (name, key) ->
@@ -2915,6 +3061,7 @@ private fun PrivateSectionLockScreen(
 
                     Switch(
                         checked = lockStates[key] == true,
+                        enabled = pinConfigured,
                         onCheckedChange = { enabled ->
                             preferences.edit()
                                 .putBoolean(key, enabled)
@@ -2929,12 +3076,15 @@ private fun PrivateSectionLockScreen(
             }
         }
 
-        Text(
-            "فعلاً این قسمت تنظیم انتخاب بخش‌هاست؛ در مرحله بعد قفل واقعی و رمز ورود را به آن وصل می‌کنیم.",
-            color = MaterialTheme.colorScheme.secondary
-        )
+        if (!pinConfigured) {
+            Text(
+                "برای فعال کردن قفل بخش‌ها، ابتدا رمز چهاررقمی بساز.",
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }
+
 @Composable
 private fun EmptyCard(message: String) {
     Card(
