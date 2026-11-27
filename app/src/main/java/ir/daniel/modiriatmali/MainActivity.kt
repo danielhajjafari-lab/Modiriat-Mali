@@ -4119,29 +4119,27 @@ Spacer(modifier = Modifier.height(8.dp))
     }
         
         rows.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        row.forEach { key ->
+            Button(
+                onClick = { press(key) },
+                modifier = Modifier
+                    .weight(1f)
+                    .aspectRatio(1f),
+                shape = CircleShape
             ) {
-                row.forEach { key ->
-                    Button(
-                        onClick = { press(key) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(58.dp),
-                        shape = RoundedCornerShape(14.dp)
-                    ) {
-                        Text(
-                            key,
-                            fontSize = 19.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
+                Text(
+                    key,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
-} 
+        
 @Composable
 private fun DebtScreen(
     db: FinanceDb,
