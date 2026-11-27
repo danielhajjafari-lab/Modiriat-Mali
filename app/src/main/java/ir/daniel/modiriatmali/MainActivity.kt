@@ -33,6 +33,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -45,6 +46,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -4047,17 +4049,35 @@ Spacer(modifier = Modifier.height(8.dp))
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
-                modifier = Modifier
-                    .width(42.dp)
-                    .height(5.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurfaceVariant,
-                        RoundedCornerShape(50)
-                    )
-                    .clickable {
-                        historyExpanded = !historyExpanded
-                    }
+    modifier = Modifier
+        .width(64.dp)
+        .height(28.dp)
+        .clickable {
+            historyExpanded = !historyExpanded
+        }
+        .pointerInput(Unit) {
+            detectVerticalDragGestures { change, dragAmount ->
+                change.consume()
+
+                if (dragAmount > 2f) {
+                    historyExpanded = true
+                } else if (dragAmount < -2f) {
+                    historyExpanded = false
+                }
+            }
+        },
+    contentAlignment = Alignment.Center
+) {
+    Box(
+        modifier = Modifier
+            .width(42.dp)
+            .height(5.dp)
+            .background(
+                MaterialTheme.colorScheme.onSurfaceVariant,
+                RoundedCornerShape(50)
             )
+    )
+            }
 
             if (historyExpanded) {
                 Spacer(modifier = Modifier.height(12.dp))
