@@ -4162,7 +4162,7 @@ Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
-        
+        }   
 @Composable
 private fun DebtScreen(
     db: FinanceDb,
