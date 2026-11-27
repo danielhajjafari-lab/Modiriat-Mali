@@ -1119,6 +1119,11 @@ LaunchedEffect(selectedIconId) {
 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 val scope = rememberCoroutineScope() 
 
+var expandedDrawerGroups by remember {
+    mutableStateOf(setOf<String>())
+}
+
+
     var editing by remember { mutableStateOf<MoneyTransaction?>(null) }
     var deleting by remember { mutableStateOf<MoneyTransaction?>(null) }
     var editAmount by remember { mutableStateOf("") }
@@ -1191,12 +1196,51 @@ val restoreLauncher = rememberLauncherForActivityResult(
     }
 }
 
-    val pages = listOf(
-        "خانه", "ثبت درآمد", "ثبت هزینه", "قرض و بدهی", "پس‌انداز",
-        "گزارش‌ها و PDF", "دسته‌بندی‌ها", "مدیریت بانک‌ها", "ماشین‌حساب",
-        "جستجو و تاریخچه", "بودجه‌بندی", "تنظیم هشدارها", "قفل بخش‌های خصوصی",
-        "شخصی‌سازی", "پشتیبانی هوشمند", "پشتیبان‌گیری", "تنظیمات"
+    
+val drawerGroups = listOf(
+    "خانه" to listOf("خانه"),
+
+    "تراکنش‌ها" to listOf(
+        "ثبت درآمد",
+        "ثبت هزینه",
+        "دسته‌بندی‌ها",
+        "جستجو و تاریخچه"
+    ),
+
+    "حساب‌ها و بانک‌ها" to listOf(
+        "مدیریت بانک‌ها"
+    ),
+
+    "قرض و بدهی" to listOf(
+        "قرض و بدهی"
+    ),
+
+    "پس‌انداز" to listOf(
+        "پس‌انداز"
+    ),
+
+    "بودجه و هشدارها" to listOf(
+        "بودجه‌بندی",
+        "تنظیم هشدارها"
+    ),
+
+    "گزارش‌ها" to listOf(
+        "گزارش‌ها و PDF"
+    ),
+
+    "ابزارها" to listOf(
+        "ماشین‌حساب",
+        "پشتیبانی هوشمند"
+    ),
+
+    "مدیریت برنامه" to listOf(
+        "قفل بخش‌های خصوصی",
+        "شخصی‌سازی",
+        "پشتیبان‌گیری",
+        "تنظیمات"
     )
+)
+
 val todayDate = SimpleDateFormat(
     "yyyy/MM/dd",
     Locale("fa", "IR")
