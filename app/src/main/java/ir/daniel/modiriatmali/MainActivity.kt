@@ -3913,20 +3913,7 @@ var calculationHistory by remember {
                 startNewNumber = true
             }
 
-            "=" -> {
-                val first = storedValue
-                val op = pendingOperator
-                val second = display.toDoubleOrNull()
-
-                if (first != null && op != null && second != null) {
-                    val result = calculate(first, second, op)
-                    display = result?.let { formatNumber(it) } ?: "خطا"
-                    storedValue = null
-                    pendingOperator = null
-                    startNewNumber = true
-                }
-            }
-
+            
             "." -> {
                 if (startNewNumber) {
                     display = "0."
