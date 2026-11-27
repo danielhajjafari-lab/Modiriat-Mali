@@ -4168,41 +4168,52 @@ Spacer(modifier = Modifier.height(8.dp))
                 }
             }
                 }
-        
-        rows.forEach { row ->
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        row.forEach { key ->
-                        Button(
-                onClick = { press(key) },
-                modifier = Modifier
-                    .weight(1f)
-                    .aspectRatio(1.15f),
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = when (key) {
-                        "+", "−", "×", "÷", "=" ->
-                            MaterialTheme.colorScheme.primary
-
-                        "AC" ->
-    MaterialTheme.colorScheme.errorContainer
-
-                        else ->
-                            MaterialTheme.colorScheme.surfaceVariant
-                    },
-                    contentColor = when (key) {
-                        "+", "−", "×", "÷", "=" ->
-                            MaterialTheme.colorScheme.onPrimary
-"AC" ->
-    MaterialTheme.colorScheme.onErrorContainer
-
-                        else ->
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                    }
-                )
+                rows.forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
+                row.forEach { key ->
+                    Button(
+                        onClick = { press(key) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1.15f),
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = when (key) {
+                                "+", "−", "×", "÷", "=" ->
+                                    MaterialTheme.colorScheme.primary
+
+                                "AC" ->
+                                    MaterialTheme.colorScheme.errorContainer
+
+                                else ->
+                                    MaterialTheme.colorScheme.surfaceVariant
+                            },
+                            contentColor = when (key) {
+                                "+", "−", "×", "÷", "=" ->
+                                    MaterialTheme.colorScheme.onPrimary
+
+                                "AC" ->
+                                    MaterialTheme.colorScheme.onErrorContainer
+
+                                else ->
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+                    ) {
+                        Text(
+                            key,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+    }
 @Composable
 private fun DebtScreen(
     db: FinanceDb,
