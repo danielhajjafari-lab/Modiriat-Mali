@@ -4179,7 +4179,7 @@ Spacer(modifier = Modifier.height(8.dp))
                 onClick = { press(key) },
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1f),
+                    .aspectRatio(1.15f),
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = when (key) {
