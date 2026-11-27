@@ -4063,7 +4063,7 @@ Text(
 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     display,
-                    fontSize = 34.sp,
+                    fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End,
                     modifier = Modifier.fillMaxWidth()
