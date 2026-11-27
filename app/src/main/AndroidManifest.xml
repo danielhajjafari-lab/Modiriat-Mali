@@ -7,7 +7,6 @@
         android:allowBackup="false"
         android:label="مدیریت مالی"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
         android:theme="@style/Theme.ModiriatMali.Starting">
 
         <activity
