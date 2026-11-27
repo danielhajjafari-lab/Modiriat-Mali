@@ -1560,11 +1560,12 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
                     }
                 },
                 icon = {
-                    Icon(
-                        Icons.Default.Circle,
-                        contentDescription = null
-                    )
-                },
+    Icon(
+        imageVector = Icons.Default.Circle,
+        contentDescription = null,
+        modifier = Modifier.size(6.dp)
+    )
+},
                 modifier = Modifier.padding(
                     start = 24.dp,
                     end = 10.dp
