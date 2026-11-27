@@ -1604,6 +1604,13 @@ alerts.forEach { alert ->
 "تنظیم هشدارها" -> {
     BudgetAlertsScreen(db)
 }
+"قفل بخش‌های خصوصی" -> {
+    PrivateSectionLockScreen(themePreferences)
+}
+
+"تنظیمات" -> {
+    SettingsScreen(themePreferences)
+}
 "تنظیمات" -> {
     SettingsScreen(themePreferences)
 }
