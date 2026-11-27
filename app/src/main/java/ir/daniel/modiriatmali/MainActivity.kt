@@ -1447,9 +1447,12 @@ if (pendingPrivatePage != null) {
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = activeTheme.surface,
-drawerContentColor = MaterialTheme.colorScheme.onSurface
-                ) {
+    modifier = Modifier
+        .fillMaxHeight()
+        .width(200.dp),
+    drawerContainerColor = activeTheme.surface,
+    drawerContentColor = MaterialTheme.colorScheme.onSurface
+) {
                     Text(
     "مدیریت مالی",
     modifier = Modifier.fillMaxWidth().padding(20.dp),
