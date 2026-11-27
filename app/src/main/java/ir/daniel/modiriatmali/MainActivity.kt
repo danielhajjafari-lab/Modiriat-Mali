@@ -4116,72 +4116,180 @@ Spacer(modifier = Modifier.height(8.dp))
                                     MaterialTheme.colorScheme.onSurfaceVariant,
                                     RoundedCornerShape(50)
                                 )
-                        )
-                    }
 
-                    if (historyExpanded) {
-                        Spacer(modifier = Modifier.height(12.dp))
+Card(
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(if (historyExpanded) 360.dp else 230.dp)
+        .animateContentSize(),
+    shape = RoundedCornerShape(20.dp)
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.End
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(
+                onClick = {
+                    calculationHistory = emptyList()
+                    calculatorPrefs.edit()
+                        .putString("history", "[]")
+                        .apply()
+                }
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "پاک کردن حافظه",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
 
+        if (historyExpanded) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                if (calculationHistory.isEmpty()) {
+                    Text("هنوز محاسبه‌ای ثبت نشده است")
+                }
+
+                calculationHistory.forEachIndexed { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            "حافظه محاسبات",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        calculationHistory.forEachIndexed { index, item ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column(
-                                    modifier = Modifier.weight(1f),
-                                    horizontalAlignment = Alignment.End
-                                ) {
-                                    Text(item.first, fontSize = 14.sp)
-                                    Text(
-                                        "= ${item.second}",
-                                        fontSize = 17.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-
-                                TextButton(
-                                    onClick = {
-                                        calculationHistory =
-                                            calculationHistory.filterIndexed { i, _ ->
-                                                i != index
-                                            }
-
-                                        val jsonArray = org.json.JSONArray()
-                                        calculationHistory.forEach { historyItem ->
-                                            jsonArray.put(
-                                                org.json.JSONObject()
-                                                    .put("expression", historyItem.first)
-                                                    .put("result", historyItem.second)
-                                            )
+                            "×",
+                            modifier = Modifier
+                                .clickable {
+                                    calculationHistory =
+                                        calculationHistory.filterIndexed { i, _ ->
+                                            i != index
                                         }
 
-                                        calculatorPrefs.edit()
-                                            .putString("history", jsonArray.toString())
-                                            .apply()
+                                    val jsonArray = org.json.JSONArray()
+                                    calculationHistory.forEach { historyItem ->
+                                        jsonArray.put(
+                                            org.json.JSONObject()
+                                                .put("expression", historyItem.first)
+                                                .put("result", historyItem.second)
+                                        )
                                     }
-                                ) {
-                                    Text("×", fontSize = 22.sp)
-                                }
-                            }
 
-                            if (index < calculationHistory.lastIndex) {
-                                HorizontalDivider()
-                            }
+                                    calculatorPrefs.edit()
+                                        .putString("history", jsonArray.toString())
+                                        .apply()
+                                }
+                                .padding(horizontal = 12.dp),
+                            fontSize = 26.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Text(item.first, fontSize = 18.sp)
+                            Text(
+                                item.second,
+                                fontSize = 20.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
+                    }
+
+                    if (index < calculationHistory.lastIndex) {
+                        HorizontalDivider()
                     }
                 }
             }
+        } else {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    if (storedValue != null && pendingOperator != null) {
+                        "${formatNumber(storedValue!!)}  $pendingOperator  ${if (startNewNumber) "" else display}"
+                    } else {
+                        ""
+                    },
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    display,
+                    fontSize = 56.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(36.dp)
+                .pointerInput(Unit) {
+                    var totalDrag = 0f
+
+                    detectVerticalDragGestures(
+                        onVerticalDrag = { change, dragAmount ->
+                            change.consume()
+                            totalDrag += dragAmount
+                        },
+                        onDragEnd = {
+                            if (totalDrag > 35f) {
+                                historyExpanded = true
+                            } else if (totalDrag < -35f) {
+                                historyExpanded = false
+                            }
+                            totalDrag = 0f
+                        },
+                        onDragCancel = {
+                            totalDrag = 0f
+                        }
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(56.dp)
+                    .height(6.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                        RoundedCornerShape(50)
+                    )
+            )
+        }
+    }
+}
+
                 }
                 rows.forEach { row ->
             Row(
