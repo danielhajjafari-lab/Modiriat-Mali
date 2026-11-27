@@ -1865,8 +1865,7 @@ alerts.forEach { alert ->
     }
 
         
-    refresh++
-    page = "خانه"
+    navigateTo("خانه")
 })
                 } else {
                     Text(page, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Bold)
