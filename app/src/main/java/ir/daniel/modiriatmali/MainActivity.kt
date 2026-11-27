@@ -4069,10 +4069,7 @@ Spacer(modifier = Modifier.height(8.dp))
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Text(
-                    "تومان",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                
             }
         if (calculationHistory.isNotEmpty()) {
     Card(
