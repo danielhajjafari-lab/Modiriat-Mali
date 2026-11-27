@@ -3068,10 +3068,9 @@ private fun PrivateSectionLockScreen(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
@@ -4741,10 +4740,9 @@ private fun BackupScreen(
     var showConfirm by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
