@@ -1,0 +1,30 @@
+
+name: Restore MainActivity
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore known-good file
+        run: |
+          git fetch origin ff33530c0757375f4885714f55f52ff15ae4846a
+          git show ff33530c0757375f4885714f55f52ff15ae4846a:app/src/main/java/ir/daniel/modiriatmali/MainActivity.kt > app/src/main/java/ir/daniel/modiriatmali/MainActivity.kt
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add app/src/main/java/ir/daniel/modiriatmali/MainActivity.kt
+          git commit -m "Restore working MainActivity"
+          git push origin HEAD:main
+          
