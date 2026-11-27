@@ -1059,6 +1059,18 @@ var page by remember {
     )
 }
 
+var pendingPrivatePage by remember {
+    mutableStateOf<String?>(null)
+}
+
+var privatePinInput by remember {
+    mutableStateOf("")
+}
+
+var privatePinError by remember {
+    mutableStateOf("")
+}
+
 val confirmDelete = themePreferences.getBoolean("confirm_delete", true)
 var selectedThemeId by remember {
     mutableStateOf(
@@ -1212,6 +1224,110 @@ CompositionLocalProvider(
 ) {
     MaterialTheme(colorScheme = appColorScheme) {
 
+if (pendingPrivatePage != null) {
+    AlertDialog(
+        onDismissRequest = {
+            pendingPrivatePage = null
+            privatePinInput = ""
+            privatePinError = ""
+        },
+        title = {
+            Text("قفل بخش خصوصی")
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text("برای ورود، رمز چهاررقمی را وارد کن.")
+
+                OutlinedTextField(
+                    value = privatePinInput,
+                    onValueChange = {
+                        if (
+                            it.length <= 4 &&
+                            it.all(Char::isDigit)
+                        ) {
+                            privatePinInput = it
+                            privatePinError = ""
+                        }
+                    },
+                    label = { Text("رمز ورود") },
+                    singleLine = true,
+                    visualTransformation =
+                        androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                    keyboardOptions =
+                        androidx.compose.foundation.text.KeyboardOptions(
+                            keyboardType =
+                                androidx.compose.ui.text.input.KeyboardType.Number
+                        )
+                )
+
+                if (privatePinError.isNotEmpty()) {
+                    Text(
+                        privatePinError,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val salt = themePreferences.getString(
+                        "private_pin_salt",
+                        ""
+                    ) ?: ""
+
+                    val savedHash = themePreferences.getString(
+                        "private_pin_hash",
+                        ""
+                    ) ?: ""
+
+                    val enteredHash = if (
+                        privatePinInput.length == 4 &&
+                        salt.isNotBlank()
+                    ) {
+                        hashPrivatePin(privatePinInput, salt)
+                    } else {
+                        ""
+                    }
+
+                    if (
+                        enteredHash.isNotEmpty() &&
+                        enteredHash == savedHash
+                    ) {
+                        val targetPage = pendingPrivatePage
+
+                        if (targetPage != null) {
+                            page = targetPage
+                        }
+
+                        pendingPrivatePage = null
+                        privatePinInput = ""
+                        privatePinError = ""
+                    } else {
+                        privatePinInput = ""
+                        privatePinError = "رمز واردشده اشتباه است."
+                    }
+                }
+            ) {
+                Text("ورود")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    pendingPrivatePage = null
+                    privatePinInput = ""
+                    privatePinError = ""
+                }
+            ) {
+                Text("انصراف")
+            }
+        }
+    )
+}
+
 
 
                 ModalNavigationDrawer(
@@ -1240,9 +1356,32 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                             NavigationDrawerItem(
                                 label = { Text(item) },
                                 selected = page == item,
-                                onClick = {
-                                    page = item
-                                    scope.launch { drawerState.close() }
+                                
+onClick = {
+    val lockKey = when (item) {
+        "گزارش‌ها و PDF" -> "lock_reports"
+        "قرض و بدهی" -> "lock_debts"
+        "جستجو و تاریخچه" -> "lock_history"
+        "پس‌انداز" -> "lock_savings"
+        "مدیریت بانک‌ها" -> "lock_banks"
+        "ماشین‌حساب" -> "lock_calculator"
+        else -> null
+    }
+
+    if (
+        lockKey != null &&
+        themePreferences.getBoolean(lockKey, false)
+    ) {
+        pendingPrivatePage = item
+        privatePinInput = ""
+        privatePinError = ""
+    } else {
+        page = item
+    }
+
+    scope.launch { drawerState.close() }
+},
+
                                 },
                                 icon = {
                                     Icon(Icons.Default.Menu, contentDescription = null)
