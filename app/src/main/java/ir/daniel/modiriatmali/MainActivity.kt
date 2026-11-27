@@ -1473,7 +1473,7 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
                 "خانه" -> Icons.Default.Home
                 "تراکنش‌ها" -> Icons.Default.SwapHoriz
                 "حساب‌ها و بانک‌ها" -> Icons.Default.AccountBalance
-                "قرض و بدهی" -> Icons.Default.Handshake
+                "قرض و بدهی" -> Icons.Default.Favorite
                 "پس‌انداز" -> Icons.Default.Savings
                 "بودجه و هشدارها" -> Icons.Default.PieChart
                 "گزارش‌ها" -> Icons.Default.Assessment
