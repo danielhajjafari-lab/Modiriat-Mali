@@ -53,6 +53,13 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.util.Properties
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
 private val LocalCurrency = compositionLocalOf { "تومان" }
 private val LocalDateFormat = compositionLocalOf { "شمسی" }
 
@@ -4276,4 +4283,239 @@ private fun createMonthlyPdf(
         }
         document.close()
     }
+}
+@Composable
+private fun BackupScreen(
+    context: Context,
+    db: FinanceDb,
+    preferences: android.content.SharedPreferences,
+    onRestore: () -> Unit
+) {
+    var message by remember { mutableStateOf("") }
+    var showConfirm by remember { mutableStateOf(false) }
+
+    val backupLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/zip")
+    ) { uri ->
+        if (uri != null) {
+            try {
+                createFinanceBackup(context, db, preferences, uri)
+                message = "پشتیبان‌گیری با موفقیت انجام شد."
+            } catch (e: Exception) {
+                message = "خطا در پشتیبان‌گیری: ${e.message}"
+            }
+        }
+    }
+
+    val restoreLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            try {
+                restoreFinanceBackup(context, db, preferences, uri)
+                message = "بازیابی اطلاعات با موفقیت انجام شد."
+                onRestore()
+            } catch (e: Exception) {
+                message = "خطا در بازیابی: ${e.message}"
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            "پشتیبان‌گیری اطلاعات",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            "از اطلاعات مالی و تنظیمات برنامه یک فایل پشتیبان تهیه کن.",
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Button(
+            onClick = {
+                backupLauncher.launch("ModiriatMali_Backup.zip")
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("ایجاد فایل پشتیبان")
+        }
+
+        OutlinedButton(
+            onClick = {
+                showConfirm = true
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("بازیابی اطلاعات از فایل")
+        }
+
+        if (message.isNotBlank()) {
+            Text(
+                message,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Text(
+            "توجه: بازیابی، اطلاعات فعلی برنامه را با اطلاعات فایل پشتیبان جایگزین می‌کند.",
+            color = MaterialTheme.colorScheme.error
+        )
+    }
+
+    if (showConfirm) {
+        AlertDialog(
+            onDismissRequest = { showConfirm = false },
+            title = { Text("تأیید بازیابی") },
+            text = {
+                Text("با بازیابی، اطلاعات مالی فعلی جایگزین می‌شوند. ادامه می‌دهی؟")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showConfirm = false
+                        restoreLauncher.launch(
+                            arrayOf("application/zip", "application/octet-stream")
+                        )
+                    }
+                ) {
+                    Text("ادامه")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showConfirm = false }
+                ) {
+                    Text("انصراف")
+                }
+            }
+        )
+    }
+}
+
+private fun createFinanceBackup(
+    context: Context,
+    db: FinanceDb,
+    preferences: android.content.SharedPreferences,
+    uri: Uri
+) {
+    val databaseFile = context.getDatabasePath("finance.db")
+
+    db.writableDatabase.execSQL("PRAGMA wal_checkpoint(FULL)")
+    db.close()
+
+    val settings = Properties()
+
+    preferences.all.forEach { (key, value) ->
+        when (value) {
+            is String -> settings.setProperty(key, "S|$value")
+            is Boolean -> settings.setProperty(key, "B|$value")
+            is Int -> settings.setProperty(key, "I|$value")
+            is Long -> settings.setProperty(key, "L|$value")
+            is Float -> settings.setProperty(key, "F|$value")
+        }
+    }
+
+    val output = context.contentResolver.openOutputStream(uri)
+        ?: throw Exception("فایل قابل ذخیره نیست.")
+
+    ZipOutputStream(output).use { zip ->
+        zip.putNextEntry(ZipEntry("finance.db"))
+        FileInputStream(databaseFile).use { input ->
+            input.copyTo(zip)
+        }
+        zip.closeEntry()
+
+        zip.putNextEntry(ZipEntry("settings.properties"))
+        settings.store(zip, "Finance App Backup")
+        zip.closeEntry()
+    }
+
+    db.writableDatabase
+}
+
+private fun restoreFinanceBackup(
+    context: Context,
+    db: FinanceDb,
+    preferences: android.content.SharedPreferences,
+    uri: Uri
+) {
+    val tempDatabase = File(context.cacheDir, "restore_finance.db")
+    val settings = Properties()
+    var databaseFound = false
+
+    val input = context.contentResolver.openInputStream(uri)
+        ?: throw Exception("فایل قابل خواندن نیست.")
+
+    ZipInputStream(input).use { zip ->
+        var entry = zip.nextEntry
+
+        while (entry != null) {
+            when (entry.name) {
+                "finance.db" -> {
+                    FileOutputStream(tempDatabase).use { output ->
+                        zip.copyTo(output)
+                    }
+                    databaseFound = true
+                }
+
+                "settings.properties" -> {
+                    settings.load(zip)
+                }
+            }
+
+            zip.closeEntry()
+            entry = zip.nextEntry
+        }
+    }
+
+    if (!databaseFound || tempDatabase.length() == 0L) {
+        throw Exception("فایل پشتیبان معتبر نیست.")
+    }
+
+    db.close()
+
+    val databaseFile = context.getDatabasePath("finance.db")
+    databaseFile.parentFile?.mkdirs()
+
+    FileInputStream(tempDatabase).use { inputStream ->
+        FileOutputStream(databaseFile).use { output ->
+            inputStream.copyTo(output)
+        }
+    }
+
+    File(databaseFile.path + "-wal").delete()
+    File(databaseFile.path + "-shm").delete()
+    tempDatabase.delete()
+
+    db.writableDatabase
+
+    val editor = preferences.edit().clear()
+
+    settings.stringPropertyNames().forEach { key ->
+        val value = settings.getProperty(key) ?: return@forEach
+        val separator = value.indexOf('|')
+
+        if (separator < 0) return@forEach
+
+        val type = value.substring(0, separator)
+        val content = value.substring(separator + 1)
+
+        when (type) {
+            "S" -> editor.putString(key, content)
+            "B" -> editor.putBoolean(key, content.toBoolean())
+            "I" -> editor.putInt(key, content.toInt())
+            "L" -> editor.putLong(key, content.toLong())
+            "F" -> editor.putFloat(key, content.toFloat())
+        }
+    }
+
+    editor.apply()
 }
