@@ -4186,8 +4186,8 @@ Spacer(modifier = Modifier.height(8.dp))
                         "+", "−", "×", "÷", "=" ->
                             MaterialTheme.colorScheme.primary
 
-                        "C" ->
-                            MaterialTheme.colorScheme.errorContainer
+                        "AC" ->
+    MaterialTheme.colorScheme.errorContainer
 
                         else ->
                             MaterialTheme.colorScheme.surfaceVariant
@@ -4195,9 +4195,8 @@ Spacer(modifier = Modifier.height(8.dp))
                     contentColor = when (key) {
                         "+", "−", "×", "÷", "=" ->
                             MaterialTheme.colorScheme.onPrimary
-
-                        "C" ->
-                            MaterialTheme.colorScheme.onErrorContainer
+"AC" ->
+    MaterialTheme.colorScheme.onErrorContainer
 
                         else ->
                             MaterialTheme.colorScheme.onSurfaceVariant
