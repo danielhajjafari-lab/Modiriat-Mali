@@ -4141,6 +4141,7 @@ Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
+        }
         
         rows.forEach { row ->
     Row(
