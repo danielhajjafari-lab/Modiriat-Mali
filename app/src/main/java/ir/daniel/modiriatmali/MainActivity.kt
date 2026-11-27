@@ -4095,7 +4095,7 @@ Spacer(modifier = Modifier.height(8.dp))
                     ) {
                         Box(
                             modifier = Modifier
-                                .width(42.dp)
+                                .width(56.dp)
                                 .height(5.dp)
                                 .background(
                                     MaterialTheme.colorScheme.onSurfaceVariant,
