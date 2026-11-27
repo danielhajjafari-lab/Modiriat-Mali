@@ -1753,8 +1753,8 @@ else
                     }
                     Text("دسترسی سریع", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        QuickAction("ثبت درآمد", Icons.Default.AddCircle, Green, Modifier.weight(1f)) { page = "ثبت درآمد" }
-                        QuickAction("ثبت هزینه", Icons.Default.RemoveCircle, Red, Modifier.weight(1f)) { page = "ثبت هزینه" }
+                        QuickAction("ثبت درآمد", Icons.Default.AddCircle, Green, Modifier.weight(1f)) { navigateTo("ثبت درآمد") }
+QuickAction("ثبت هزینه", Icons.Default.RemoveCircle, Red, Modifier.weight(1f)) { navigateTo("ثبت هزینه") }
                     }
                     Text("تراکنش‌های اخیر", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Row(
