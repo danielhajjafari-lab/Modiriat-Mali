@@ -1054,8 +1054,8 @@ val themePreferences = remember {
 val currency = themePreferences.getString("currency", "تومان") ?: "تومان"
     val dateFormat = themePreferences.getString("date_format", "شمسی") ?: "شمسی"
 var page by remember {
-    mutableStateOf(
-        themePreferences.getString("start_page", "خانه") ?: "خانه"
+    mutableStateOf("خانه")
+}
     )
 }
 
@@ -1069,6 +1069,31 @@ var privatePinInput by remember {
 
 var privatePinError by remember {
     mutableStateOf("")
+}
+LaunchedEffect(Unit) {
+    val startPage = themePreferences.getString(
+        "start_page",
+        "خانه"
+    ) ?: "خانه"
+
+    val startLockKey = when (startPage) {
+        "گزارش‌ها و PDF" -> "lock_reports"
+        "قرض و بدهی" -> "lock_debts"
+        "جستجو و تاریخچه" -> "lock_history"
+        "پس‌انداز" -> "lock_savings"
+        "مدیریت بانک‌ها" -> "lock_banks"
+        "ماشین‌حساب" -> "lock_calculator"
+        else -> null
+    }
+
+    if (
+        startLockKey != null &&
+        themePreferences.getBoolean(startLockKey, false)
+    ) {
+        pendingPrivatePage = startPage
+    } else {
+        page = startPage
+    }
 }
 
 val confirmDelete = themePreferences.getBoolean("confirm_delete", true)
