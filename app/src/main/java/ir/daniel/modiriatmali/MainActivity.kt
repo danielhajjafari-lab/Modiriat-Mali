@@ -1470,7 +1470,7 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                     ) {
 drawerGroups.forEach { (groupTitle, groupPages) ->
 
-    val isExpanded = groupTitle in expandedDrawerGroups
+    val isExpanded = groupTitle != "خانه" && groupTitle in expandedDrawerGroups
 
     Row(
         modifier = Modifier
