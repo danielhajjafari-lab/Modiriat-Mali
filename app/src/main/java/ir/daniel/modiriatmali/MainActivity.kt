@@ -1450,43 +1450,112 @@ drawerContentColor = MaterialTheme.colorScheme.onSurface
                             .verticalScroll(rememberScrollState())
                             .padding(vertical = 8.dp)
                     ) {
-                        pages.forEach { item ->
-                            NavigationDrawerItem(
-                                label = { Text(item) },
-                                selected = page == item,
-                                
-onClick = {
-    val lockKey = when (item) {
-        "گزارش‌ها و PDF" -> "lock_reports"
-        "قرض و بدهی" -> "lock_debts"
-        "جستجو و تاریخچه" -> "lock_history"
-        "پس‌انداز" -> "lock_savings"
-        "مدیریت بانک‌ها" -> "lock_banks"
-        "ماشین‌حساب" -> "lock_calculator"
-        else -> null
-    }
+drawerGroups.forEach { (groupTitle, groupPages) ->
 
-    if (
-        lockKey != null &&
-        themePreferences.getBoolean(lockKey, false)
-    ) {
-        pendingPrivatePage = item
-        privatePinInput = ""
-        privatePinError = ""
-    } else {
-        page = item
-    }
+    val isExpanded = groupTitle in expandedDrawerGroups
 
-    scope.launch { drawerState.close() }
-},
-
-                                icon = {
-                                    Icon(Icons.Default.Menu, contentDescription = null)
-                                },
-                                modifier = Modifier.padding(horizontal = 10.dp)
-                            )
-                        }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                expandedDrawerGroups =
+                    if (isExpanded) {
+                        expandedDrawerGroups - groupTitle
+                    } else {
+                        expandedDrawerGroups + groupTitle
                     }
+            }
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = when (groupTitle) {
+                "خانه" -> Icons.Default.Home
+                "تراکنش‌ها" -> Icons.Default.SwapHoriz
+                "حساب‌ها و بانک‌ها" -> Icons.Default.AccountBalance
+                "قرض و بدهی" -> Icons.Default.Handshake
+                "پس‌انداز" -> Icons.Default.Savings
+                "بودجه و هشدارها" -> Icons.Default.PieChart
+                "گزارش‌ها" -> Icons.Default.Assessment
+                "ابزارها" -> Icons.Default.Calculate
+                else -> Icons.Default.Settings
+            },
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.width(14.dp))
+
+        Text(
+            text = groupTitle,
+            modifier = Modifier.weight(1f),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Icon(
+            imageVector = if (isExpanded) {
+                Icons.Default.ExpandLess
+            } else {
+                Icons.Default.ExpandMore
+            },
+            contentDescription = null
+        )
+    }
+
+    HorizontalDivider(
+        color = MaterialTheme.colorScheme.outlineVariant
+    )
+
+    if (isExpanded) {
+        groupPages.forEach { item ->
+
+            NavigationDrawerItem(
+                label = {
+                    Text(item)
+                },
+                selected = page == item,
+                onClick = {
+                    val lockKey = when (item) {
+                        "گزارش‌ها و PDF" -> "lock_reports"
+                        "قرض و بدهی" -> "lock_debts"
+                        "جستجو و تاریخچه" -> "lock_history"
+                        "پس‌انداز" -> "lock_savings"
+                        "مدیریت بانک‌ها" -> "lock_banks"
+                        "ماشین‌حساب" -> "lock_calculator"
+                        else -> null
+                    }
+
+                    if (
+                        lockKey != null &&
+                        themePreferences.getBoolean(lockKey, false)
+                    ) {
+                        pendingPrivatePage = item
+                        privatePinInput = ""
+                        privatePinError = ""
+                    } else {
+                        page = item
+                    }
+
+                    scope.launch {
+                        drawerState.close()
+                    }
+                },
+                icon = {
+                    Icon(
+                        Icons.Default.Circle,
+                        contentDescription = null
+                    )
+                },
+                modifier = Modifier.padding(
+                    start = 24.dp,
+                    end = 10.dp
+                )
+            )
+        }
+    }
+}
+
                 }
             }
         ) {
