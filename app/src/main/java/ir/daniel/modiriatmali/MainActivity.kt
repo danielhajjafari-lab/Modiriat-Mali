@@ -3806,6 +3806,24 @@ launcherIcons.forEach { item ->
 }
 @Composable
 private fun FinanceCalculator() {
+    val calculatorPrefs = LocalContext.current.getSharedPreferences(
+    "calculator_history",
+    Context.MODE_PRIVATE
+)
+
+var calculationHistory by remember {
+    mutableStateOf(
+        runCatching {
+            val saved = calculatorPrefs.getString("history", "[]") ?: "[]"
+            val array = org.json.JSONArray(saved)
+
+            List(array.length()) { index ->
+                val item = array.getJSONObject(index)
+                item.getString("expression") to item.getString("result")
+            }
+        }.getOrDefault(emptyList())
+    )
+}
     var display by remember { mutableStateOf("0") }
     var storedValue by remember { mutableStateOf<Double?>(null) }
     var pendingOperator by remember { mutableStateOf<String?>(null) }
