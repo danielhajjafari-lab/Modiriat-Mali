@@ -4037,7 +4037,7 @@ Spacer(modifier = Modifier.height(8.dp))
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }if (calculationHistory.isNotEmpty()) {
+        if (calculationHistory.isNotEmpty()) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp)
