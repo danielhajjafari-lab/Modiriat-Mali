@@ -4512,11 +4512,12 @@ if (!hasTransactionsTable) {
     throw Exception("ساختار فایل پشتیبان معتبر نیست.")
 }
 
-db.close()
 if (settings.isEmpty) {
     tempDatabase.delete()
     throw Exception("تنظیمات داخل فایل پشتیبان پیدا نشد.")
 }
+
+db.close()
 
     val databaseFile = context.getDatabasePath("finance.db")
 databaseFile.parentFile?.mkdirs()
