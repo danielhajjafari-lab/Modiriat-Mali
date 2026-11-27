@@ -4175,25 +4175,35 @@ Spacer(modifier = Modifier.height(8.dp))
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         row.forEach { key ->
-            Button(
+                        Button(
                 onClick = { press(key) },
                 modifier = Modifier
                     .weight(1f)
                     .aspectRatio(1f),
-                shape = CircleShape
-            ) {
-                Text(
-                    key,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = when (key) {
+                        "+", "−", "×", "÷", "=" ->
+                            MaterialTheme.colorScheme.primary
+
+                        "C" ->
+                            MaterialTheme.colorScheme.errorContainer
+
+                        else ->
+                            MaterialTheme.colorScheme.surfaceVariant
+                    },
+                    contentColor = when (key) {
+                        "+", "−", "×", "÷", "=" ->
+                            MaterialTheme.colorScheme.onPrimary
+
+                        "C" ->
+                            MaterialTheme.colorScheme.onErrorContainer
+
+                        else ->
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
-            }
-        }
-    }
-        }   
-        }
-        }
-}
+            ) {
 @Composable
 private fun DebtScreen(
     db: FinanceDb,
