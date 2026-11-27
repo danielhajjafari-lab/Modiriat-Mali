@@ -1137,6 +1137,11 @@ LaunchedEffect(selectedIconId) {
 
 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 val scope = rememberCoroutineScope() 
+BackHandler(enabled = drawerState.isOpen) {
+    scope.launch {
+        drawerState.close()
+    }
+}
 
 var expandedDrawerGroups by remember {
     mutableStateOf(setOf<String>())
