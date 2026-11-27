@@ -1406,7 +1406,7 @@ if (pendingPrivatePage != null) {
                         val targetPage = pendingPrivatePage
 
                         if (targetPage != null) {
-                            page = targetPage
+    navigateTo(targetPage)
                         }
 
                         pendingPrivatePage = null
