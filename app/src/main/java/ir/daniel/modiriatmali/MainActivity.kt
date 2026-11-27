@@ -4119,32 +4119,7 @@ Spacer(modifier = Modifier.height(8.dp))
             if (historyExpanded) {
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
-                    "حافظه محاسبات",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                calculationHistory.forEachIndexed { index, item ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.End
-                        ) {
-                            Text(item.first, fontSize = 14.sp)
-                            Text(
-                                "= ${item.second}",
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                
                         }
 
                         TextButton(
