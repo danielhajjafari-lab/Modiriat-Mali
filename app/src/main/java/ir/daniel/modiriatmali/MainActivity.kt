@@ -1137,6 +1137,36 @@ val monthlyBalance = monthlyIncome - monthlyExpenses
         )
     }
     }
+    
+var backupMessage by remember { mutableStateOf("") }
+
+val backupLauncher = rememberLauncherForActivityResult(
+    ActivityResultContracts.CreateDocument("application/zip")
+) { uri ->
+    if (uri != null) {
+        try {
+            createFinanceBackup(context, db, themePreferences, uri)
+            backupMessage = "پشتیبان‌گیری با موفقیت انجام شد."
+        } catch (e: Exception) {
+            backupMessage = "خطا در پشتیبان‌گیری: ${e.message}"
+        }
+    }
+}
+
+val restoreLauncher = rememberLauncherForActivityResult(
+    ActivityResultContracts.OpenDocument()
+) { uri ->
+    if (uri != null) {
+        try {
+            restoreFinanceBackup(context, db, themePreferences, uri)
+            backupMessage = "بازیابی اطلاعات با موفقیت انجام شد."
+            refresh++
+        } catch (e: Exception) {
+            backupMessage = "خطا در بازیابی: ${e.message}"
+        }
+    }
+}
+
     val pages = listOf(
         "خانه", "ثبت درآمد", "ثبت هزینه", "قرض و بدهی", "پس‌انداز",
         "گزارش‌ها و PDF", "دسته‌بندی‌ها", "مدیریت بانک‌ها", "ماشین‌حساب",
@@ -4738,24 +4768,42 @@ private fun BackupScreen(
             fontWeight = FontWeight.Bold
         )
 
+
+@Composable
+private fun BackupScreen(
+    message: String,
+    onCreateBackup: () -> Unit,
+    onRestore: () -> Unit
+) {
+    var showConfirm by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            "پشتیبان‌گیری اطلاعات",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+
         Text(
             "از اطلاعات مالی و تنظیمات برنامه یک فایل پشتیبان تهیه کن.",
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Button(
-            onClick = {
-                backupLauncher.launch("ModiriatMali_Backup.zip")
-            },
+            onClick = onCreateBackup,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("ایجاد فایل پشتیبان")
         }
 
         OutlinedButton(
-            onClick = {
-                showConfirm = true
-            },
+            onClick = { showConfirm = true },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("بازیابی اطلاعات از فایل")
@@ -4785,9 +4833,7 @@ private fun BackupScreen(
                 TextButton(
                     onClick = {
                         showConfirm = false
-                        restoreLauncher.launch(
-                            arrayOf("application/zip", "application/octet-stream")
-                        )
+                        onRestore()
                     }
                 ) {
                     Text("ادامه")
@@ -4803,6 +4849,7 @@ private fun BackupScreen(
         )
     }
 }
+
 
 private fun createFinanceBackup(
     context: Context,
