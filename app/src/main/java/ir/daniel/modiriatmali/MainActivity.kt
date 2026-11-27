@@ -4486,7 +4486,18 @@ val checkDatabase = SQLiteDatabase.openDatabase(
     null,
     SQLiteDatabase.OPEN_READONLY
 )
+val databaseIsHealthy = checkDatabase.rawQuery(
+    "PRAGMA quick_check",
+    null
+).use { cursor ->
+    cursor.moveToFirst() && cursor.getString(0) == "ok"
+}
 
+if (!databaseIsHealthy) {
+    checkDatabase.close()
+    tempDatabase.delete()
+    throw Exception("فایل پشتیبان خراب است و قابل بازیابی نیست.")
+}
 val hasTransactionsTable = checkDatabase.rawQuery(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='transactions'",
     null
