@@ -1619,7 +1619,16 @@ alerts.forEach { alert ->
         }
     )
 }
-
+"پشتیبان‌گیری" -> {
+    BackupScreen(
+        context = context,
+        db = db,
+        preferences = themePreferences,
+        onRestore = {
+            refresh++
+        }
+    )
+}
 
 else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلاعات مالی شما در این نسخه در بخش ثبت تراکنش‌ها ذخیره می‌شود.")
                         
