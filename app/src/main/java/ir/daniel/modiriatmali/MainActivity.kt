@@ -4522,14 +4522,29 @@ db.close()
     val databaseFile = context.getDatabasePath("finance.db")
 databaseFile.parentFile?.mkdirs()
 
+val newDatabaseFile = File(databaseFile.parentFile, "finance_restore.db")
+
+FileInputStream(tempDatabase).use { inputStream ->
+    FileOutputStream(newDatabaseFile).use { output ->
+        inputStream.copyTo(output)
+        output.fd.sync()
+    }
+}
+
 File(databaseFile.path + "-wal").delete()
 File(databaseFile.path + "-shm").delete()
 
-FileInputStream(tempDatabase).use { inputStream ->
-    FileOutputStream(databaseFile).use { output ->
-        inputStream.copyTo(output)
-    }
+if (databaseFile.exists() && !databaseFile.delete()) {
+    newDatabaseFile.delete()
+    throw Exception("جایگزینی فایل دیتابیس انجام نشد.")
 }
+
+if (!newDatabaseFile.renameTo(databaseFile)) {
+    newDatabaseFile.delete()
+    throw Exception("انتقال فایل دیتابیس انجام نشد.")
+}
+
+tempDatabase.delete()
 
 tempDatabase.delete()
 
