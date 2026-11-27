@@ -4477,10 +4477,31 @@ private fun restoreFinanceBackup(
     }
 
     if (!databaseFound || tempDatabase.length() == 0L) {
-        throw Exception("فایل پشتیبان معتبر نیست.")
-    }
+    tempDatabase.delete()
+    throw Exception("فایل پشتیبان معتبر نیست.")
+}
 
-    db.close()
+val checkDatabase = SQLiteDatabase.openDatabase(
+    tempDatabase.absolutePath,
+    null,
+    SQLiteDatabase.OPEN_READONLY
+)
+
+val hasTransactionsTable = checkDatabase.rawQuery(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name='transactions'",
+    null
+).use { cursor ->
+    cursor.moveToFirst()
+}
+
+checkDatabase.close()
+
+if (!hasTransactionsTable) {
+    tempDatabase.delete()
+    throw Exception("ساختار فایل پشتیبان معتبر نیست.")
+}
+
+db.close()
 
     val databaseFile = context.getDatabasePath("finance.db")
     databaseFile.parentFile?.mkdirs()
