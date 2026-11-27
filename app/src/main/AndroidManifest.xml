@@ -5,7 +5,7 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher_Coin"
+        android:icon="@mipmap/ic_launcher"
         android:label="مدیریت مالی"
         android:supportsRtl="true"
         android:theme="@style/Theme.ModiriatMali.Starting">
