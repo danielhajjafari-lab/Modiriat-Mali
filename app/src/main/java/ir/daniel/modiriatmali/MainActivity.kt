@@ -1513,14 +1513,16 @@ drawerGroups.forEach { (groupTitle, groupPages) ->
             fontWeight = FontWeight.Bold
         )
 
-        Icon(
-            imageVector = if (isExpanded) {
-                Icons.Default.ExpandLess
-            } else {
-                Icons.Default.ExpandMore
-            },
-            contentDescription = null
-        )
+                if (groupTitle != "خانه") {
+            Icon(
+                imageVector = if (isExpanded) {
+                    Icons.Default.ExpandLess
+                } else {
+                    Icons.Default.ExpandMore
+                },
+                contentDescription = null
+            )
+                }
     }
 
     HorizontalDivider(
