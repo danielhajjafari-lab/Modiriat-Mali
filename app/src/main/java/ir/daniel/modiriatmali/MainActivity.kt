@@ -1137,8 +1137,6 @@ var selectedIconId by remember {
         if (savedIconId == null || savedIconId == "wallet") "coin" else savedIconId
     )
 }
-    )
-}
 
 LaunchedEffect(selectedIconId) {
     applyLauncherIcon(context, selectedIconId)
