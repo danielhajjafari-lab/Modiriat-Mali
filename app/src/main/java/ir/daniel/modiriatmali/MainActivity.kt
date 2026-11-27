@@ -4504,17 +4504,18 @@ if (!hasTransactionsTable) {
 db.close()
 
     val databaseFile = context.getDatabasePath("finance.db")
-    databaseFile.parentFile?.mkdirs()
+databaseFile.parentFile?.mkdirs()
 
-    FileInputStream(tempDatabase).use { inputStream ->
-        FileOutputStream(databaseFile).use { output ->
-            inputStream.copyTo(output)
-        }
+File(databaseFile.path + "-wal").delete()
+File(databaseFile.path + "-shm").delete()
+
+FileInputStream(tempDatabase).use { inputStream ->
+    FileOutputStream(databaseFile).use { output ->
+        inputStream.copyTo(output)
     }
+}
 
-    File(databaseFile.path + "-wal").delete()
-    File(databaseFile.path + "-shm").delete()
-    tempDatabase.delete()
+tempDatabase.delete()
 
     db.writableDatabase
 
