@@ -1456,15 +1456,7 @@ if (pendingPrivatePage != null) {
     drawerContainerColor = activeTheme.surface,
     drawerContentColor = MaterialTheme.colorScheme.onSurface
 ) {
-                    Text(
-    "مدیریت مالی",
-    modifier = Modifier.fillMaxWidth().padding(20.dp),
-    color = MaterialTheme.colorScheme.primary,
-    fontSize = 22.sp,
-    fontWeight = FontWeight.Bold
-
-                    )
-                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    
 
                     Column(
                         Modifier.fillMaxHeight()
