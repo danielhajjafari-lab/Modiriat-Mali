@@ -3305,31 +3305,143 @@ if (showTogglePinDialog) {
 
                         showTogglePinDialog = false
                         togglePinInput = ""
-                        togglePinError = ""
-                    } else {
-                        togglePinError = "رمز واردشده اشتباه است."
-                    }
-                }
+
+        sections.forEach { (name, key) ->
+            Card(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("تأیید")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    showTogglePinDialog = false
-                    togglePinInput = ""
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(name)
+
+                    Switch(
+                        checked = lockStates[key] == true,
+                        enabled = pinConfigured,
+                        onCheckedChange = { enabled ->
+                            pendingLockKey = key
+                            pendingLockValue = enabled
+                            togglePinInput = ""
+                            togglePinError = ""
+                            showTogglePinDialog = true
+                        }
+                    )
                 }
-            ) {
-                Text("انصراف")
             }
         }
-    )
-}
 
+        if (!pinConfigured) {
+            Text(
+                "برای فعال کردن قفل بخش‌ها، ابتدا رمز چهاررقمی بساز.",
+                color = MaterialTheme.colorScheme.secondary
+            )
         }
     }
+
+    if (showTogglePinDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showTogglePinDialog = false
+                togglePinInput = ""
+            },
+            title = {
+                Text("تأیید رمز خصوصی")
+            },
+            text = {
+                Column {
+                    Text("برای تغییر وضعیت قفل، رمز فعلی را وارد کن.")
+
+                    OutlinedTextField(
+                        value = togglePinInput,
+                        onValueChange = {
+                            if (it.length <= 4 && it.all(Char::isDigit)) {
+                                togglePinInput = it
+                                togglePinError = ""
+                            }
+                        },
+                        label = { Text("رمز چهاررقمی") },
+                        visualTransformation =
+                            androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                        keyboardOptions =
+                            androidx.compose.foundation.text.KeyboardOptions(
+                                keyboardType =
+                                    androidx.compose.ui.text.input.KeyboardType.Number
+                            ),
+                        singleLine = true
+                    )
+
+                    if (togglePinError.isNotEmpty()) {
+                        Text(
+                            togglePinError,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val salt = preferences.getString(
+                            "private_pin_salt", ""
+                        ) ?: ""
+
+                        val savedHash = preferences.getString(
+                            "private_pin_hash", ""
+                        ) ?: ""
+
+                        val enteredHash = if (
+                            togglePinInput.length == 4 &&
+                            salt.isNotBlank()
+                        ) {
+                            hashPrivatePin(togglePinInput, salt)
+                        } else {
+                            ""
+                        }
+
+                        if (
+                            enteredHash == savedHash &&
+                            savedHash.isNotEmpty()
+                        ) {
+                            preferences.edit()
+                                .putBoolean(
+                                    pendingLockKey,
+                                    pendingLockValue
+                                )
+                                .apply()
+
+                            lockStates = lockStates.toMutableMap().apply {
+                                put(pendingLockKey, pendingLockValue)
+                            }
+
+                            showTogglePinDialog = false
+                            togglePinInput = ""
+                            togglePinError = ""
+                        } else {
+                            togglePinError = "رمز واردشده اشتباه است."
+                        }
+                    }
+                ) {
+                    Text("تأیید")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showTogglePinDialog = false
+                        togglePinInput = ""
+                    }
+                ) {
+                    Text("انصراف")
+                }
+            }
+        )
+    }
 }
+
 
 @Composable
 private fun EmptyCard(message: String) {
