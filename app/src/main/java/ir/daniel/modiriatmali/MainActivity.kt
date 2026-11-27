@@ -4820,7 +4820,12 @@ private fun createFinanceBackup(
 ) {
     val databaseFile = context.getDatabasePath("finance.db")
 
-    db.writableDatabase.execSQL("PRAGMA wal_checkpoint(FULL)")
+    db.writableDatabase.rawQuery(
+    "PRAGMA wal_checkpoint(FULL)",
+    null
+).use { cursor ->
+    cursor.moveToFirst()
+    }
     db.close()
 
     try {
