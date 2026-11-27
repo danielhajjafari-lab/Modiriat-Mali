@@ -4071,85 +4071,111 @@ Spacer(modifier = Modifier.height(8.dp))
 
                 
             }
-        if (calculationHistory.isNotEmpty()) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-    modifier = Modifier
-        .width(64.dp)
-        .height(28.dp)
-        .clickable {
-            historyExpanded = !historyExpanded
-        }
-        .pointerInput(Unit) {
-            detectVerticalDragGestures { change, dragAmount ->
-                change.consume()
+                if (calculationHistory.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(64.dp)
+                            .height(28.dp)
+                            .clickable {
+                                historyExpanded = !historyExpanded
+                            }
+                            .pointerInput(Unit) {
+                                detectVerticalDragGestures { change, dragAmount ->
+                                    change.consume()
+                                    if (dragAmount > 2f) {
+                                        historyExpanded = true
+                                    } else if (dragAmount < -2f) {
+                                        historyExpanded = false
+                                    }
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .width(42.dp)
+                                .height(5.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.onSurfaceVariant,
+                                    RoundedCornerShape(50)
+                                )
+                        )
+                    }
 
-                if (dragAmount > 2f) {
-                    historyExpanded = true
-                } else if (dragAmount < -2f) {
-                    historyExpanded = false
-                }
-            }
-        },
-    contentAlignment = Alignment.Center
-) {
-    Box(
-        modifier = Modifier
-            .width(42.dp)
-            .height(5.dp)
-            .background(
-                MaterialTheme.colorScheme.onSurfaceVariant,
-                RoundedCornerShape(50)
-            )
-    )
-            }
+                    if (historyExpanded) {
+                        Spacer(modifier = Modifier.height(12.dp))
 
-            if (historyExpanded) {
-                Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            "حافظه محاسبات",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
 
-                
-                        }
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                        TextButton(
-                            onClick = {
-                                calculationHistory =
-                                    calculationHistory.filterIndexed { i, _ -> i != index }
-
-                                val jsonArray = org.json.JSONArray()
-                                calculationHistory.forEach { historyItem ->
-                                    jsonArray.put(
-                                        org.json.JSONObject()
-                                            .put("expression", historyItem.first)
-                                            .put("result", historyItem.second)
+                        calculationHistory.forEachIndexed { index, item ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    horizontalAlignment = Alignment.End
+                                ) {
+                                    Text(item.first, fontSize = 14.sp)
+                                    Text(
+                                        "= ${item.second}",
+                                        fontSize = 17.sp,
+                                        fontWeight = FontWeight.Bold
                                     )
                                 }
 
-                                calculatorPrefs.edit()
-                                    .putString("history", jsonArray.toString())
-                                    .apply()
-                            }
-                        ) {
-                            Text("×", fontSize = 22.sp)
-                        }
-                    }
+                                TextButton(
+                                    onClick = {
+                                        calculationHistory =
+                                            calculationHistory.filterIndexed { i, _ ->
+                                                i != index
+                                            }
 
-                    if (index < calculationHistory.lastIndex) {
-                        HorizontalDivider()
+                                        val jsonArray = org.json.JSONArray()
+                                        calculationHistory.forEach { historyItem ->
+                                            jsonArray.put(
+                                                org.json.JSONObject()
+                                                    .put("expression", historyItem.first)
+                                                    .put("result", historyItem.second)
+                                            )
+                                        }
+
+                                        calculatorPrefs.edit()
+                                            .putString("history", jsonArray.toString())
+                                            .apply()
+                                    }
+                                ) {
+                                    Text("×", fontSize = 22.sp)
+                                }
+                            }
+
+                            if (index < calculationHistory.lastIndex) {
+                                HorizontalDivider()
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-        }
+                }
         
         rows.forEach { row ->
     Row(
