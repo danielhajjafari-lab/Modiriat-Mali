@@ -4513,6 +4513,10 @@ if (!hasTransactionsTable) {
 }
 
 db.close()
+if (settings.isEmpty) {
+    tempDatabase.delete()
+    throw Exception("تنظیمات داخل فایل پشتیبان پیدا نشد.")
+}
 
     val databaseFile = context.getDatabasePath("finance.db")
 databaseFile.parentFile?.mkdirs()
