@@ -4178,7 +4178,7 @@ Spacer(modifier = Modifier.height(8.dp))
                         onClick = { press(key) },
                         modifier = Modifier
                             .weight(1f)
-                            .aspectRatio(1.15f),
+                            .aspectRatio(1.25f),
                         shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (key) {
