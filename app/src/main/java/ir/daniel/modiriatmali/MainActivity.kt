@@ -4032,7 +4032,84 @@ Spacer(modifier = Modifier.height(8.dp))
                 )
             }
         }
+if (calculationHistory.isNotEmpty()) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Text(
+                "حافظه محاسبات",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            calculationHistory.forEachIndexed { index, item ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(
+                            item.first,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            "= ${item.second}",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    TextButton(
+                        onClick = {
+                            calculationHistory =
+                                calculationHistory.filterIndexed { i, _ -> i != index }
+
+                            val jsonArray = org.json.JSONArray()
+                            calculationHistory.forEach { historyItem ->
+                                jsonArray.put(
+                                    org.json.JSONObject()
+                                        .put("expression", historyItem.first)
+                                        .put("result", historyItem.second)
+                                )
+                            }
+
+                            calculatorPrefs.edit()
+                                .putString("history", jsonArray.toString())
+                                .apply()
+                        }
+                    ) {
+                        Text(
+                            "×",
+                            color = MaterialTheme.colorScheme.error,
+                            fontSize = 22.sp
+                        )
+                    }
+                }
+
+                if (index < calculationHistory.lastIndex) {
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+                }
+            }
+        }
+    }
+}
         rows.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
