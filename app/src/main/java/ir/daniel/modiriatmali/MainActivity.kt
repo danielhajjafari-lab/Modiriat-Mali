@@ -3062,7 +3062,7 @@ else
                 if (dailyLimit > 0 && todayExpenses > dailyLimit) {
                     Text(
                         "هشدار: از سقف هزینه روزانه عبور کرده‌ای!",
-                        color = Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontWeight = FontWeight.Bold
                     )
                 }
