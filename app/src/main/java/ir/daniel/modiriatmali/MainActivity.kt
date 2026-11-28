@@ -3179,11 +3179,14 @@ val soundPicker = rememberLauncherForActivityResult(
                 }
         }
         if (alertType == "صدا") {
-            OutlinedButton(
+                        OutlinedButton(
                 onClick = {
                     soundPicker.launch(arrayOf("audio/*"))
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
             ) {
                 Text(
                     if (soundUri.isBlank()) {
