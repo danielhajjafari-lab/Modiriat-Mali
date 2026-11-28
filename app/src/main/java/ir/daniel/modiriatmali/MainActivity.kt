@@ -4060,89 +4060,116 @@ var historyStage by remember { mutableStateOf(0) }
                 )
             }
         }
+        
 
-        // حافظه محاسبات
-        Card(
+        // دستگیره و حافظه کشویی
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if (historyExpanded) 300.dp else 76.dp)
-                .animateContentSize(),
-            shape = RoundedCornerShape(18.dp)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(38.dp)
-                        .pointerInput(Unit) {
-                            var totalDrag = 0f
-                            detectVerticalDragGestures(
-                                onVerticalDrag = { change, dragAmount ->
-                                    change.consume()
-                                    totalDrag += dragAmount
-                                },
-                                onDragEnd = {
-                                    if (totalDrag > 25f) {
-                                        historyExpanded = true
-                                    } else if (totalDrag < -25f) {
-                                        historyExpanded = false
-                                    }
-                                    totalDrag = 0f
-                                },
-                                onDragCancel = {
-                                    totalDrag = 0f
-                                }
-                            )
+                .height(24.dp)
+                .pointerInput(historyStage) {
+                    var totalDrag = 0f
+                    detectVerticalDragGestures(
+                        onVerticalDrag = { change, dragAmount ->
+                            change.consume()
+                            totalDrag += dragAmount
                         },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Text(
-                        "حافظه محاسبات",
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    IconButton(
-                        onClick = {
-                            calculationHistory = emptyList()
-                            saveHistory()
+                        onDragEnd = {
+                            if (totalDrag > 30f) {
+                                historyStage = (historyStage + 1).coerceAtMost(2)
+                            } else if (totalDrag < -30f) {
+                                historyStage = (historyStage - 1).coerceAtLeast(0)
+                            }
+                            totalDrag = 0f
+                        },
+                        onDragCancel = {
+                            totalDrag = 0f
                         }
-                    ) {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = "پاک کردن حافظه",
-                            tint = MaterialTheme.colorScheme.error
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(46.dp)
+                    .height(5.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                        RoundedCornerShape(50)
+                    )
+            )
+        }
+
+        // نمایش آخرین عملیات در مرحله اول
+        if (historyStage == 1) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(58.dp)
+                    .animateContentSize(),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 14.dp, vertical = 6.dp),
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    if (calculationHistory.isNotEmpty()) {
+                        Text(
+                            calculationHistory.first().first,
+                            fontSize = 13.sp
+                        )
+                        Text(
+                            "= ${calculationHistory.first().second}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
+            }
+        }
 
-                Box(
-                    modifier = Modifier
-                        .width(46.dp)
-                        .height(5.dp)
-                        .background(
-                            MaterialTheme.colorScheme.onSurfaceVariant,
-                            RoundedCornerShape(50)
-                        )
-                        .clickable {
-                            historyExpanded = !historyExpanded
+        // حافظه کامل در مرحله دوم
+        if (historyStage == 2) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .animateContentSize(),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        IconButton(
+                            onClick = {
+                                calculationHistory = emptyList()
+                                saveHistory()
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = "پاک کردن حافظه",
+                                tint = MaterialTheme.colorScheme.error
+                            )
                         }
-                )
+                    }
 
-                if (historyExpanded) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
                             .verticalScroll(rememberScrollState())
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                            .padding(horizontal = 12.dp, vertical = 4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
                         if (calculationHistory.isEmpty()) {
@@ -4179,10 +4206,7 @@ var historyStage by remember { mutableStateOf(0) }
                                 Column(
                                     horizontalAlignment = Alignment.End
                                 ) {
-                                    Text(
-                                        item.first,
-                                        fontSize = 14.sp
-                                    )
+                                    Text(item.first, fontSize = 14.sp)
                                     Text(
                                         "= ${item.second}",
                                         fontSize = 17.sp,
@@ -4199,6 +4223,7 @@ var historyStage by remember { mutableStateOf(0) }
                 }
             }
         }
+        
 
         // صفحه کلید
         rows.forEach { row ->
