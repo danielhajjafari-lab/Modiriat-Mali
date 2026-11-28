@@ -2625,12 +2625,21 @@ private fun AdvancedTransactionSearch(
             }
         }
 
-        OutlinedTextField(
+                OutlinedTextField(
             value = categoryText,
             onValueChange = { categoryText = it },
             label = { Text("فیلتر دسته‌بندی") },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
         )
 
         OutlinedTextField(
