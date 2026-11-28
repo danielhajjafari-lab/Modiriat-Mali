@@ -4265,6 +4265,7 @@ var historyStage by remember { mutableStateOf(0) }
         
 
         // صفحه کلید
+        if (historyStage < 2) {
         Column(
     modifier = Modifier.weight(1f),
     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -4316,6 +4317,7 @@ var historyStage by remember { mutableStateOf(0) }
             }
         }
     }
+}
 }
 }
         
