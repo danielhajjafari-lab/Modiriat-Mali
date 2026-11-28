@@ -4233,7 +4233,11 @@ var historyStage by remember { mutableStateOf(0) }
         
 
         // صفحه کلید
-        rows.forEach { row ->
+        Column(
+    modifier = Modifier.weight(1f),
+    verticalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    rows.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
