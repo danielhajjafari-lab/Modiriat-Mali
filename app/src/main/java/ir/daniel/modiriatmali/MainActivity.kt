@@ -2435,10 +2435,16 @@ else MaterialTheme.colorScheme.surfaceVariant
         )
 
         categories.forEach { name ->
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(18.dp),
+        border = androidx.compose.foundation.BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outlineVariant
+        )
+    ) {
             ) {
                 Row(
                     Modifier.fillMaxWidth().padding(8.dp),
