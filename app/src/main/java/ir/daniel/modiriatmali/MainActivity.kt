@@ -885,7 +885,12 @@ fun deleteBank(id: Long): Boolean {
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-    installSplashScreen()
+    val splashScreen = installSplashScreen()
+val splashStartTime = android.os.SystemClock.elapsedRealtime()
+
+splashScreen.setKeepOnScreenCondition {
+    android.os.SystemClock.elapsedRealtime() - splashStartTime < 500
+}
     super.onCreate(savedInstanceState)
         val db = FinanceDb(this)
         setContent { FinanceApp(db) }
