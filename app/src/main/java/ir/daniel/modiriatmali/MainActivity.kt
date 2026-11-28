@@ -4236,7 +4236,13 @@ var historyStage by remember { mutableStateOf(0) }
                         onClick = { press(key) },
                         modifier = Modifier
                             .weight(1f)
-                            .aspectRatio(1.15f),
+                            .aspectRatio(
+    when (historyStage) {
+        0 -> 1.15f
+        1 -> 1.40f
+        else -> 1.65f
+    }
+),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (key) {
