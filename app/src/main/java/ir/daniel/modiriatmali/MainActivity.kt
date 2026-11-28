@@ -2778,9 +2778,9 @@ private fun TransactionRow(
             defaultElevation = 3.dp
         ),
         border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            accent.copy(alpha = 0.25f)
-        )
+    1.dp,
+    MaterialTheme.colorScheme.outlineVariant
+)
     ) {
         Row(
             Modifier
