@@ -1860,8 +1860,8 @@ border = androidx.compose.foundation.BorderStroke(
             fontWeight = FontWeight.Bold
         )
     }
-                    }
-                    }
+                    
+                }
                     Text("دسترسی سریع", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         QuickAction("ثبت درآمد", Icons.Default.AddCircle, Green, Modifier.weight(1f)) { navigateTo("ثبت درآمد") }
