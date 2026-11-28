@@ -3861,23 +3861,59 @@ launcherIcons.forEach { item ->
                     
 
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        listOf(
-                            preset.background,
-                            preset.surface,
-                            preset.primary,
-                            preset.secondary
-                        ).forEach { color ->
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(
-                                        color,
-                                        RoundedCornerShape(10.dp)
-                                    )
-                            )
-                        }
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(72.dp)
+        .background(
+            preset.background,
+            RoundedCornerShape(12.dp)
+        )
+        .padding(10.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        Box(
+            Modifier
+                .width(90.dp)
+                .height(9.dp)
+                .background(
+                    preset.primary,
+                    RoundedCornerShape(8.dp)
+                )
+        )
+
+        Box(
+            Modifier
+                .width(58.dp)
+                .height(7.dp)
+                .background(
+                    preset.secondary,
+                    RoundedCornerShape(8.dp)
+                )
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .size(44.dp)
+            .background(
+                preset.surface,
+                RoundedCornerShape(12.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            Modifier
+                .size(20.dp)
+                .background(
+                    preset.primary,
+                    RoundedCornerShape(50)
+                )
+        )
+    }
                     }
                 }
             }
