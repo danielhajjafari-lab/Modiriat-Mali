@@ -3849,8 +3849,7 @@ private fun FinanceCalculator() {
             }.getOrDefault(emptyList())
         )
     }
-
-    var historyExpanded by remember { mutableStateOf(false) }
+var historyStage by remember { mutableStateOf(0) }
     var display by remember { mutableStateOf("0") }
     var storedValue by remember { mutableStateOf<Double?>(null) }
     var pendingOperator by remember { mutableStateOf<String?>(null) }
