@@ -3162,14 +3162,21 @@ val soundPicker = rememberLauncherForActivityResult(
     color = MaterialTheme.colorScheme.onSurface
 )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("صدا", "فقط لرزش", "بی‌صدا").forEach { type ->
                 FilterChip(
                     selected = alertType == type,
                     onClick = { alertType = type },
-                    label = { Text(type) }
+                    label = { Text(type) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
             }
+                }
         }
         if (alertType == "صدا") {
             OutlinedButton(
