@@ -3025,7 +3025,7 @@ Text(
 )
                 Text(
                     displayMoney(todayExpenses),
-                    color = Red,
+                    color = MaterialTheme.colorScheme.error,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
