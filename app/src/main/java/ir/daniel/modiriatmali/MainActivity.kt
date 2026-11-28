@@ -2975,7 +2975,7 @@ private fun BudgetScreen(
     )
 )
 
-                Button(
+                                Button(
                     onClick = {
                         val amount = limitText.toLongOrNull()
                         if (amount == null || amount <= 0L) {
@@ -2985,10 +2985,14 @@ private fun BudgetScreen(
                             message = "سقف هزینه روزانه ذخیره شد."
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("ذخیره سقف روزانه")
-                }
+                                }
 
                 if (message.isNotBlank()) {
                     Text(
