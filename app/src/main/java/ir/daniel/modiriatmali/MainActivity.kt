@@ -3265,8 +3265,11 @@ val soundPicker = rememberLauncherForActivityResult(
                     alertType = "صدا"
                     soundUri = ""
                 }
-            },
-            modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text(if (editingAlert != null) "ذخیره ویرایش" else "افزودن هشدار")
         }
