@@ -2597,17 +2597,22 @@ private fun AdvancedTransactionSearch(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             listOf("همه", "درآمد", "هزینه").forEach { type ->
-                Button(
+                                Button(
                     onClick = { selectedType = type },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor =
-                            if (selectedType == type) MaterialTheme.colorScheme.primary
-else MaterialTheme.colorScheme.surfaceVariant
+                        containerColor = if (selectedType == type)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = if (selectedType == type)
+                            MaterialTheme.colorScheme.onPrimary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(type)
-                }
+                                }
             }
         }
 
