@@ -4246,13 +4246,11 @@ var historyStage by remember { mutableStateOf(0) }
             ) {
                 row.forEach { key ->
                     Button(
-                        onClick = { press(key) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-    }
-),
-                        shape = CircleShape,
+    onClick = { press(key) },
+    modifier = Modifier
+        .weight(1f)
+        .fillMaxHeight(),
+    shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (key) {
                                 "+", "−", "×", "÷", "=" ->
