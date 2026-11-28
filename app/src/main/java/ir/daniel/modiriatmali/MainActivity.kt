@@ -3804,6 +3804,13 @@ launcherIcons.forEach { item ->
 }
         appThemePresets.forEach { preset ->
             val selected = selectedThemeId == preset.id
+            val descriptionColor = if (
+    preset.id == "light" || preset.id == "ocean"
+) {
+    Color(0xFF555555)
+} else {
+    Color(0xFFB8B8C8)
+            }
 
             Card(
                 modifier = Modifier
@@ -3848,9 +3855,9 @@ launcherIcons.forEach { item ->
                     }
 
                     Text(
-                        preset.description,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                            
+    preset.description,
+    color = descriptionColor
+)
                     )
 
                     Row(
