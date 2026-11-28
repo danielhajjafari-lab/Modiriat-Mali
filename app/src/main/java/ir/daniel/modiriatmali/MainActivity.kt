@@ -1820,42 +1820,47 @@ border = androidx.compose.foundation.BorderStroke(
             fontSize = 17.sp,
             fontWeight = FontWeight.Bold
         )
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Column {
+                Text(
+                    "درآمد ماه",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 12.sp
+                )
+                Text(
+                    displayMoney(monthlyIncome),
+                    color = Green,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
             Column(horizontalAlignment = Alignment.End) {
-    Text(
-        "هزینه ماه",
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontSize = 12.sp
-    )
-    Text(
-        displayMoney(monthlyExpenses),
-        color = Red,
-        fontWeight = FontWeight.Bold
-    )
-}
-}
-
-HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-Text(
-    "خالص ماه: ${displayMoney(monthlyBalance)}",
-    color = if (monthlyBalance >= 0) Green else Red,
-    fontSize = 16.sp,
-    fontWeight = FontWeight.Bold
-)
+                Text(
+                    "هزینه ماه",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 12.sp
+                )
+                Text(
+                    displayMoney(monthlyExpenses),
+                    color = Red,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
-        Text(displayMoney(monthlyExpenses), color = Red, fontWeight = FontWeight.Bold)
+        Text(
+            "خالص ماه: ${displayMoney(monthlyBalance)}",
             color = if (monthlyBalance >= 0) Green else Red,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
     }
+                    }
                     }
                     Text("دسترسی سریع", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
