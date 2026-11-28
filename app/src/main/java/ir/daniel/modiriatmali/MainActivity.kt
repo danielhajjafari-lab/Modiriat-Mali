@@ -1756,7 +1756,17 @@ else
         }
     }
                     }
-                    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), shape = RoundedCornerShape(22.dp)) {
+                    Card(
+    modifier = Modifier.fillMaxWidth(),
+    colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surface
+    ),
+    shape = RoundedCornerShape(22.dp),
+    border = androidx.compose.foundation.BorderStroke(
+        1.dp,
+        MaterialTheme.colorScheme.outlineVariant
+    )
+) {
                         Column(
                             Modifier.fillMaxWidth().padding(20.dp),
                             horizontalAlignment = Alignment.End
