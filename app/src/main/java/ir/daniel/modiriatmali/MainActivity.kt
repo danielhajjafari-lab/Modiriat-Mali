@@ -3200,7 +3200,7 @@ val soundPicker = rememberLauncherForActivityResult(
             if (soundUri.isNotBlank()) {
                 Text(
                     "صدای دلخواه انتخاب شده است",
-                    color = Green
+                    color = MaterialTheme.colorScheme.tertiary
                 )
 
                 OutlinedButton(
