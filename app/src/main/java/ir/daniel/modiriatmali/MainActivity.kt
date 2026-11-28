@@ -2445,7 +2445,7 @@ else MaterialTheme.colorScheme.surfaceVariant
             MaterialTheme.colorScheme.outlineVariant
         )
     ) {
-            ) {
+
                 Row(
                     Modifier.fillMaxWidth().padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
