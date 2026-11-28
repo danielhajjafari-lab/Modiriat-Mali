@@ -2857,7 +2857,7 @@ private fun TransactionRow(
                     Icon(
                         Icons.Default.Delete,
                         "حذف",
-                        tint = Red
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             }
