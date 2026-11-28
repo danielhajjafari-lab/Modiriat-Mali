@@ -1332,7 +1332,7 @@ val budgetColor = when {
 }
     
 
-val appColorScheme = if (selectedThemeId == "light") {
+val appColorScheme = if (selectedThemeId == "light" || selectedThemeId == "ocean") {
     lightColorScheme(
         primary = activeTheme.primary,
         onPrimary = Color.White,
