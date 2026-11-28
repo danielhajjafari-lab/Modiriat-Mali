@@ -4285,6 +4285,7 @@ var historyStage by remember { mutableStateOf(0) }
         }
     }
 }
+}
         
 @Composable
 private fun DebtScreen(
