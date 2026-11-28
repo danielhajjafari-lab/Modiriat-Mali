@@ -3220,7 +3220,10 @@ val soundPicker = rememberLauncherForActivityResult(
                             )
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                                        modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
                     Text("پخش آزمایشی صدا 🔊")
                 }
