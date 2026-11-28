@@ -3858,7 +3858,7 @@ launcherIcons.forEach { item ->
     preset.description,
     color = descriptionColor
 )
-                    )
+                    
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
