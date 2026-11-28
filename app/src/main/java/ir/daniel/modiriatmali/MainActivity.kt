@@ -1637,8 +1637,14 @@ tint = MaterialTheme.colorScheme.primary
         ) { padding ->
             
 
-            Column(
-                Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+            Column(Modifier
+    .padding(padding)
+    .fillMaxSize()
+    .then(
+        if (page == "ماشین‌حساب") Modifier
+        else Modifier.verticalScroll(rememberScrollState())
+    )
+    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 if (page == "خانه") {Text(
