@@ -3292,6 +3292,7 @@ if (editingAlert != null) {
         Text("لغو ویرایش")
     }
 }
+        Text(
     "هشدارهای ثبت‌شده",
     color = MaterialTheme.colorScheme.primary,
     fontSize = 18.sp
