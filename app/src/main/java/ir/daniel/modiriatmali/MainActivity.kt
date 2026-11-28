@@ -3270,6 +3270,7 @@ val soundPicker = rememberLauncherForActivityResult(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
+                        },
         ) {
             Text(if (editingAlert != null) "ذخیره ویرایش" else "افزودن هشدار")
         }
