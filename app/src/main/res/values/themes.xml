@@ -1,13 +1,14 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <style name="Theme.ModiriatMali" parent="android:style/Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">#172554</item>
+        <item name="android:windowBackground">#000000</item>
         <item name="android:colorAccent">#38BDF8</item>
     </style>
 
     <style name="Theme.ModiriatMali.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#172554</item>
+        <item name="windowSplashScreenBackground">#000000</item>
         <item name="windowSplashScreenAnimatedIcon">@null</item>
         <item name="postSplashScreenTheme">@style/Theme.ModiriatMali</item>
     </style>
