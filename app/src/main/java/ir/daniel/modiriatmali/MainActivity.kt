@@ -4044,7 +4044,7 @@ var historyStage by remember { mutableStateOf(0) }
                         else Modifier.height(58.dp)
                     )
                     .animateContentSize(
-    animationSpec = tween(durationMillis = 450)
+    animationSpec = tween(durationMillis = 750)
 ),
                 shape = RoundedCornerShape(18.dp)
             ) {
