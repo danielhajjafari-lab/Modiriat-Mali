@@ -3284,7 +3284,7 @@ if (editingAlert != null) {
             alertType = "صدا"
             soundUri = ""
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary
         )
