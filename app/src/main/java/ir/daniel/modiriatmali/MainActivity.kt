@@ -3037,7 +3037,7 @@ Text(
                     if (dailyLimit > 0) displayMoney(remaining)
                 
             else "سقف بودجه تعیین نشده",
-                    color = Green,
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
