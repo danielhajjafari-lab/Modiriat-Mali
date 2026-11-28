@@ -120,38 +120,65 @@ data class AppThemePreset(
     val secondary: Color
 )
 
+
 private val appThemePresets = listOf(
+    // 1. لوکس و حرفه‌ای
     AppThemePreset(
-        "neon", "نئونی دیجیتال", "قالب فعلی برنامه",
-        Color(0xFF080D18), Color(0xFF111B2D),
-        Color(0xFF27D7F2), Color(0xFF9B7BFF)
+        "royal", "لوکس و حرفه‌ای", "مشکی و طلایی لوکس",
+        Color(0xFF090806), Color(0xFF21190F),
+        Color(0xFFFFC52E), Color(0xFFFFA000)
     ),
+
+    // 2. تیره و مدرن
     AppThemePreset(
-        "royal", "سلطنتی", "مشکی و طلایی لوکس",
-        Color(0xFF100D0A), Color(0xFF211A12),
-        Color(0xFFFFC857), Color(0xFFD49B42)
+        "neon", "تیره و مدرن", "سرمه‌ای و فیروزه‌ای",
+        Color(0xFF070B18), Color(0xFF111B32),
+        Color(0xFF20E5D0), Color(0xFF368BFF)
     ),
+
+    // 3. ساده و مینیمال
     AppThemePreset(
-        "ocean", "اقیانوسی", "آبی عمیق و آرام",
-        Color(0xFF071522), Color(0xFF102A40),
-        Color(0xFF45B7E8), Color(0xFF58D6C5)
+        "light", "ساده و مینیمال", "سفید و سبز ملایم",
+        Color(0xFFF4F7F5), Color(0xFFFFFFFF),
+        Color(0xFF24B982), Color(0xFF68CFA5)
     ),
+
+    // 4. شیشه‌ای و جذاب
     AppThemePreset(
-        "forest", "جنگلی", "سبز تیره و طبیعی",
-        Color(0xFF0B1711), Color(0xFF17291E),
-        Color(0xFF65D68A), Color(0xFFB2D96C)
+        "glass", "شیشه‌ای و جذاب", "بنفش و آبی شیشه‌ای",
+        Color(0xFF11102B), Color(0xFF211D48),
+        Color(0xFF9D65FF), Color(0xFF32B9FF)
     ),
+
+    // 5. مدرن و مرتب
     AppThemePreset(
-        "purple", "بنفش مدرن", "بنفش و سرمه‌ای",
-        Color(0xFF100D20), Color(0xFF211A38),
-        Color(0xFFB69AFF), Color(0xFFEC91D8)
+        "ocean", "مدرن و مرتب", "سفید و سبز فیروزه‌ای",
+        Color(0xFFF0F7F7), Color(0xFFFFFFFF),
+        Color(0xFF16BFA0), Color(0xFF278BDB)
     ),
+
+    // 6. رنگی و دوستانه
     AppThemePreset(
-        "light", "روشن مینیمال", "سفید و آبی ملایم",
-        Color(0xFFF2F5FA), Color(0xFFFFFFFF),
-        Color(0xFF2878D0), Color(0xFF7356C7)
+        "purple", "رنگی و دوستانه", "بنفش و رنگ‌های شاد",
+        Color(0xFF17102D), Color(0xFF292047),
+        Color(0xFFB16BFF), Color(0xFFFF65C3)
+    ),
+
+    // 7. متفاوت و جسور
+    AppThemePreset(
+        "forest", "متفاوت و جسور", "مشکی و زرد طلایی",
+        Color(0xFF080808), Color(0xFF191919),
+        Color(0xFFFFD21F), Color(0xFFFFA900)
+    ),
+
+    // 8. دیجیتال و تکنولوژیک
+    AppThemePreset(
+        "tech", "دیجیتال و تکنولوژیک", "آبی نئونی و بنفش",
+        Color(0xFF030817), Color(0xFF0C1530),
+        Color(0xFF00D9FF), Color(0xFF963BFF)
     )
 )
+
 
 
 data class MoneyTransaction(
