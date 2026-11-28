@@ -4030,11 +4030,238 @@ var historyStage by remember { mutableStateOf(0) }
         .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+    
+        // حافظه کشویی
+        if (historyStage > 0) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (historyStage == 2) Modifier.weight(1f)
+                        else Modifier.height(58.dp)
+                    )
+                    .animateContentSize(),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                if (historyStage == 1) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 14.dp, vertical = 6.dp),
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        if (calculationHistory.isNotEmpty()) {
+                            Text(
+                                calculationHistory.first().first,
+                                fontSize = 13.sp
+                            )
+                            Text(
+                                "= ${calculationHistory.first().second}",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                } else {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            IconButton(
+                                onClick = {
+                                    calculationHistory = emptyList()
+                                    saveHistory()
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = "پاک کردن حافظه",
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
 
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .verticalScroll(rememberScrollState())
+                                .padding(horizontal = 12.dp, vertical = 4.dp),
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            if (calculationHistory.isEmpty()) {
+                                Text(
+                                    "هنوز محاسبه‌ای ثبت نشده است",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
 
-        
+                            calculationHistory.forEachIndexed { index, item ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 7.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        "×",
+                                        modifier = Modifier
+                                            .clickable {
+                                                calculationHistory =
+                                                    calculationHistory.filterIndexed { i, _ ->
+                                                        i != index
+                                                    }
+                                                saveHistory()
+                                            }
+                                            .padding(horizontal = 12.dp),
+                                        fontSize = 24.sp,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
 
-        
+                                    Spacer(modifier = Modifier.weight(1f))
+
+                                    Column(
+                                        horizontalAlignment = Alignment.End
+                                    ) {
+                                        Text(item.first, fontSize = 14.sp)
+                                        Text(
+                                            "= ${item.second}",
+                                            fontSize = 17.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+
+                                if (index < calculationHistory.lastIndex) {
+                                    HorizontalDivider()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // نمایشگر در حالت عادی
+        if (historyStage == 0) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        if (storedValue != null && pendingOperator != null) {
+                            "${formatNumber(storedValue!!)} $pendingOperator " +
+                                if (startNewNumber) "" else display
+                        } else {
+                            ""
+                        },
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        display,
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.End,
+                        maxLines = 1,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
+
+        // دستگیره کشویی
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(24.dp)
+                .pointerInput(historyStage) {
+                    var totalDrag = 0f
+                    detectVerticalDragGestures(
+                        onVerticalDrag = { change, dragAmount ->
+                            change.consume()
+                            totalDrag += dragAmount
+                        },
+                        onDragEnd = {
+                            if (totalDrag > 30f) {
+                                historyStage = (historyStage + 1).coerceAtMost(2)
+                            } else if (totalDrag < -30f) {
+                                historyStage = (historyStage - 1).coerceAtLeast(0)
+                            }
+                            totalDrag = 0f
+                        },
+                        onDragCancel = {
+                            totalDrag = 0f
+                        }
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(46.dp)
+                    .height(5.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                        RoundedCornerShape(50)
+                    )
+            )
+        }
+
+        // نمایشگر در مرحله اول
+        if (historyStage == 1) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        if (storedValue != null && pendingOperator != null) {
+                            "${formatNumber(storedValue!!)} $pendingOperator " +
+                                if (startNewNumber) "" else display
+                        } else {
+                            ""
+                        },
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        display,
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.End,
+                        maxLines = 1,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
         
 
         // صفحه کلید
