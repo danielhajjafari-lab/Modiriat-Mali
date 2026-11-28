@@ -3138,14 +3138,23 @@ val soundPicker = rememberLauncherForActivityResult(
             )
         )
 
-        OutlinedTextField(
+                OutlinedTextField(
             value = duration,
             onValueChange = {
                 duration = it.filter(Char::isDigit).take(2)
             },
             label = { Text("مدت هشدار به ثانیه") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
         )
 
         Text(
