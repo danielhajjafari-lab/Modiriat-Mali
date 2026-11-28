@@ -53,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -1623,7 +1624,7 @@ tint = MaterialTheme.colorScheme.primary
             }
         ) {
         Scaffold(
-            containerColor = activeTheme.background,
+            containerColor = Color.Transparent,
             topBar = {
                 TopAppBar(
                     title = {
@@ -1663,8 +1664,7 @@ tint = MaterialTheme.colorScheme.primary
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-    containerColor = activeTheme.background
-)
+    containerColor = Color.Transparent
                     )
             }
         ) { padding ->
