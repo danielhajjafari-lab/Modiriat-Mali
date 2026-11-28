@@ -1838,8 +1838,7 @@ border = androidx.compose.foundation.BorderStroke(
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
-        Text(
-            "خالص ماه: ${displayMoney(monthlyExpenses)}",
+        Text(displayMoney(monthlyExpenses), color = Red, fontWeight = FontWeight.Bold)
             color = if (monthlyBalance >= 0) Green else Red,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
