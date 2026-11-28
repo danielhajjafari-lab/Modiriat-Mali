@@ -1673,6 +1673,15 @@ tint = MaterialTheme.colorScheme.primary
             Column(Modifier
     .padding(padding)
     .fillMaxSize()
+    .background(
+    Brush.verticalGradient(
+        colors = listOf(
+            activeTheme.background,
+            activeTheme.surface,
+            activeTheme.background
+        )
+    )
+)
     .then(
         if (page == "ماشین‌حساب") Modifier
         else Modifier.verticalScroll(rememberScrollState())
