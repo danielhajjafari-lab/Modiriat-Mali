@@ -2145,7 +2145,7 @@ else -> EmptyCard("این بخش هنوز در دست ساخت است. اطلا�
                     dismissButton = {
                         TextButton(onClick = { editing = null }) { Text("انصراف") }
                     },
-                    containerColor = Color(0xFF17263D),
+                    containerColor = MaterialTheme.colorScheme.surface,
 tonalElevation = 8.dp,
 shape = RoundedCornerShape(24.dp)
                 )
@@ -2172,7 +2172,7 @@ shape = RoundedCornerShape(24.dp)
                     dismissButton = {
                         TextButton(onClick = { deleting = null }) { Text("انصراف") }
                     },
-                    containerColor = Color(0xFF17263D),
+                    containerColor = MaterialTheme.colorScheme.surface,
 tonalElevation = 8.dp,
 shape = RoundedCornerShape(24.dp)
                 )
