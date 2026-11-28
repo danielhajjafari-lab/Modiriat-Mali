@@ -19,7 +19,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_wallet"
+            android:icon="@mipmap/ic_launcher_wallet"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_chart"
+            @mipmap/ic_launcher_chart
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,7 +58,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_bank"
+            @mipmap/ic_launcher_bank
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,7 +71,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_savings"
+            @mipmap/ic_launcher_savings
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -84,7 +84,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_receipt"
+            @mipmap/ic_launcher_receipt
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -97,7 +97,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_calculator"
+            @mipmap/ic_launcher_calculator
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -110,7 +110,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_card"
+          @mipmap/ic_launcher_card
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
