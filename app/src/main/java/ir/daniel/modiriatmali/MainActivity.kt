@@ -4191,43 +4191,6 @@ var historyStage by remember { mutableStateOf(0) }
             }
         }
 
-        // دستگیره کشویی
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(24.dp)
-                .pointerInput(historyStage) {
-                    var totalDrag = 0f
-                    detectVerticalDragGestures(
-                        onVerticalDrag = { change, dragAmount ->
-                            change.consume()
-                            totalDrag += dragAmount
-                        },
-                        onDragEnd = {
-                            if (totalDrag > 30f) {
-                                historyStage = (historyStage + 1).coerceAtMost(2)
-                            } else if (totalDrag < -30f) {
-                                historyStage = (historyStage - 1).coerceAtLeast(0)
-                            }
-                            totalDrag = 0f
-                        },
-                        onDragCancel = {
-                            totalDrag = 0f
-                        }
-                    )
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(46.dp)
-                    .height(5.dp)
-                    .background(
-                        MaterialTheme.colorScheme.onSurfaceVariant,
-                        RoundedCornerShape(50)
-                    )
-            )
-        }
 
         // نمایشگر در مرحله اول
         if (historyStage == 1) {
@@ -4269,6 +4232,43 @@ var historyStage by remember { mutableStateOf(0) }
         }
         
 
+        // دستگیره کشویی
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(24.dp)
+                .pointerInput(historyStage) {
+                    var totalDrag = 0f
+                    detectVerticalDragGestures(
+                        onVerticalDrag = { change, dragAmount ->
+                            change.consume()
+                            totalDrag += dragAmount
+                        },
+                        onDragEnd = {
+                            if (totalDrag > 30f) {
+                                historyStage = (historyStage + 1).coerceAtMost(2)
+                            } else if (totalDrag < -30f) {
+                                historyStage = (historyStage - 1).coerceAtLeast(0)
+                            }
+                            totalDrag = 0f
+                        },
+                        onDragCancel = {
+                            totalDrag = 0f
+                        }
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(46.dp)
+                    .height(5.dp)
+                    .background(
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                        RoundedCornerShape(50)
+                    )
+            )
+        }
         // صفحه کلید
         if (historyStage < 2) {
         Column(
