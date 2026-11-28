@@ -4239,7 +4239,9 @@ var historyStage by remember { mutableStateOf(0) }
 ) {
     rows.forEach { row ->
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+    .weight(1f)
+    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 row.forEach { key ->
