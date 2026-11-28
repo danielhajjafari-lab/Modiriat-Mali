@@ -3053,7 +3053,7 @@ Text(
                     progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = if (todayExpenses >= dailyLimit && dailyLimit > 0)
-    Red
+    MaterialTheme.colorScheme.error
 else
     MaterialTheme.colorScheme.primary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant
