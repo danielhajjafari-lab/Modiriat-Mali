@@ -2682,9 +2682,10 @@ private fun SummaryCard(
             defaultElevation = 5.dp
         ),
         border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            color.copy(alpha = 0.35f)
-        )
+    1.dp,
+    MaterialTheme.colorScheme.outlineVariant
+)
+        
     ) {
         Column(
             Modifier
@@ -2729,9 +2730,9 @@ private fun QuickAction(
             defaultElevation = 5.dp
         ),
         border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            tint.copy(alpha = 0.4f)
-        )
+    1.dp,
+    MaterialTheme.colorScheme.outlineVariant
+)
     ) {
         Column(
             Modifier
