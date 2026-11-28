@@ -4018,9 +4018,10 @@ var historyStage by remember { mutableStateOf(0) }
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp),
+    modifier = Modifier
+        .fillMaxWidth()
+        .animateContentSize()
+        .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
