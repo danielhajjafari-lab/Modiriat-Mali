@@ -1335,9 +1335,9 @@ val budgetColor = when {
 val appColorScheme = if (selectedThemeId == "light" || selectedThemeId == "ocean") {
     lightColorScheme(
         primary = activeTheme.primary,
-        onPrimary = Color.White,
+        onPrimary = Color(0xFF102018),
         secondary = activeTheme.secondary,
-        onSecondary = Color.White,
+        onSecondary = Color(0xFF102018),
         tertiary = activeTheme.secondary,
         background = activeTheme.background,
         onBackground = Color(0xFF1A2230),
