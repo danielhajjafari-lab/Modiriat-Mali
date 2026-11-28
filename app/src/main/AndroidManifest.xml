@@ -32,7 +32,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            @mipmap/ic_launcher_chart
+            android:icon="@mipmap/ic_launcher_chart"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,7 +58,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            @mipmap/ic_launcher_bank
+            android:icon="@mipmap/ic_launcher_bank"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,7 +71,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            @mipmap/ic_launcher_savings
+            android:icon="@mipmap/ic_launcher_savings"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -84,7 +84,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            @mipmap/ic_launcher_receipt
+            android:icon="@mipmap/ic_launcher_receipt"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -97,7 +97,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-            @mipmap/ic_launcher_calculator
+            android:icon="@mipmap/ic_launcher_calculator"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -110,7 +110,7 @@
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
-          @mipmap/ic_launcher_card
+          android:icon="@mipmap/ic_launcher_card"
             android:label="مدیریت مالی">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
