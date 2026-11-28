@@ -1825,16 +1825,28 @@ border = androidx.compose.foundation.BorderStroke(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
-                Text("درآمد ماه", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
-                Text(displayMoney(monthlyIncome), color = Green, fontWeight = FontWeight.Bold)
-            }
-
             Column(horizontalAlignment = Alignment.End) {
-                Text("هزینه ماه", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
-                Text(displayMoney(monthlyIncome), color = Red, fontWeight = FontWeight.Bold)
-            }
-        }
+    Text(
+        "هزینه ماه",
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = 12.sp
+    )
+    Text(
+        displayMoney(monthlyExpenses),
+        color = Red,
+        fontWeight = FontWeight.Bold
+    )
+}
+}
+
+HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+Text(
+    "خالص ماه: ${displayMoney(monthlyBalance)}",
+    color = if (monthlyBalance >= 0) Green else Red,
+    fontSize = 16.sp,
+    fontWeight = FontWeight.Bold
+)
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
