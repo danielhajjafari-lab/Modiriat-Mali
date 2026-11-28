@@ -3285,16 +3285,14 @@ if (editingAlert != null) {
             soundUri = ""
         },
         modifier = Modifier.fillMaxWidth()
-            modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary
         )
     ) {
+        Text("لغو ویرایش")
     }
 }
-        Divider(color = MaterialTheme.colorScheme.outlineVariant)
-
-        Text(
     "هشدارهای ثبت‌شده",
     color = MaterialTheme.colorScheme.primary,
     fontSize = 18.sp
