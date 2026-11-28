@@ -1665,7 +1665,8 @@ tint = MaterialTheme.colorScheme.primary
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
     containerColor = Color.Transparent
-                    )
+)
+                )
             }
         ) { padding ->
             
