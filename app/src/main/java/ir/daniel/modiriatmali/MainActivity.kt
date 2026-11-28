@@ -4041,7 +4041,9 @@ var historyStage by remember { mutableStateOf(0) }
                         if (historyStage == 2) Modifier.weight(1f)
                         else Modifier.height(58.dp)
                     )
-                    .animateContentSize(),
+                    .animateContentSize(
+    animationSpec = tween(durationMillis = 450)
+),
                 shape = RoundedCornerShape(18.dp)
             ) {
                 if (historyStage == 1) {
